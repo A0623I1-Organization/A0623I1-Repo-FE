@@ -2,10 +2,11 @@ import React from 'react';
 // import '../HomePage.scss'
 import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
+import ZaloChat from '../../../components/ui/ZaloChat';
 
 function Main(props) {
     return (
-        <main id="main">
+        <main id={styles.main}>
             <section><Slick /></section>
             <section className={styles.sectionCategory}>
                 <ul>
@@ -488,6 +489,7 @@ function Main(props) {
                     </div>
                 </div>
             </section>
+            <ZaloChat />
         </main>
     );
 }
