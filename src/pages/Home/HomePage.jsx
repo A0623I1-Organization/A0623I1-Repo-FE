@@ -1,10 +1,15 @@
 import React from 'react';
+import HeaderHome from '../../components/Header/HeaderHome';
+import Main from './components/Main';
+import FooterHome from '../../components/Footer/FooterHome';
 
 function HomePage(props) {
     return (
-        <div>
-            <h2>Đây là trang chủ</h2>   
-        </div>
+        <>
+            <HeaderHome />
+            <Main />
+            <FooterHome />
+        </>
     );
 }
 
