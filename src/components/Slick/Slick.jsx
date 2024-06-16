@@ -18,7 +18,7 @@ function Slick() {
       };
       
     return (
-        <section className={styles.sliderHome}>
+        <div className={styles.sliderHome}>
             <Slider {...settings}>
                 <div className={styles.item}>
                     <img src="https://media.fmplus.com.vn/uploads/sliders/2c2abd60-aa84-42de-9ace-1c0219007a0d.png" alt="" />
@@ -30,7 +30,7 @@ function Slick() {
                     <img src="https://media.fmplus.com.vn/uploads/sliders/9ec34c1e-ac69-4b8d-a543-9b3fc37cdc99.png" alt="" />
                 </div>
             </Slider>
-        </section>
+        </div>
     );
 }
 
