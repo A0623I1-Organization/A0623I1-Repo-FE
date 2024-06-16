@@ -1,0 +1,1 @@
+Đây là thư mục sẽ chứa dữ liệu nội dung hiển thị trang web.
