@@ -1,0 +1,133 @@
+.app-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.content-wrapper {
+  border-radius: 4px;
+  width: 100%;
+  height: 100vh;
+  box-shadow: rgba(99, 99, 99, 0.2) 0 2px 8px 0;
+  margin: 0 auto;
+  max-height: 100%;
+  display: flex;
+
+  .app-content {
+    padding: 16px;
+    height: 100%;
+    display: flex;
+    width: 100%;
+    overflow: auto;
+
+    .content-body {
+      margin-top: 5%;
+      width: 100%;
+      .content-element {
+        background-color: var(--sidebar);
+        width: 96%;
+
+        border-radius: 10px;
+        box-shadow: 2px 2px 5px 0 #4d4b4b;
+        margin: 2%;
+
+        .flex-content {
+          display: flex;
+          justify-content: flex-start;
+          align-items: flex-start;
+
+          .person-info {
+            padding: 20px 40px;
+            width: 60%;
+
+            tr {
+              th, td {
+                padding: 20px 10px 20px 10px;
+                color: var(--sidebar-main-color);
+              }
+
+              th {
+                color: var(--app-content-main-color);
+                text-align: left;
+                width: 40%;
+              }
+
+              td {
+                width: 60%;
+              }
+            }
+          }
+
+          .form-operation {
+            height: auto;
+            padding: 20px;
+            width: 40%;
+
+            .form-element {
+              margin: 20px 0;
+              width: 100%;
+
+              label {
+                font-size: 16px;
+                font-weight: 600;
+                color: #1c1c1c;
+                margin-top: 20px;
+                display: block;
+              }
+
+              input, select, textarea {
+                width: 70%;
+                height: 50px;
+                margin: auto;
+                border-radius: 10px;
+                outline: none;
+                border: 1px solid #c4bdbd;
+                padding-left: 20px;
+                font-size: 16px;
+              }
+
+              .validate-error {
+                color: #da1010;
+                font-size: 14px;
+                height: 10px;
+              }
+
+            }
+
+            .btn-submit {
+              width: 140px;
+              height: 50px;
+              background-color: var(--action-color);
+              border-radius: 10px;
+              font-size: 16px;
+              font-weight: 600;
+              left: 20%;
+              position: relative;
+              color: #fff;
+            }
+
+            button:hover {
+              background-color: var(--button-bg-hover);
+              transition: 0.3s ease-in-out;
+            }
+
+          }
+
+        }
+        @media screen and (max-width: 768px) {
+          .flex-content {
+            display: block;
+            .person-info {
+              width: 100%;
+            }
+            .form-operation {
+              width: 100%;
+              margin-left: 20px;
+            }
+          }
+        }
+
+      }
+
+    }
+  }
+}
