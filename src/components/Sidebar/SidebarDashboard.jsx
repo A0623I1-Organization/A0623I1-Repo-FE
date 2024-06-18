@@ -109,7 +109,7 @@ export function SidebarDashboard(props) {
         </span>
                     </a>
                     <div className={showDropdown === "warehouse" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/person-info"}>Personal information</Link>
+                        <Link to={"/dashboard/infor"}>Personal information</Link>
                         <a href="#">Warehouse</a>
                         <a href="#">Data entry</a>
                         <a href="#">Statistical</a>
