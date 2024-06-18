@@ -1,14 +1,29 @@
 import {HeaderDashboard} from "../../../components/Header/HeaderDashboard";
 import {SidebarDashboard} from "../../../components/Sidebar/SidebarDashboard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import * as authenticationService from "../../../services/auth/AuthenticationService";
+import {logout} from "../../../services/auth/AuthenticationService";
 
 
 export function PersonInfo() {
+    const [userInfo, setUserInfo] = useState({})
 
     const [isShowSidebar, setIsShowSidebar] = useState(false);
 
     const callbackFunction = (childData) => {
         setIsShowSidebar(childData)
+    }
+
+    useEffect(()=> {
+        const fetchData = async () => {
+            await getUserInfo();
+        }
+        fetchData();
+    }, [])
+
+    const getUserInfo = async () => {
+        const temp = await authenticationService.getYourProfile(localStorage.getItem("token"));
+        setUserInfo(temp);
     }
 
     return (
@@ -21,30 +36,32 @@ export function PersonInfo() {
 
                         <div className="content-element">
                             <div className="flex-content">
+                                {userInfo &&
                                 <table className="person-info">
                                     <tbody>
                                     <tr>
                                         <th>Tên nhân viên</th>
-                                        <td>Nguyễn Văn A</td>
+                                        <td>{userInfo.fullName}</td>
                                     </tr>
                                     <tr>
                                         <th>Mã nhân viên</th>
-                                        <td>0123456789</td>
+                                        <td>{userInfo.userCode}</td>
                                     </tr>
                                     <tr>
                                         <th>Ngày sinh</th>
-                                        <td>01/02/0123</td>
+                                        <td>{userInfo.dateOfBirth}</td>
                                     </tr>
                                     <tr>
                                         <th>Địa chỉ</th>
-                                        <td>Hoà Khánh, Đà Nẵng</td>
+                                        <td>{userInfo.address}</td>
                                     </tr>
                                     <tr>
                                         <th>Số điện thoại</th>
-                                        <td>0123456789</td>
+                                        <td>{userInfo.phoneNumber}</td>
                                     </tr>
                                     </tbody>
                                 </table>
+                                }
                                 <form className="form-operation">
                                     <div className="old-password form-element">
                                         <label>Mật khẩu cũ: </label>
