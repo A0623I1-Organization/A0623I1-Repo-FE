@@ -29,7 +29,7 @@ export function PersonInfo() {
     return (
         <div className="app-container">
             <HeaderDashboard parentCallback={callbackFunction}></HeaderDashboard>
-            <div className={"content-wrapper"}>
+            <div id="content-wrapper">
                 <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
                 <div className="app-content">
                     <div className="content-body">

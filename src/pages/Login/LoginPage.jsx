@@ -35,7 +35,7 @@ function LoginPage(props) {
     }
 
     return (
-        <div className="container">
+        <div id="login-page">
             <div className="header">
                 <div className="logo-brand">
                     <img src={logo} alt="logo"/>
