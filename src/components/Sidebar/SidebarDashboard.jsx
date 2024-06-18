@@ -1,10 +1,15 @@
 import "./sidebarDashboard.scss";
 import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import * as authenticationService from "../../services/auth/AuthenticationService";
 
 export function SidebarDashboard(props) {
     const [sidebarActive, setSidebarActive] = useState(props.showSidebar);
     const [showDropdown, setShowDropdown] = useState("");
+    const isAdmin = authenticationService.isAdmin();
+    const isSalesMan = authenticationService.isSalesMan();
+    const isWarehouse = authenticationService.isWarehouse();
+    const isStoreManager = authenticationService.isStoreManager();
 
     useEffect(() => {
         setSidebarActive(props.showSidebar);
@@ -35,7 +40,7 @@ export function SidebarDashboard(props) {
                         <span>Dashboard</span>
                     </a>
                 </li>
-                <li className="sidebar-list-item paste-button active" >
+                {(isSalesMan || isAdmin) && <li className="sidebar-list-item paste-button active" >
                     <a className="show-dropdown" onClick={()=>handleToggleDropdown("salesMan")}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -69,14 +74,14 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "salesMan" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/person-info"}>Personal information</Link>
+                        <Link to={"/dashboard/infor"}>Personal information</Link>
                         <a href="#">Warehouse</a>
                         <a href="#">Payment</a>
                         <a href="#">Statistical</a>
                         <a href="#">Notice from management</a>
                     </div>
-                </li>
-                <li className="sidebar-list-item paste-button">
+                </li>}
+                {(isWarehouse || isAdmin) && <li className="sidebar-list-item paste-button">
                     <a className="show-dropdown" onClick={()=>handleToggleDropdown("warehouse")}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -94,29 +99,29 @@ export function SidebarDashboard(props) {
                             <path d="M22 12A10 10 0 0 0 12 2v10z"/>
                         </svg>
                         <span>
-          Warehouse Manager
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={16}
-              height={16}
-              viewBox="0 0 512 512"
-          >
-            <path
-                d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8
-          29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"
-            />
-          </svg>
-        </span>
+                          Warehouse Manager
+                          <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width={16}
+                              height={16}
+                              viewBox="0 0 512 512"
+                          >
+                            <path
+                                d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8
+                          29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"
+                            />
+                          </svg>
+                        </span>
                     </a>
                     <div className={showDropdown === "warehouse" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/person-info"}>Personal information</Link>
+                        <Link to={"/dashboard/infor"}>Personal information</Link>
                         <a href="#">Warehouse</a>
                         <a href="#">Data entry</a>
                         <a href="#">Statistical</a>
                         <a href="#">Notice from management</a>
                     </div>
-                </li>
-                <li className="sidebar-list-item paste-button">
+                </li>}
+                {(isStoreManager || isAdmin) && <li className="sidebar-list-item paste-button">
                     <a className="show-dropdown" onClick={()=>handleToggleDropdown("storeManager")}>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -135,22 +140,22 @@ export function SidebarDashboard(props) {
                                 d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
                         </svg>
                         <span>
-          Store Manager
-          <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={16}
-              height={16}
-              viewBox="0 0 512 512"
-          >
-            <path
-                d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8
-          29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"
-            />
-          </svg>
-        </span>
+                          Store Manager
+                          <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width={16}
+                              height={16}
+                              viewBox="0 0 512 512"
+                          >
+                            <path
+                                d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8
+                          29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"
+                            />
+                          </svg>
+                        </span>
                     </a>
                     <div className={showDropdown === "storeManager" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/person-info"}>Personal information</Link>
+                        <Link to={"/dashboard/infor"}>Personal information</Link>
                         <a href="#">Warehouse</a>
                         <a href="#">Report</a>
                         <a href="#">Customer management</a>
@@ -158,7 +163,7 @@ export function SidebarDashboard(props) {
                         <a href="#">Notification</a>
                         <a href="#">Backup/Restore</a>
                     </div>
-                </li>
+                </li>}
                 <li className="sidebar-list-item">
                     <a className="show-dropdown">
                         <svg
@@ -181,6 +186,5 @@ export function SidebarDashboard(props) {
                 </li>
             </ul>
         </aside>
-
     );
 }
