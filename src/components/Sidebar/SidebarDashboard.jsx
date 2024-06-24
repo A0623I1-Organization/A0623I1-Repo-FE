@@ -159,7 +159,7 @@ export function SidebarDashboard(props) {
                         <a href="#">Warehouse</a>
                         <a href="#">Report</a>
                         <a href="#">Customer management</a>
-                        <a href="#">Employee management</a>
+                        <Link to={"/dashboard/employee-list"}>Employee management</Link>
                         <a href="#">Notification</a>
                         <a href="#">Backup/Restore</a>
                     </div>

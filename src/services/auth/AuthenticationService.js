@@ -26,8 +26,8 @@ export const getAllUsers = async (token) =>{
     try{
         const response = await axios.get(`${baseURL}/admin/get-all-users`,
             {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+            headers: {Authorization: `Bearer ${token}`}
+        })
         return response.data;
     }catch(err){
         throw err;
@@ -41,6 +41,7 @@ export const getYourProfile = async (token) => {
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
+        console.log(response.data)
         return response.data;
     }catch(err){
         throw err;
@@ -72,8 +73,9 @@ export const deleteUser = async (userId, token) =>{
 }
 
 
-export const updateUser = async (userId, userData, token) => {
+export const updateUser = async (userData, token) => {
     try{
+        const userId = userData.userId;
         const response = await axios.put(`${baseURL}/admin/update/${userId}`, userData,
             {
                 headers: {Authorization: `Bearer ${token}`}
@@ -91,7 +93,7 @@ export const logout = () => {
 }
 
 export const isAuthenticated = () =>{
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem('token');
     return !!token
 }
 

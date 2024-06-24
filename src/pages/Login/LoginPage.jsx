@@ -23,7 +23,6 @@ function LoginPage(props) {
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
                 const decodedToken = jwtDecode(userData.token);
-                console.log(decodedToken.roles);
                 navigate("/dashboard");
                 toast.success("Login successfully!");
             } else{
@@ -35,7 +34,7 @@ function LoginPage(props) {
     }
 
     return (
-        <div className="container">
+        <div id="container">
             <div className="header">
                 <div className="logo-brand">
                     <img src={logo} alt="logo"/>
