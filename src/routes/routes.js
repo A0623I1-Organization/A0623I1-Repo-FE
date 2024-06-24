@@ -5,6 +5,7 @@ import LoginPage from '../pages/Login/LoginPage';
 import NewsPage from '../pages/News/NewsPage';
 import { Dashboard } from '../pages/Dashboard/Dashboard';
 import { PersonInfo } from '../pages/Dashboard/PersonInfo/PersonInfo';
+import ImportPricing from '../components/Inventory/ImportPricing'
 import * as authenticationService from "../services/auth/AuthenticationService";
 
 function Approutes(props) {
@@ -14,6 +15,7 @@ function Approutes(props) {
         <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path='/dashboard/import' element={<ImportPricing/>}/>
             {isAuthenticated && <Route path="/dashboard" element={<Dashboard />} />}
             {isAuthenticated && <Route path="/dashboard/infor" element={<PersonInfo />} />}
             <Route path="/news" element={<NewsPage />} />
