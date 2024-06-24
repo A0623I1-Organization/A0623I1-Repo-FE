@@ -30,17 +30,17 @@ const routes = [
     private: true,
   },
   {
-    path: '/dashboard/employee',
+    path: '/dashboard/employee-list',
     element: <EmployeeList />,
     private: true,
   },
   {
-    path: '/dashboard/employee/create',
+    path: '/dashboard/employee-create',
     element: <EmployeeCreate />,
     private: true,
   },
   {
-    path: '/dashboard/employee/create/:id',
+    path: '/dashboard/employee-create/:id',
     element: <EmployeeCreate />,
     private: true,
   },

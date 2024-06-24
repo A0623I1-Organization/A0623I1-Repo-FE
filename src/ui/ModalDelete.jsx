@@ -6,7 +6,7 @@ export default function Modal({ isOpen, onClose, title, content, submit }) {
 
 if (!isOpen) return null;
 
-  return (
+  return (  
     <Dialog className="relative z-10" open={isOpen} onClose={onClose}>
       <DialogBackdrop
         transition
