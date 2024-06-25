@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 
 import logo from "../../assets/images/logo.png";
 import "./LoginPage.scss";
@@ -10,12 +10,16 @@ import {useState} from "react";
 import {jwtDecode} from "jwt-decode";
 
 function LoginPage(props) {
+    const isAuthenticated = authenticationService.isAuthenticated();
+    const navigate = useNavigate();
     const [error, setError] = useState('')
     const {register, handleSubmit, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
 
-    const navigate = useNavigate();
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard" />
+    }
 
     const onSubmit = async (data) => {
         try {

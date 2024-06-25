@@ -2,7 +2,7 @@ import React from 'react';
 // import '../HomePage.scss'
 import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
-import ZaloChat from '../../../components/ui/ZaloChat';
+import ZaloChat from '../../../ui/ZaloChat';
 
 function Main(props) {
     return (
