@@ -28,6 +28,7 @@ function LoginPage(props) {
             const userData = await authenticationService.login(data);
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
+                localStorage.setItem('fullName', userData.fullName);
                 const decodedToken = jwtDecode(userData.token);
                 navigate("/dashboard");
                 toast.success("Login successfully!");

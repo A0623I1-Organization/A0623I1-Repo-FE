@@ -37,7 +37,7 @@ export function SidebarDashboard(props) {
                             <path
                                 d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
                         </svg>
-                        <span>Dashboard</span>
+                        <span>Trang quản lý</span>
                     </a>
                 </li>
                 {(isSalesMan || isAdmin) && <li className="sidebar-list-item paste-button active" >
@@ -59,7 +59,7 @@ export function SidebarDashboard(props) {
                             <path d="M16 10a4 4 0 0 1-8 0"/>
                         </svg>
                         <span>
-                          Salesman
+                          Người bán hàng
                           <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width={16}
@@ -74,11 +74,11 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "salesMan" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/dashboard/infor"}>Personal information</Link>
-                        <a href="#">Warehouse</a>
-                        <a href="#">Payment</a>
-                        <a href="#">Statistical</a>
-                        <a href="#">Notice from management</a>
+                        <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
+                        <a href="#">Nhà kho</a>
+                        <a href="#">Thanh toán</a>
+                        <a href="#">Thống kê</a>
+                        <a href="#">Xem thông báo</a>
                     </div>
                 </li>}
                 {(isWarehouse || isAdmin) && <li className="sidebar-list-item paste-button">
@@ -99,7 +99,7 @@ export function SidebarDashboard(props) {
                             <path d="M22 12A10 10 0 0 0 12 2v10z"/>
                         </svg>
                         <span>
-                          Warehouse Manager
+                          Quản lý kho
                           <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width={16}
@@ -114,11 +114,11 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "warehouse" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/dashboard/infor"}>Personal information</Link>
-                        <a href="#">Warehouse</a>
-                        <a href="#">Data entry</a>
-                        <a href="#">Statistical</a>
-                        <a href="#">Notice from management</a>
+                        <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
+                        <a href="#">Nhà kho</a>
+                        <a href="#">Nhập liệu</a>
+                        <a href="#">Thống kê</a>
+                        <a href="#">Xem thông báo</a>
                     </div>
                 </li>}
                 {(isStoreManager || isAdmin) && <li className="sidebar-list-item paste-button">
@@ -140,7 +140,7 @@ export function SidebarDashboard(props) {
                                 d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
                         </svg>
                         <span>
-                          Store Manager
+                          Quản lý cửa hàng
                           <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width={16}
@@ -155,13 +155,13 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "storeManager" ? "dropdown-content show" : "dropdown-content"}>
-                        <Link to={"/dashboard/infor"}>Personal information</Link>
-                        <a href="#">Warehouse</a>
-                        <a href="#">Report</a>
-                        <a href="#">Customer management</a>
-                        <Link to={"/dashboard/employee-list"}>Employee management</Link>
-                        <a href="#">Notification</a>
-                        <a href="#">Backup/Restore</a>
+                        <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
+                        <a href="#">Nhà kho</a>
+                        <a href="#">Xem báo cáo</a>
+                        <a href="#">Quản lý khách hàng</a>
+                        <Link to={"/dashboard/employee-list"}>Quản lý nhân viên</Link>
+                        <a href="#">Đăng thông báo</a>
+                        <a href="#">Sao lưu/Khôi phục</a>
                     </div>
                 </li>}
                 <li className="sidebar-list-item">
@@ -181,7 +181,7 @@ export function SidebarDashboard(props) {
                             <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                         </svg>
-                        <span>News</span>
+                        <span>Tin tức</span>
                     </a>
                 </li>
             </ul>
