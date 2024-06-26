@@ -1,13 +1,44 @@
-import {Link} from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 
 import logo from "../../assets/images/logo.png";
 import "./LoginPage.scss";
 import FooterHome from "../../components/Footer/FooterHome";
+import {useForm} from "react-hook-form";
+import * as authenticationService from "../../services/auth/AuthenticationService";
+import {toast} from "react-toastify";
+import {useState} from "react";
+import {jwtDecode} from "jwt-decode";
 
 function LoginPage(props) {
+    const isAuthenticated = authenticationService.isAuthenticated();
+    const navigate = useNavigate();  
+    const [error, setError] = useState('')
+    const {register, handleSubmit, formState: {errors}} = useForm({
+        criteriaMode: "all"
+    });
+
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard" />
+    }
+
+    const onSubmit = async (data) => {
+        try {
+            const userData = await authenticationService.login(data);
+            if (userData.token) {
+                localStorage.setItem('token', userData.token);
+                const decodedToken = jwtDecode(userData.token);
+                navigate("/dashboard");
+                toast.success("Login successfully!");
+            } else{
+                setError(userData.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    }
 
     return (
-        <div id="login-page">
+        <div id="container">
             <div className="header">
                 <div className="logo-brand">
                     <img src={logo} alt="logo"/>
@@ -23,15 +54,16 @@ function LoginPage(props) {
                     <div className="form-box">
                         <div className="form sign_in">
                             <h3>Đăng nhập</h3>
-                            <form action="#" id="form_input">
+                            <form onSubmit={handleSubmit(onSubmit)} id="form_input">
                                 <div className="type">
                                     <input
-                                        type="text"
+                                        type="text" {...register("username")}
                                         className="login-input"
                                         placeholder="Username"
-                                        name=""
                                         id="username"
                                     />
+                                    {errors.username && <p style={{color: "red", fontSize: "16px"}}>{errors.username.message}</p>}
+
                                     <div className="popup">
                                         <p className="validate-error">
                                             Tên đăng nhập hoặc mật khẩu không đúng!!!
@@ -40,12 +72,13 @@ function LoginPage(props) {
                                 </div>
                                 <div className="type">
                                     <input
-                                        type="password"
+                                        type="password" {...register("password")}
                                         className="login-input"
                                         placeholder="Password"
-                                        name=""
                                         id="password"
                                     />
+                                    {errors.password && <p style={{color: "red", fontSize: "16px"}}>{errors.password.message}</p>}
+
                                 </div>
                                 <div className="remember-me-and-forgot">
                                     <label>

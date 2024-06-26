@@ -26,7 +26,7 @@
             .content-header {
                 width: 100%;
                 display: flex;
-                justify-content: space-between;
+                justify-content: flex-start;
                 align-items: center;
 
                 .box-element {
@@ -555,7 +555,7 @@
                                 outline: none;
                                 background-color: var(--sidebar);
                                 margin-left: 10px;
-                                font-size: 16px;
+                                font-size: 13px;
                                 border-radius: 25px;
                                 text-align: center;
                                 height: 35px;
