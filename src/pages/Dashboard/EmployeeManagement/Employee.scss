@@ -231,6 +231,12 @@
 
               span.inputValue {
                 font-weight: 400;
+                position: relative;
+                svg {
+                  position: absolute;
+                  top: 6px;
+                  right: 10px;
+                }
               }
 
 

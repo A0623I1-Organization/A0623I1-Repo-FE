@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './assets/styles/global.scss';
 import routes from './routes/routes';
-//Thư viện tạo hiệu ứng 
+//Thư viện tạo hiệu ứng
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import PrivateRoute from './utils/PrivateRoute';
@@ -21,7 +21,7 @@ function App() {
               />
             );
           }
-          
+
           return (
             <Route
               key={index}
