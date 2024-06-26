@@ -256,8 +256,8 @@ function HeaderHome(props) {
                 </ul>
                 <ul>
                     <li>
-                        <Link to={"/login"} className={styles.btn}>
-                            Đăng nhập
+                        <Link to={"/tra-cuu-don-hang"} className={styles.btn}>
+                            Đơn hàng
                         </Link>
                     </li>
                     {/* <li>Đăng ký</li> */}

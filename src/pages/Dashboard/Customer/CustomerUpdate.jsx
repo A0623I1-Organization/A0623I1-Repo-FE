@@ -66,7 +66,7 @@ function CustomerUpdate() {
                                 </label>
                             </div>
                             <div className="item2">
-                                <input type="submit" className="btn add" defaultValue="Sửa" />
+                                <input type="submit" className="btn add" value="Sửa" />
                                 <input
                                     onClick={openModal}
                                     type="button"
