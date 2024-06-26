@@ -39,7 +39,7 @@ if (!isOpen) return null;
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               <button
                 type="button"
-                className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm  text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto border-none cursor-pointer"
+                className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm  text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto border-none cursor-pointer"
                 onClick={submit}
               >
                 Xác nhận
