@@ -28,7 +28,6 @@ function SideBar({status}) {
                 <div className={styles.menuBottom}>
                     <ul>
                         <li>Tư vấn Zalo</li>
-                        <li>Đăng nhập</li>
                         <li>Đơn hàng của tôi</li>
                         <li>Hệ thống cửa hàng</li>
                         <li>Chính sách hỗ trợ</li>

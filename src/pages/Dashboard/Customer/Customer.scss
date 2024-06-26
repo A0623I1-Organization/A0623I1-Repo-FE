@@ -28,8 +28,8 @@
           .form{
               width: 80%;
               height: 80%;
-              border: 1px solid #4ade80;
-              background-color: white;
+            //   border: 1px solid #4ade80;
+            //   background-color: white;
               border-radius: 4px;
               padding: 8px;
               .item1{
@@ -39,10 +39,16 @@
                       width: 50%;
                       padding: 8px;
                       display: flex;
-                      align-items: center;
+                    //   align-items: center;
+                      flex-wrap: wrap;
                       span{
                           width: 25%;
                           min-width: 110px;
+                      }
+                      small{
+                        width: 100%;
+                        color: red;
+                        padding-left: 110px;
                       }
                       input,select{
                           padding: 10px;
@@ -120,6 +126,9 @@
                   .item1{
                       label{
                           width: 100%;
+                          small{
+                            padding-left: 25%;
+                          }
                       }
                   }
               }
@@ -140,6 +149,9 @@
                           }
                           span{
                               margin-bottom: 8px;
+                          }
+                          small{
+                            padding-left: 0;
                           }
   
                       }

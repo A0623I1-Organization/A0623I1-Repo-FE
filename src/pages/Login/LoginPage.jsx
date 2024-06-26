@@ -8,9 +8,11 @@ import * as authenticationService from "../../services/auth/AuthenticationServic
 import {toast} from "react-toastify";
 import {useState} from "react";
 import {jwtDecode} from "jwt-decode";
+import {FaEye, FaEyeSlash} from "react-icons/fa";
 
 function LoginPage(props) {
     const isAuthenticated = authenticationService.isAuthenticated();
+    const [openEye, setOpenEye] = useState(false);
     const navigate = useNavigate();
     const [error, setError] = useState('')
     const {register, handleSubmit, formState: {errors}} = useForm({
@@ -59,7 +61,7 @@ function LoginPage(props) {
                                     <input
                                         type="text" {...register("username")}
                                         className="login-input"
-                                        placeholder="Username"
+                                        placeholder="Tên đăng nhập"
                                         id="username"
                                     />
                                     {errors.username && <p style={{color: "red", fontSize: "16px"}}>{errors.username.message}</p>}
@@ -72,11 +74,12 @@ function LoginPage(props) {
                                 </div>
                                 <div className="type">
                                     <input
-                                        type="password" {...register("password")}
+                                        type={openEye ? "text" : "password"} {...register("password")}
                                         className="login-input"
-                                        placeholder="Password"
+                                        placeholder="Mật khẩu"
                                         id="password"
                                     />
+                                    {openEye ? <FaEye onClick={() => setOpenEye(!openEye)}></FaEye>: <FaEyeSlash onClick={() => setOpenEye(!openEye)}></FaEyeSlash>}
                                     {errors.password && <p style={{color: "red", fontSize: "16px"}}>{errors.password.message}</p>}
 
                                 </div>
@@ -85,7 +88,6 @@ function LoginPage(props) {
                                         <input type="checkbox" name="remember" defaultValue="true"/>
                                         Ghi nhớ đăng nhập
                                     </label>
-                                    <a href="#">Quên mật khẩu?</a>
                                 </div>
                                 <button className="btn bkg">Đăng nhập</button>
                             </form>

@@ -12,6 +12,7 @@ function CustomerCreate() {
                             <label htmlFor="">
                                 <span>Mã khách hàng</span>
                                 <input type="text" name="" placeholder="" />
+                                {/* <small>Mã khách hàng không hợp lệ!</small> */}
                             </label>
                             <label htmlFor="">
                                 <span>Giới tính</span>
@@ -43,7 +44,7 @@ function CustomerCreate() {
                             </label>
                         </div>
                         <div className="item2">
-                            <input type="submit" className="btn add" defaultValue="Thêm" />
+                            <input type="submit" className="btn add" value="Thêm" />
                             <input type="button" className="btn cancel" defaultValue="Hủy" />
                         </div>
                     </form>

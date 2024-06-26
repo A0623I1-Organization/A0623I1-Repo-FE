@@ -106,13 +106,13 @@ export const isAdmin = () =>{
 export const isWarehouse = () =>{
     const token = localStorage.getItem('token')
     const decodedToken = jwtDecode(token);
-    return decodedToken.roles === 'ROLE_WAREHOUSE_MANAGER';
+    return decodedToken.roles === 'ROLE_WAREHOUSE';
 }
 
 export const isSalesMan = () =>{
     const token = localStorage.getItem('token')
     const decodedToken = jwtDecode(token);
-    return decodedToken.roles === 'ROLE_SALES';
+    return decodedToken.roles === 'ROLE_SALESMAN';
 }
 
 export const isStoreManager = () =>{

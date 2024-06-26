@@ -50,7 +50,7 @@ const routes = [
     private: true,
   },
   {
-    path: '/dashboard/customer/update',
+    path: '/dashboard/customer/update/:id',
     element: <CustomerUpdate />,
     private: true,
   },
