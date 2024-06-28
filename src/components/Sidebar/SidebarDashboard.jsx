@@ -70,8 +70,9 @@ export function SidebarDashboard(props) {
                     </a>
                     <div className={showDropdown === "salesMan" ? "dropdown-content show" : "dropdown-content"}>
                         <Link to={"/person-info"}>Personal information</Link>
-                        <a href="#">Warehouse</a>
-                        <a href="#">Payment</a>
+                        <Link to={"/warehouse"}>Warehouse</Link>
+                        {/*<Link to={"/dashboard/main"}>Main</Link>*/}
+                        <Link to={"/payment"}>Payment</Link>
                         <a href="#">Statistical</a>
                         <a href="#">Notice from management</a>
                     </div>
@@ -110,7 +111,7 @@ export function SidebarDashboard(props) {
                     </a>
                     <div className={showDropdown === "warehouse" ? "dropdown-content show" : "dropdown-content"}>
                         <Link to={"/person-info"}>Personal information</Link>
-                        <a href="#">Warehouse</a>
+                        <Link to={"/warehouse"}>Warehouse</Link>
                         <a href="#">Data entry</a>
                         <a href="#">Statistical</a>
                         <a href="#">Notice from management</a>

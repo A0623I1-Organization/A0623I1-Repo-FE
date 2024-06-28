@@ -3,7 +3,7 @@ import {SidebarDashboard} from "../../components/Sidebar/SidebarDashboard";
 import "./Dashboard.scss";
 import {useState} from "react";
 
-export function Dashboard() {
+export function Dashboard(props) {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
 
     const callbackFunction = (childData) => {
@@ -17,6 +17,7 @@ export function Dashboard() {
                 <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
                 <div className="app-content">
                     <div className="content-body">
+
                         <div className="content-header">
                             <div className="guest box-element">
                                 <div className="icon-sta">
