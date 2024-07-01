@@ -3,17 +3,11 @@ import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage
 import QRCode from 'qrcode';
 
 export const generateAndUploadQRCode = async (productData) => {
-    const { productId, pricingId, pricingCode, pricingName, price, size, color, pricingImgUrl } = productData;
+    const {  pricingCode, pricingName } = productData;
 
     const qrData = JSON.stringify({
-        productId,
-        pricingId,
         pricingCode,
-        pricingName,
-        price,
-        size,
-        color,
-        pricingImgUrl
+        pricingName
     });
 
     try {
@@ -29,7 +23,7 @@ export const generateAndUploadQRCode = async (productData) => {
         const qrImageBlob = await fetch(qrDataURL).then(res => res.blob());
 
         // Đường dẫn lưu trữ trên Firebase Storage
-        const fileName = `product_${productId}.png`;
+        const fileName = `product_${pricingCode}.png`;
         const filePath = `QR/${fileName}`;
 
         // Tham chiếu đến vị trí lưu trữ trên Firebase Storage
@@ -47,6 +41,6 @@ export const generateAndUploadQRCode = async (productData) => {
         return qrImageUrl; // Trả về đường dẫn public của ảnh QR trên Firebase Storage
     } catch (error) {
         console.error('Error uploading QR Code to Firebase:', error);
-        throw error; // Ném lỗi để xử lý ở bước gọi hàm này
+        throw error;
     }
 };

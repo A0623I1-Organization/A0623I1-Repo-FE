@@ -5,6 +5,7 @@ import './warehouse.scss';
 import * as productService from '../../../services/products/product-service';
 import {NavLink, useNavigate} from "react-router-dom";
 import DownloadImageFromFireBase from "../../../firebase/DownloadImageFromFireBase";
+import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
 
 export const WareHouse = () => {
     const navigate = useNavigate()
@@ -46,7 +47,7 @@ export const WareHouse = () => {
         }
     };
     const showView = (productId) => {
-        navigate(`/pricingView`, {state: {productId: productId}})
+        navigate(`/dashboard/pricingView`, {state: {productId: productId}})
     }
     // Function to generate array of page numbers for pagination
     const getPageNumbers = () => {
@@ -78,14 +79,10 @@ export const WareHouse = () => {
     };
 
     return (
-        <div className="app-container">
-            <HeaderDashboard parentCallback={callbackFunction} />
-            <div className="content-wrapper">
-                <SidebarDashboard showSidebar={isShowSidebar} />
-                <div className="app-content">
+       <DashboardMain content={
                     <div className="content-body">
                         <div className="nav-link-container">
-                            <NavLink className="nav-link" to='/create-pricing'>Thêm Hàng Hóa</NavLink>
+                            <NavLink className="nav-link" to='/dashboard/create-pricing'>Thêm Hàng Hóa</NavLink>
                         </div>
                         <div className="header-search">
                             {/* Header search content */}
@@ -108,7 +105,8 @@ export const WareHouse = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {products?.map((item, index) => (
+                                {  products.length===0 ? <h3 className='container'>Không có kết quả</h3>:
+                                    products?.map((item, index) => (
                                     <tr key={item.productId}>
                                         <td>{index + 1}</td>
                                         <td>{item.productCode}</td>
@@ -141,8 +139,6 @@ export const WareHouse = () => {
                             <button onClick={handleNext} hidden={page === totalPages - 1}>Next</button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+       }/>
     );
 };

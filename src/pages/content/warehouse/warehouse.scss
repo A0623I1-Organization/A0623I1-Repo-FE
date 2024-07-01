@@ -22,10 +22,17 @@
   }
 }
 
+
+
 .data-table {
+  max-height: 900px;
+  overflow-y: auto;
+
   table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 20px;
+    border-radius: 8px; /* Bo tròn các góc của bảng */
 
     th, td {
       border: 1px solid #ddd;
@@ -37,11 +44,22 @@
       background-color: #f2f2f2;
     }
 
-    tbody tr:nth-child(even) {
-      background-color: #f2f2f2;
+    tbody {
+      tr:nth-child(even) {
+        background-color: #f2f2f2; /* Màu nền cho hàng chẵn */
+      }
+
+      tr:nth-child(odd) {
+        background-color:  rgba(242, 242, 242, 0.34); /* Màu nền cho hàng lẻ */
+      }
+
+      tr:hover {
+        background-color: #cce5ff; /* Màu nền khi hover */
+      }
     }
   }
 }
+
 
 .pagination {
   display: flex;
