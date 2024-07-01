@@ -123,7 +123,7 @@ const BillForm = () => {
     console.log(customer)
 
     const fetchUniqueBillCode = () => {
-        generateUniqueCode('HD', `http://localhost:8080/api/bills/checkBillCode`)
+        generateUniqueCode( `http://localhost:8080/api/bills/generateAndCheckBillCode`)
             .then(res => {
                 setBillCode(res);
                 setValue('billCode', res);

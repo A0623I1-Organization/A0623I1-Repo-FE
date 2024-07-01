@@ -80,7 +80,6 @@ const CreatePricing = () => {
             await getAllColor();
             await getAllProductType();
             await  fetchUniqueProductCode();
-            // await  fetchUniquePricingCode();
         };
 
         fetchData().then().catch();
@@ -96,12 +95,12 @@ const CreatePricing = () => {
 
 
     const fetchUniqueProductCode = () => {
-        generateUniqueCode('P',`http://localhost:8080/api/products/checkProductCode`).then(res=>{
+        generateUniqueCode(`http://localhost:8080/api/products/generateAndCheckProductCode`).then(res=>{
             setValue('productCode', res);
         }).catch(err=>console.log(err));
     };
     const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode('H', `http://localhost:8080/api/pricing/checkPricingCode`)
+        return generateUniqueCode(`http://localhost:8080/api/pricing/generateAndCheckPricingCode`)
             .then(res => {
                 setValue(`pricingList[${index}].pricingCode`, res);
                 return res;

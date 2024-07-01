@@ -12,8 +12,6 @@ import { EmployeeCreate } from "../pages/Dashboard/EmployeeManagement/EmployeeCr
 import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
-import {Route, Routes} from "react-router-dom";
-
 
 const routes = [
   {
