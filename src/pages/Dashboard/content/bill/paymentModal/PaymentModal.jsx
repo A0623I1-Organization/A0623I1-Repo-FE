@@ -4,7 +4,7 @@ import styles from './PaymentModal.module.scss';
 const PaymentModal = ({ isOpen, onClose, onPaymentMethodSelect }) => {
     const handlePaymentMethodSelect = (method) => {
         onPaymentMethodSelect(method);
-        onClose(); //
+        onClose();
     };
 
     return (

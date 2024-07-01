@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import './PricingModal.scss';
-import * as pricingService from "../../../../services/products/pricing-service";
+import './CustomerModal.scss';
+import * as customerService from "../../../../../services/customer/customer-service";
 
-const PricingModal = ({ isOpen, onClose, getCustomerId }) => {
-    const [pricings, setPricings] = useState([]);
+const CustomerModal = ({ isOpen, onClose, getCustomer }) => {
+    const [customers, setCustomers] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [page, setPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
-        getAllPricing(page);
+        getAllCustomer(page);
     }, [page]);
 
-    const getAllPricing = (pageNumber) => {
-        pricingService.getAllPricing(pageNumber).then(res => {
-            setPricings(res.content);
+    const getAllCustomer = (pageNumber) => {
+        customerService.getAllCustomer(pageNumber).then(res => {
+            setCustomers(res.content);
             setTotalPages(res.totalPages);
-        }).catch(err => console.error("Error fetching pricings: ", err));
+        }).catch(err => console.error("Error fetching customers: ", err));
     };
 
     const handlePrevious = () => {
@@ -60,9 +60,8 @@ const PricingModal = ({ isOpen, onClose, getCustomerId }) => {
     };
 
     const handleRowClick = (customer) => {
-        alert("Selected customer ID: " + customer.customerId);
         setSearchInput(customer.customerName); // Update searchInput with customer name or any other field
-        getCustomerId(customer.customerCode); // Pass customer ID to parent component
+        getCustomer(customer); // Pass customer ID to parent component
         onClose(); // Close modal after selection
     };
 
@@ -85,16 +84,18 @@ const PricingModal = ({ isOpen, onClose, getCustomerId }) => {
                         <thead>
                         <tr>
                             <th>STT</th>
-                            <th>Mã Hàng</th>
-                            <th>Tên Hàng</th>
+                            <th>Mã khách hàng</th>
+                            <th>Tên khách hàng</th>
+                            <th>Số điện thoại</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {pricings.map((item, index) => (
-                            <tr key={item.pricingId} onClick={() => handleRowClick(item)}>
+                        {customers.map((item, index) => (
+                            <tr key={item.customerId} onClick={() => handleRowClick(item)}>
                                 <td>{index + 1}</td>
-                                <td>{item.pricingCode}</td>
-                                <td>{item.pricingName}</td>
+                                <td>{item.customerCode}</td>
+                                <td>{item.customerName}</td>
+                                <td>{item.phoneNumber}</td>
                             </tr>
                         ))}
                         </tbody>
@@ -114,4 +115,4 @@ const PricingModal = ({ isOpen, onClose, getCustomerId }) => {
     );
 };
 
-export default PricingModal;
+export default CustomerModal;

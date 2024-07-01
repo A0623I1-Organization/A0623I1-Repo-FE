@@ -1,11 +1,11 @@
-import { HeaderDashboard } from "../../../components/Header/HeaderDashboard";
-import { SidebarDashboard } from "../../../components/Sidebar/SidebarDashboard";
+import { HeaderDashboard } from "../../../../components/Header/HeaderDashboard";
+import { SidebarDashboard } from "../../../../components/Sidebar/SidebarDashboard";
 import { useEffect, useState } from "react";
 import './warehouse.scss';
-import * as productService from '../../../services/products/product-service';
+import * as productService from '../../../../services/products/product-service';
 import {NavLink, useNavigate} from "react-router-dom";
-import DownloadImageFromFireBase from "../../../firebase/DownloadImageFromFireBase";
-import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
+import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
+import {DashboardMain} from "../../../../components/Dashboard/DashboardMain";
 
 export const WareHouse = () => {
     const navigate = useNavigate()

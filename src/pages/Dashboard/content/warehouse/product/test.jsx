@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import styles from './createPricing.module.scss';
-import {HeaderDashboard} from '../../../../components/Header/HeaderDashboard';
-import {SidebarDashboard} from '../../../../components/Sidebar/SidebarDashboard';
+import {HeaderDashboard} from '../../../../../components/Header/HeaderDashboard';
+import {SidebarDashboard} from '../../../../../components/Sidebar/SidebarDashboard';
 import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import UploadImage from '../../../../firebase/UploadImage';
-import * as productService from '../../../../services/products/product-service'
-import * as colorService from '../../../../services/products/color-service'
-import * as categoryService from '../../../../services/products/category-service'
-import * as productTypeService from '../../../../services/products/productType-service'
+import UploadImage from '../../../../../firebase/UploadImage';
+import * as productService from '../../../../../services/products/product-service'
+import * as colorService from '../../../../../services/products/color-service'
+import * as categoryService from '../../../../../services/products/category-service'
+import * as productTypeService from '../../../../../services/products/productType-service'
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 const schema = yup.object().shape({

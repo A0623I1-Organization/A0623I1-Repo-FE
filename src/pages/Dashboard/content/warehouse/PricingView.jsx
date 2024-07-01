@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import './warehouse.scss';
-import * as pricingService from '../../../services/products/pricing-service';
+import * as pricingService from '../../../../services/products/pricing-service';
 import {NavLink, useLocation} from "react-router-dom";
-import DownloadImageFromFireBase from "../../../firebase/DownloadImageFromFireBase";
-import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
+import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
+import {DashboardMain} from "../../../../components/Dashboard/DashboardMain";
 
 export const PricingView = () => {
     const {state} = useLocation()

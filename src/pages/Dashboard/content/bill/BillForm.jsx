@@ -3,14 +3,14 @@ import './billForm.scss';
 import QRCodeReader from './scanQr/QRCodeReader';
 import CustomerModal from "./customerModal/CustomerModal";
 import InvoiceModal from "./invoice/InvoiceModal";
-import { DashboardMain } from "../../../components/Dashboard/DashboardMain";
+import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
 import PaymentModal from "./paymentModal/PaymentModal";
-import { generateUniqueCode } from "../../../services/bill/random_mhd";
-import * as pricingService from "../../../services/products/pricing-service"
+import { generateUniqueCode } from "../../../../services/bill/random_mhd";
+import * as pricingService from "../../../../services/products/pricing-service"
 import { useFieldArray, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as billService from "../../../services/bill/bill-service";
+import * as billService from "../../../../services/bill/bill-service";
 import {toast} from "react-toastify";
 import { format } from 'date-fns';
 import {useNavigate} from "react-router-dom";
