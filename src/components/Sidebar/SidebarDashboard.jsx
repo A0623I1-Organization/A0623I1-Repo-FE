@@ -74,6 +74,13 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "salesMan" ? "dropdown-content show" : "dropdown-content"}>
+
+                        <Link to={"/person-info"}>Personal information</Link>
+                        <Link to={"/dashboard/warehouse"}>Warehouse</Link>
+                        {/*<Link to={"/dashboard/main"}>Main</Link>*/}
+                        <Link to={"/dashboard/payment"}>Payment</Link>
+                        <a href="#">Statistical</a>
+                        <a href="#">Notice from management</a>
                         <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
                         <a href="#">Nhà kho</a>
                         <a href="#">Thanh toán</a>
@@ -114,6 +121,12 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "warehouse" ? "dropdown-content show" : "dropdown-content"}>
+                        <Link to={"/person-info"}>Personal information</Link>
+                        <Link to={"/dashboard/warehouse"}>Warehouse</Link>
+                        <a href="#">Data entry</a>
+                        <a href="#">Statistical</a>
+                        <a href="#">Notice from management</a>
+
                         <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
                         <a href="#">Nhà kho</a>
                         <a href="#">Nhập liệu</a>
