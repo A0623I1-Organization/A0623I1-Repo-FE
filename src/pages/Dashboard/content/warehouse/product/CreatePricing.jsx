@@ -27,7 +27,7 @@ const schema = yup.object().shape({
             pricingCode: yup.string().required('Pricing Code is required'),
             price: yup.number().required('Price is required').positive('Price must be positive'),
             size: yup.string().required('Size is required'),
-            qrCode: yup.string().nullable(),
+            qrCode: yup.string().default(''),
             // inventory: yup.number().required('Inventory is required').integer('Inventory must be an integer'),
             color: yup.string().required('Color is required'),
             pricingImgUrl: yup.string().url('Must be a valid URL').required('Pricing Image  is required'),
@@ -333,7 +333,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.size &&
                                         <p>{errors.pricingList[index].size.message}</p>}
                                 </div>
-                                <div className={styles.formGroup}>
+                                <div className={styles.formGroup} style={{display:"none"}}>
                                     <label>QR Code:</label>
                                     <Controller
                                         name={`pricingList[${index}].qrCode`}
