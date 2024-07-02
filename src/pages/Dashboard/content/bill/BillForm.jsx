@@ -119,7 +119,7 @@ const BillForm = () => {
         const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
         setValue("dateCreate", formattedDate);
 
-        fetchUniqueBillCode();
+        // fetchUniqueBillCode();
     }, []);
     console.log(customer)
 
@@ -129,7 +129,8 @@ const BillForm = () => {
                 setBillCode(res);
                 setValue('billCode', res);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err)
+        );
     };
 console.log(billCode)
 console.log(customer.customerCode)
