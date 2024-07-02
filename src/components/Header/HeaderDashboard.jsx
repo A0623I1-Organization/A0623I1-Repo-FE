@@ -1,4 +1,4 @@
-import "./HeaderDashboard.scss";
+import "./headerDashboard.scss";
 import avatar from "./avatar.jpg";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";

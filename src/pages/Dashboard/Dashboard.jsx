@@ -1,4 +1,4 @@
-import { DashboardMain } from "../../components/Dashboard/DashboardMain";
+import {DashboardMain} from "../../components/Dashboard/DashboardMain";
 import "./Dashboard.scss";
 
 export function Dashboard() {
