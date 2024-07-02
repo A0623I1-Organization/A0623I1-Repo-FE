@@ -118,7 +118,7 @@ const BillForm = () => {
         const today = new Date();
         setValue("dateCreate", Moment(today).format("DD/MM/yyyy"));
 
-        fetchUniqueBillCode();
+        // fetchUniqueBillCode();
     }, []);
     console.log(customer)
 
@@ -128,7 +128,8 @@ const BillForm = () => {
                 setBillCode(res);
                 setValue('billCode', res);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err)
+        );
     };
 console.log(billCode)
 console.log(customer.customerCode)
