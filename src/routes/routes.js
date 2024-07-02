@@ -12,26 +12,6 @@ import { EmployeeCreate } from "../pages/Dashboard/EmployeeManagement/EmployeeCr
 import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
-import {Route, Routes} from "react-router-dom";
-function Approutes(props) {
-    return (
-        <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/warehouse" element={<WareHouse/>} />
-            <Route path='/pricingView' element={<PricingView/>}/>
-            <Route path="/create-pricing" element={<CreatePricing/>} />
-            <Route path="/payment" element={<BillForm/>} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/infor" element={<PersonInfo />} />
-            <Route path="/news" element={<NewsPage />} />
-            <Route path="*" element={<NotFound />} />
-        </Routes>
-    );
-}
-
-
-
 
 const routes = [
   {
