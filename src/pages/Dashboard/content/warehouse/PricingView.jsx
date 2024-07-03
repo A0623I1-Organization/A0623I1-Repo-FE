@@ -19,11 +19,11 @@ export const PricingView = () => {
     };
 
     useEffect(() => {
-        console.log(state.productId)
+        console.log(state?.productId)
         console.log(page)
-        getAllPricingByProductId(state.productId, page)
+        getAllPricingByProductId(state?.productId, page)
 
-    }, [state.productId, page]);
+    }, [state?.productId, page]);
     const getAllPricingByProductId = (productId, pageNumber) => {
         pricingService.getAllPricinByProductId(productId, pageNumber).then(res => {
             setPricings(res.content);
@@ -146,7 +146,7 @@ export const PricingView = () => {
                                        {getClassNamesFor('size') === 'ascending' && <span>&#9650;</span>}
                                        {getClassNamesFor('size') === 'descending' && <span>&#9660;</span>}
                                    </th>
-                                   <th>ảnh</th>
+                                   <th>Ảnh</th>
                                    <th onClick={() => requestSort('color.colorName')}>
                                        Màu
                                        {getClassNamesFor('color.colorName') === 'ascending' && <span>&#9650;</span>}

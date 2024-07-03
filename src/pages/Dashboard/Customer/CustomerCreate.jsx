@@ -14,9 +14,7 @@ function CustomerCreate() {
             // reset();
             toast.success("Thêm mới khách hàng thành công")
         } catch (e) {
-            toast.error("Thêm khách hàng thất bại")
-            console.log(e)
-            return;
+            toast.error(`${e}`)
         }
     };
 
