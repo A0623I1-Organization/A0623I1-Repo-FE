@@ -43,20 +43,16 @@ function CustomerUpdate() {
     const closeModal = () => setModalOpen(false);
 
     const handleSubmitDelete = () => {
-        console.log('Xác nhận');
         closeModal();
     };
 
     const onSubmit = async (data) => {
         try {
             await CustomerService.updateCustomer(id,data);
-            console.log(data);
             // reset();
             toast.success("Sửa khách hàng thành công")
         } catch (e) {
-            toast.error("Sửa khách hàng thất bại")
-            console.log(e)
-            return;
+            toast.error(`${e}`)
         }
     };
 

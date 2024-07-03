@@ -76,7 +76,7 @@ const CreatePricing = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getAllCategory();
+            await getAllCategory(); // Xóa bỏ cái asyc await đi nha
             await getAllColor();
             await getAllProductType();
             await  fetchUniqueProductCode();
@@ -119,7 +119,7 @@ const CreatePricing = () => {
     useEffect(() => {
         // Filter product types when selectedCategory changes
         setProductTypesByCategory(
-            productTypes.filter(item => item.category.categoryName === selectedCategory)
+            productTypes?.filter(item => item.category.categoryName === selectedCategory)
         );
     }, [selectedCategory, productTypes]);
 

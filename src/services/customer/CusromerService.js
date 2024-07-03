@@ -6,7 +6,7 @@ export const createCustomer = async (item) => {
         return temp.data;
     } catch (e) {
         console.log(e)
-        throw new Error("Không thể thêm mới!")
+        throw new Error(e.response.data)
     }
 }
 
@@ -16,7 +16,7 @@ export const updateCustomer = async (id,item) => {
         return temp.data;
     } catch (e) {
         console.log(e)
-        throw new Error("Không thể cập nhật!")
+        throw new Error(e.response.data)
     }
 }
 
