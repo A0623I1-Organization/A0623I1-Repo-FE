@@ -1,5 +1,5 @@
-import {HeaderDashboard} from "../../components/Header/HeaderDashboard";
-import {SidebarDashboard} from "../../components/Sidebar/SidebarDashboard";
+import {HeaderDashboard} from "../Header/HeaderDashboard";
+import {SidebarDashboard} from "../Sidebar/SidebarDashboard";
 import {useState} from "react";
 
 export function DashboardMain({content}) {

@@ -3,8 +3,23 @@ import React from 'react';
 import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
 import ZaloChat from '../../../ui/ZaloChat';
+import { useState, useEffect } from 'react';
+import * as ProductService from '../../../services/products/PricingService'
 
 function Main(props) {
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        getAllProducts();
+        console.log(products);
+    }, []);
+
+    const getAllProducts = async () => {
+        const response = await ProductService.getAll();
+        setProducts(response)
+    };
+
     return (
         <main id={styles.main}>
             <section><Slick /></section>
