@@ -1,2 +1,0 @@
-- Hàm hoặc lớp tiện ích mã nguồn giúp thực hiện các tác vụ phổ biến mà nhiều thành phần trong ứng dụng có thể cần đến,
- như xử lý ngày giờ, quản lý chuỗi, hoặc các hàm tính toán
