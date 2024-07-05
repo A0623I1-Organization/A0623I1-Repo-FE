@@ -20,7 +20,7 @@
     background: var(--background-dashboard);
 
     .content-body {
-      margin-top: 100px;
+      margin-top: 60px;
       width: 100%;
 
       .content-header {
@@ -36,10 +36,22 @@
           margin: auto;
           box-shadow: 2px 2px 5px 0 #4d4b4b;
           border-radius: 10px;
+          text-align: center;
           display: flex;
           justify-content: center;
           align-items: center;
-          flex-direction: column;
+          flex-wrap: wrap;
+
+          .element-info {
+            width: 100%;
+          }
+
+          .percentage {
+            width: 100%;
+            svg {
+              display: none;
+            }
+          }
 
           .icon-sta {
             svg {
@@ -48,6 +60,7 @@
           }
 
           .item-name {
+            display: block;
             font-size: 20px;
             font-weight: 600;
             color: var(--app-content-main-color);
@@ -421,10 +434,62 @@
         font-size: 14px;
         .content-header {
           margin-top: 5%;
+          display: block;
+
           .box-element {
-            width: 30%;
+            width: 96%;
+            margin: 2%;
             background-color: var(--sidebar);
             height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            .element-info {
+              width: 60%;
+            }
+            .percentage {
+              position: relative;
+              width: 92px;
+              height: 92px;
+              border-radius: 50%;
+              svg {
+                display: block;
+                width: 7rem;
+                height: 7rem;
+                circle {
+                  fill: none;
+                  stroke-width: 10;
+                  stroke-linecap: round;
+                  stroke-dashoffset: calc(226.2 - (226.2 * 70) / 100);
+                  stroke-dasharray: 226.2;
+                  transition: stroke-dashoffset 1s;
+                  transform: rotate(-90deg);
+                  transform-origin: center;
+                }
+
+                .circle1 {
+                  stroke: #4caf50;
+                }
+                .circle2 {
+                  stroke: #ef0631;
+                }
+                .circle3 {
+                  stroke: #0653f6;
+                }
+              }
+              .item-growth {
+                position: absolute;
+                top: -3px;
+                left: -1px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100%;
+                width: 100%;
+              }
+            }
 
             .icon-sta {
               svg {
@@ -504,8 +569,6 @@
         .content-header {
           margin-top: 12%;
           .box-element {
-            width: 30%;
-            background-color: var(--sidebar);
             height: 200px;
 
             .icon-sta {
