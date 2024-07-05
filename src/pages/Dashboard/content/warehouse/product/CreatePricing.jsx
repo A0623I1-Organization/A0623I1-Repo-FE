@@ -27,7 +27,7 @@ const schema = yup.object().shape({
             pricingCode: yup.string().required('Pricing Code is required'),
             price: yup.number().required('Price is required').positive('Price must be positive'),
             size: yup.string().required('Size is required'),
-            qrCode: yup.string().nullable(),
+            qrCode: yup.string().default(''),
             // inventory: yup.number().required('Inventory is required').integer('Inventory must be an integer'),
             color: yup.string().required('Color is required'),
             pricingImgUrl: yup.string().url('Must be a valid URL').required('Pricing Image  is required'),
@@ -76,11 +76,10 @@ const CreatePricing = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getAllCategory();
+            await getAllCategory(); // Xóa bỏ cái asyc await đi nha
             await getAllColor();
             await getAllProductType();
             await  fetchUniqueProductCode();
-            // await  fetchUniquePricingCode();
         };
 
         fetchData().then().catch();
@@ -96,12 +95,12 @@ const CreatePricing = () => {
 
 
     const fetchUniqueProductCode = () => {
-        generateUniqueCode('P',`http://localhost:8080/api/products/checkProductCode`).then(res=>{
+        generateUniqueCode(`http://localhost:8080/api/products/generateAndCheckProductCode`).then(res=>{
             setValue('productCode', res);
         }).catch(err=>console.log(err));
     };
     const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode('H', `http://localhost:8080/api/pricing/checkPricingCode`)
+        return generateUniqueCode(`http://localhost:8080/api/pricing/generateAndCheckPricingCode`)
             .then(res => {
                 setValue(`pricingList[${index}].pricingCode`, res);
                 return res;
@@ -120,7 +119,7 @@ const CreatePricing = () => {
     useEffect(() => {
         // Filter product types when selectedCategory changes
         setProductTypesByCategory(
-            productTypes.filter(item => item.category.categoryName === selectedCategory)
+            productTypes?.filter(item => item.category.categoryName === selectedCategory)
         );
     }, [selectedCategory, productTypes]);
 
@@ -333,7 +332,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.size &&
                                         <p>{errors.pricingList[index].size.message}</p>}
                                 </div>
-                                <div className={styles.formGroup}>
+                                <div className={styles.formGroup} style={{display:"none"}}>
                                     <label>QR Code:</label>
                                     <Controller
                                         name={`pricingList[${index}].qrCode`}

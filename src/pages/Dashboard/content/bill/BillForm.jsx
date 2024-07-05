@@ -12,8 +12,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as billService from "../../../../services/bill/bill-service";
 import {toast} from "react-toastify";
-import { format } from 'date-fns';
 import {useNavigate} from "react-router-dom";
+import Moment from "moment";
 
 // Define Yup validation schema
 const schema = yup.object().shape({
@@ -116,20 +116,20 @@ const BillForm = () => {
 
     useEffect(() => {
         const today = new Date();
-        const formattedDate = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
-        setValue("dateCreate", formattedDate);
+        setValue("dateCreate", Moment(today).format("DD/MM/yyyy"));
 
-        fetchUniqueBillCode();
+        // fetchUniqueBillCode();
     }, []);
     console.log(customer)
 
     const fetchUniqueBillCode = () => {
-        generateUniqueCode('HD', `http://localhost:8080/api/bills/checkBillCode`)
+        generateUniqueCode( `http://localhost:8080/api/bills/generateAndCheckBillCode`)
             .then(res => {
                 setBillCode(res);
                 setValue('billCode', res);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err)
+        );
     };
 console.log(billCode)
 console.log(customer.customerCode)
@@ -163,7 +163,7 @@ console.log(customer.customerCode)
                     }
                 )),
                 customer: JSON.parse(data.customer),
-                dateCreate: format(new Date(data.dateCreate), 'yyyy-MM-dd'), // Định dạng ngày tháng
+                dateCreate: Moment(data.dateCreate).format("yyyy-MM-DD") // Định dạng ngày tháng
             };
 
             console.log(updatedData);
@@ -272,7 +272,6 @@ console.log(customer.customerCode)
                             <button type="button" id="pay" onClick={openPayModal}>Thanh toán</button>
                             <button type="button" id="printInvoice" onClick={handlePrintInvoice}>In hóa đơn</button>
                             <button type="button" id="cancel">Hủy</button>
-                            <button type="submit">Submit</button>
                         </div>
                         {isQRCodeReaderVisible && <QRCodeReader handleScan={handleScan} handleError={handleError} />}
                     </form>

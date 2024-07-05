@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8080/users";
+const baseURL = "http://localhost:8080/api/auth/users";
 
 export const getAllEmployees = async (token, page, searchContent) => {
     try {

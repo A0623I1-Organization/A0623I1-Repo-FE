@@ -5,7 +5,7 @@ const baseURL = "http://localhost:8080";
 
 export const login = async (data) => {
     try {
-        const response = await axios.post(`${baseURL}/api/auth/authenticate`, data)
+        const response = await axios.post(`${baseURL}/auth/authenticate`, data)
         console.log(response.data);
         return response.data;
     } catch (e) {
@@ -15,7 +15,7 @@ export const login = async (data) => {
 
 export const register = async (userData) => {
     try{
-        const response = await axios.post(`${baseURL}/api/auth/register`, userData)
+        const response = await axios.post(`${baseURL}/auth/register`, userData)
         return response.data;
     }catch(err){
         throw err;
@@ -37,7 +37,7 @@ export const getAllUsers = async (token) =>{
 
 export const getYourProfile = async (token) => {
     try{
-        const response = await axios.get(`${baseURL}/admin-user/get-profile`,
+        const response = await axios.get(`${baseURL}/api/auth/users/me`,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
