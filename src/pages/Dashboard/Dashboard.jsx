@@ -1,5 +1,5 @@
 import {DashboardMain} from "../../components/Dashboard/DashboardMain";
-import "./Dashboard.scss";
+import "./dashboard.scss";
 
 export function Dashboard() {
     return (

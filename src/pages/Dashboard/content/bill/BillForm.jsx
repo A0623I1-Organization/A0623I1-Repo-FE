@@ -14,12 +14,14 @@ import * as billService from "../../../../services/bill/bill-service";
 import {toast} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import Moment from "moment";
+import PromotionModal from "./promotionModal/PromotionModal";
 
 // Define Yup validation schema
 const schema = yup.object().shape({
     billCode: yup.string().required('Mã hóa đơn không được để trống'),
     dateCreate: yup.string().required('Ngày tạo không được để trống'),
     customer: yup.string().required("Mã khách hàng không được để trống"),
+    promotionCode: yup.string().default(''),
     billItemList: yup.array().of(
         yup.object().shape({
             pricing: yup.string().required('ID mặt hàng không được để trống'),
@@ -34,17 +36,18 @@ const BillForm = () => {
     const [isQRCodeReaderVisible, setIsQRCodeReaderVisible] = useState(false);
     const [billItems, setBillItems] = useState([]);
     const [total, setTotal] = useState(0);
-    const [discount, setDiscount] = useState(0);
+    const [discountByCustomerType, setDiscountByCustomerType] = useState(0);
     const [finalTotal, setFinalTotal] = useState(0);
     const [modalOpen, setModalOpen] = useState(false);
     const [printInvoice, setPrintInvoice] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
     const [billCode, setBillCode] = useState('');
     const [pricingCode, setPricingCode] = useState('');
     const [pricingByCode, setPricingByCode] = useState('');
     const [quantity, setQuantity] = useState('');
     const [customer, setCustomer] = useState('');
+    const [promotionCode, setPromotionCode] = useState('');
+    const [discount,setDiscount] = useState('0')
 
     // React Hook Form setup
     const { register, handleSubmit, setValue, control, formState: { errors } } = useForm({
@@ -88,13 +91,22 @@ const BillForm = () => {
             setQuantity('');
             setPricingCode('');
             setTotal(total + newItem.total);
-            setFinalTotal(total + newItem.total - discount);
+            const sum =total + newItem.total -discountByCustomerType*(total + newItem.total )
+            // Update finalTotal based on discount
+            if (discount <= 1) {
+                setFinalTotal(sum -discount*(total + sum));
+            } else {
+                setFinalTotal(sum- discount);
+            }
+
+            // setFinalTotal(total + newItem.total - discount);
 
             append({ pricing: JSON.stringify(pricingByCode), quantity: newItem.quantity });
         } else {
             console.error('Invalid pricing data');
         }
     };
+
     const deleteBillItem = (index) => {
         remove(index); // This removes the item from billItemList managed by react-hook-form
 
@@ -110,7 +122,6 @@ const BillForm = () => {
         // Recalculate total and finalTotal if needed
         const newTotal = updatedBillItems.reduce((acc, item) => acc + item.total, 0);
         setTotal(newTotal);
-        setFinalTotal(newTotal - discount);
     };
 
 
@@ -120,7 +131,7 @@ const BillForm = () => {
 
         // fetchUniqueBillCode();
     }, []);
-    console.log(customer)
+
 
     const fetchUniqueBillCode = () => {
         generateUniqueCode( `http://localhost:8080/api/bills/generateAndCheckBillCode`)
@@ -131,8 +142,7 @@ const BillForm = () => {
             .catch(err => console.log(err)
         );
     };
-console.log(billCode)
-console.log(customer.customerCode)
+
     useEffect(() => {
         fetchPricingByCode(pricingCode);
     }, [pricingCode]);
@@ -166,7 +176,6 @@ console.log(customer.customerCode)
                 dateCreate: Moment(data.dateCreate).format("yyyy-MM-DD") // Định dạng ngày tháng
             };
 
-            console.log(updatedData);
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
@@ -191,19 +200,30 @@ console.log(customer.customerCode)
     const toggleQRCodeReader = () => setIsQRCodeReaderVisible(!isQRCodeReaderVisible);
 
     const handlePrintInvoice = () => setPrintInvoice(true);
-    const handlePaymentMethodSelect = (method) => {
-        setSelectedPaymentMethod(method);
-        if (method === 'cash') {
-            handleSubmit(onSubmit)();
-        } else {
-            console.log('Đang xử lý thanh toán VNPay');
-        }
+    const handlePayment= (promotion) => {
+      setDiscount(promotion.discount);
+      setValue("promotionCode",promotion.promotionCode);
+      handleSubmit(onSubmit)();
+
     };
 
     const handleCustomerSelect = (selectedCustomer) => {
         setCustomer(selectedCustomer);
+        setDiscountByCustomerType(selectedCustomer.customerType.discount);
         setValue("customer", JSON.stringify(selectedCustomer));
+
     };
+    useEffect(() => {
+        // Update finalTotal when discount changes
+        const sum = total - discountByCustomerType*total;
+        let newFinalTotal;
+        if (discount <= 1) {
+            newFinalTotal = sum - discount * (total + sum);
+        } else {
+            newFinalTotal = sum - discount;
+        }
+        setFinalTotal(newFinalTotal);
+    }, [billItems,discount,discountByCustomerType]);
 
     return (
         <DashboardMain
@@ -212,25 +232,25 @@ console.log(customer.customerCode)
                     <form className="bill-form" onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-group">
                             <label htmlFor="billCode">Mã hóa đơn</label>
-                            <input type="text" id="billCode" disabled={true} {...register('billCode')} />
+                            <input type="text" id="billCode" disabled={true} {...register('billCode')} className="input-large" />
                             {errors.billCode && <span>{errors.billCode.message}</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="customerCode">Mã khách hàng</label>
-                            <input type="text" id="customerCode" value={customer?.customerCode || ''} disabled />
+                            <input type="text" id="customerCode" value={customer?.customerCode || ''} disabled className="input-large"/>
                             <button type="button" id="lookupCustomer" onClick={openModal}>Tra cứu khách hàng</button>
                             {errors.customer &&<p>{errors.customer.message}</p>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="date">Ngày tháng năm</label>
-                            <input type="text" id="date"  disabled={true} {...register('dateCreate')} />
+                            <input type="text" id="date"  disabled={true} {...register('dateCreate')} className="input-large"/>
                             {errors.dateCreate && <span>{errors.dateCreate.message}</span>}
                         </div>
                         <div className="form-group">
                             <label htmlFor="itemCode">Mã hàng</label>
-                            <input type="text" id="itemCode" value={pricingCode} onChange={e => setPricingCode(e.target.value)} />
-                            <label htmlFor="quantity">Số lượng</label>
-                            <input type="number" id="quantity" value={quantity} onChange={e => setQuantity(e.target.value)} />
+                            <input type="text" id="itemCode" value={pricingCode} onChange={e => setPricingCode(e.target.value)}   className="input-small" />
+                            <label htmlFor="quantity" style={{marginLeft:'30px'}}>Số lượng</label>
+                            <input type="number" id="quantity" style={{width:'10px'}} value={quantity} onChange={e => setQuantity(e.target.value)}   className="input-small" />
                             <button type="button" id="addItem" onClick={addItem}>Nhập</button>
                         </div>
                         <div className="table-container">
@@ -257,7 +277,8 @@ console.log(customer.customerCode)
                                         <td>{item.size}</td>
                                         <td>{item.price}</td>
                                         <td>{item.total}</td>
-                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>                                    </tr>
+                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>
+                                    </tr>
                                 ))}
                                 </tbody>
                             </table>
@@ -276,10 +297,10 @@ console.log(customer.customerCode)
                         {isQRCodeReaderVisible && <QRCodeReader handleScan={handleScan} handleError={handleError} />}
                     </form>
                     <CustomerModal isOpen={modalOpen} onClose={closeModal} getCustomer={handleCustomerSelect} />
-                    <PaymentModal
+                    <PromotionModal
                         isOpen={isModalOpen}
                         onClose={closePayModal}
-                        onPaymentMethodSelect={handlePaymentMethodSelect}
+                        onPayment={handlePayment}
                     />
                     {printInvoice && (
                         <div className="invoice-print">
