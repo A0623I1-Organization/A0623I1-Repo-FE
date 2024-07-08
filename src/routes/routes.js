@@ -12,6 +12,7 @@ import { EmployeeCreate } from "../pages/Dashboard/EmployeeManagement/EmployeeCr
 import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
+import ImportPricing from '../components/Inventory/ImportPricing';
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
         path: '/dashboard/create-pricing',
         element: <CreatePricing />,
         private: true,
+    },
+    {
+        path: '/dashboard/import-pricing',
+        element: <ImportPricing/>,
+        private: true
     },
     {
         path: '/dashboard/payment',
