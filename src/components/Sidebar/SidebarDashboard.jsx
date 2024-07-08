@@ -44,6 +44,7 @@ export function SidebarDashboard(props) {
                           <TiArrowSortedDown />
                         </span>
                     </a>
+
                     <div className={showDropdown === "salesMan" ? "dropdown-content" : "dropdown-content show"}>
                         <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/warehouse"}>Nhà kho</Link>

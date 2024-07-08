@@ -53,6 +53,7 @@ const CreatePricing = () => {
     const [productImages, setProductImages] = useState([]);
     const [productCode, setProductCode] = useState('');
     const [pricingCode, setPricingCode] = useState('');
+    const [disabled,setDisabled] = useState(true)
     const {control, handleSubmit, formState: {errors}, setValue} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -60,6 +61,9 @@ const CreatePricing = () => {
             productImages: [], // Initialize images as an empty array
         }
     });
+    useEffect(() => {
+        console.log(disabled)
+    }, [disabled]);
 
     const {fields, append, remove} = useFieldArray({
         control,
@@ -343,17 +347,6 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.qrCode &&
                                         <p>{errors.pricingList[index].qrCode.message}</p>}
                                 </div>
-                                {/*<div className={styles.formGroup}>*/}
-                                {/*    <label>Inventory:</label>*/}
-                                {/*    <Controller*/}
-                                {/*        name={`pricingList[${index}].inventory`}*/}
-                                {/*        control={control}*/}
-                                {/*        defaultValue={item.inventory}*/}
-                                {/*        render={({field}) => <input type="number" {...field} />}*/}
-                                {/*    />*/}
-                                {/*    {errors.pricingList?.[index]?.inventory &&*/}
-                                {/*        <p>{errors.pricingList[index].inventory.message}</p>}*/}
-                                {/*</div>*/}
                                 <div className={styles.formGroup}>
                                     <label>Color:</label>
                                     <Controller
@@ -384,7 +377,9 @@ const CreatePricing = () => {
                                         defaultValue={item.pricingImgUrl}
                                         render={({field}) => (
                                             <UploadOneImage
-                                                onImageUrlChange={(url) => handleOneImageUrlChange(url, index)}/>
+                                                onImageUrlChange={(url) => handleOneImageUrlChange(url, index)}
+                                                getDisabled={(e)=>setDisabled(e)}
+                                            />
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
                                         <p>{errors.pricingList[index].pricingImgUrl.message}</p>}
@@ -397,7 +392,7 @@ const CreatePricing = () => {
                         ))}
                     </div>
                     <div className={styles.buttonWrapper}>
-                        <button type="submit" className={styles.submitButton}>
+                        <button type="submit" className={styles.submitButton} disabled={disabled}>
                             Xác nhận
                         </button>
                         <button type="button" onClick={handleAddPricingRow} className={
