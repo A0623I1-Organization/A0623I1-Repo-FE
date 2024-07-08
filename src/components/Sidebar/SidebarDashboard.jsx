@@ -85,7 +85,7 @@ export function SidebarDashboard(props) {
                         <a href="#">Nhà kho</a>
                         <a href="#">Thanh toán</a>
                         <a href="#">Thống kê</a>
-                        <a href="#">Xem thông báo</a>
+                        <Link to={"/dashboard/salesman/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
                 {(isWarehouse || isAdmin) && <li className="sidebar-list-item paste-button">
