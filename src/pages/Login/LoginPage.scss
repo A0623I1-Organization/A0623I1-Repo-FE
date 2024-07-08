@@ -1,4 +1,4 @@
-#login-page {
+#container {
   width: 100%;
 
   .header {
@@ -93,6 +93,7 @@
               height: 48px;
               background-color: #EEEDEF;
               margin: 30px 0;
+              position: relative;
             }
             input {
               width: 100%;
@@ -105,6 +106,12 @@
             }
             input::placeholder {
               color: #A9A8A9;
+            }
+
+            svg {
+              position: absolute;
+              top: 16px;
+              right: 10px;
             }
             .popup {
               width: 250px;
@@ -372,7 +379,70 @@
         border-radius: 0;
       }
     }
+
   }
+
+  /* -----------------------------CSS cho phần Footer (phần cuối trang web) ---------------------------------*/
+  #footer {
+    background-color: #fafafa;
+    border-top: 1px solid #ccc;
+  }
+  #footer .footer-main {
+    padding: 3.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  #footer .footer-main .item {
+    min-width: 25%;
+  }
+  #footer .footer-main .item ul li {
+    margin: 14px 0;
+  }
+  #footer .footer-main .item:nth-child(3) ul + ul {
+    display: flex;
+  }
+  #footer .footer-main .item:nth-child(3) ul + ul li {
+    margin: 0;
+  }
+  #footer .footer-main .item:nth-child(3) ul + ul li svg {
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: #ccc;
+    width: 32px;
+    height: 32px;
+  }
+  #footer .footer-main .item:nth-child(3) ul + ul li + li {
+    margin-left: 16px;
+  }
+  #footer .footer-main .item:nth-child(4) ul + h3 + ul {
+    display: flex;
+  }
+  #footer .footer-main .item:nth-child(4) ul + h3 + ul li + li {
+    margin-left: 8px;
+  }
+  #footer .footer-main .item:nth-child(4) ul li label input, #footer .footer-main .item:nth-child(4) ul li label button {
+    padding: 6px 8px;
+    outline: none;
+    border: 1px solid #ccc;
+  }
+  #footer .footer-main .item:nth-child(4) ul li label button {
+    background-color: orangered;
+    color: white;
+    border: none;
+  }
+  #footer .footer-bottom {
+    background-color: #2d2d2d;
+    text-align: center;
+  }
+  #footer .footer-bottom p {
+    min-height: 55px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
 }
 
 @keyframes Show {

@@ -1,4 +1,4 @@
-import {Link, useNavigate} from "react-router-dom";
+import {Link, Navigate, useNavigate} from "react-router-dom";
 
 import logo from "../../assets/images/logo.png";
 import "./LoginPage.scss";
@@ -8,22 +8,28 @@ import * as authenticationService from "../../services/auth/AuthenticationServic
 import {toast} from "react-toastify";
 import {useState} from "react";
 import {jwtDecode} from "jwt-decode";
+import {FaEye, FaEyeSlash} from "react-icons/fa";
 
 function LoginPage(props) {
+    const isAuthenticated = authenticationService.isAuthenticated();
+    const [openEye, setOpenEye] = useState(false);
+    const navigate = useNavigate();
     const [error, setError] = useState('')
     const {register, handleSubmit, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
 
-    const navigate = useNavigate();
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard" />
+    }
 
     const onSubmit = async (data) => {
         try {
             const userData = await authenticationService.login(data);
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
+                localStorage.setItem('fullName', userData.fullName);
                 const decodedToken = jwtDecode(userData.token);
-                console.log(decodedToken.roles);
                 navigate("/dashboard");
                 toast.success("Login successfully!");
             } else{
@@ -35,7 +41,7 @@ function LoginPage(props) {
     }
 
     return (
-        <div id="login-page">
+        <div id="container">
             <div className="header">
                 <div className="logo-brand">
                     <img src={logo} alt="logo"/>
@@ -56,7 +62,7 @@ function LoginPage(props) {
                                     <input
                                         type="text" {...register("username")}
                                         className="login-input"
-                                        placeholder="Username"
+                                        placeholder="Tên đăng nhập"
                                         id="username"
                                     />
                                     {errors.username && <p style={{color: "red", fontSize: "16px"}}>{errors.username.message}</p>}
@@ -69,11 +75,12 @@ function LoginPage(props) {
                                 </div>
                                 <div className="type">
                                     <input
-                                        type="password" {...register("password")}
+                                        type={openEye ? "text" : "password"} {...register("password")}
                                         className="login-input"
-                                        placeholder="Password"
+                                        placeholder="Mật khẩu"
                                         id="password"
                                     />
+                                    {openEye ? <FaEye onClick={() => setOpenEye(!openEye)}></FaEye>: <FaEyeSlash onClick={() => setOpenEye(!openEye)}></FaEyeSlash>}
                                     {errors.password && <p style={{color: "red", fontSize: "16px"}}>{errors.password.message}</p>}
 
                                 </div>
@@ -82,7 +89,6 @@ function LoginPage(props) {
                                         <input type="checkbox" name="remember" defaultValue="true"/>
                                         Ghi nhớ đăng nhập
                                     </label>
-                                    <a href="#">Quên mật khẩu?</a>
                                 </div>
                                 <button className="btn bkg">Đăng nhập</button>
                             </form>

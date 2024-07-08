@@ -1,4 +1,4 @@
-import "./HeaderDashboard.scss";
+import "./headerDashboard.scss";
 import avatar from "./avatar.jpg";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
@@ -7,7 +7,7 @@ import {jwtDecode} from "jwt-decode";
 
 
 export function HeaderDashboard(props) {
-    const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
 
@@ -18,9 +18,8 @@ export function HeaderDashboard(props) {
     },[])
 
     const getUserName = () => {
-        const token = localStorage.getItem('token')
-        const decodedToken = jwtDecode(token);
-        setUsername(decodedToken.username);
+        const fullName = localStorage.getItem('fullName')
+        setFullName(fullName);
     }
 
     const handleShowUserMenu = () => {
@@ -49,7 +48,7 @@ export function HeaderDashboard(props) {
                 </svg>
             </div>
             <div className="search-header">
-                <input className="search-bar" placeholder="Search..." type="text"/>
+                <input className="search-bar" placeholder="tìm kiếm..." type="text"/>
             </div>
             {/*-------------logon-brand----------*/}
             <div className="logo-brand">
@@ -97,7 +96,7 @@ export function HeaderDashboard(props) {
                             alt="avatar"
                         />
                     </div>
-                    <div className="username">{username}</div>
+                    <div className="username">{fullName}</div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                         <path
                             d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8
@@ -122,7 +121,7 @@ export function HeaderDashboard(props) {
                                 d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
                             />
                         </svg>
-                        Personal information
+                        Thông tin cá nhân
                     </a>
                     <a onClick={handleLogout}>
                         <svg
@@ -142,7 +141,7 @@ export function HeaderDashboard(props) {
                                 d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"
                             />
                         </svg>
-                        Log out
+                        Đăng xuất
                     </a>
                 </div>
                 }
