@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 export const getAll = async () => {
     try {
-        const temp = await axios.get("http://localhost:8080/public/pricings");
+        const temp = await axios.get("http://localhost:8080/api/public/pricings");
         return temp.data;
     } catch (e) {
         console.log(e)
