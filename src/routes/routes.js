@@ -13,9 +13,7 @@ import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
 import ImportPricing from '../components/Inventory/ImportPricing';
-import ListOfNotification from "../components/Notification/list/ListOfNotification";
 import {NotificationList} from "../pages/Dashboard/Notification/NotificationList";
-
 
 const routes = [
     {
@@ -92,81 +90,9 @@ const routes = [
         element: <NewsPage/>,
     },
     {
-        path: '*',
-        element: <NotFound/>,
-    },
-    {
-        path: '/',
-        element: <HomePage/>,
-        exact: true,
-    },
-    {
-        path: '/login',
-        element: <LoginPage/>,
-    },
-    {
-        path: '/dashboard',
-        element: <Dashboard/>,
+        path: '/dashboard/salesman/notification',
+        element: <NotificationList />,
         private: true,
-    },
-    {
-        path: '/dashboard/warehouse',
-        element: <WareHouse/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/pricingView',
-        element: <PricingView/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/create-pricing',
-        element: <CreatePricing/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/payment',
-        element: <BillForm/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/infor',
-        element: <PersonInfo/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/employee-list',
-        element: <EmployeeList/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/employee-create',
-        element: <EmployeeCreate/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/employee-create/:id',
-        element: <EmployeeCreate/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/customer/create',
-        element: <CustomerCreate/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/customer/update/:id',
-        element: <CustomerUpdate/>,
-        private: true,
-    },
-    {
-        path: '/news',
-        element: <NewsPage/>,
-    },
-    {
-    path: '/dashboard/salesman/notification',
-    element: <NotificationList />,
-    private: true,
     },
     {
         path: '*',
