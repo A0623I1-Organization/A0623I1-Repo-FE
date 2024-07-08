@@ -13,6 +13,8 @@ import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
 import ImportPricing from '../components/Inventory/ImportPricing';
+import ListOfNotification from "../components/Notification/list/ListOfNotification";
+import {NotificationList} from "../pages/Dashboard/Notification/NotificationList";
 
 
 const routes = [
@@ -160,6 +162,11 @@ const routes = [
     {
         path: '/news',
         element: <NewsPage/>,
+    },
+    {
+    path: '/dashboard/salesman/notification',
+    element: <NotificationList />,
+    private: true,
     },
     {
         path: '*',
