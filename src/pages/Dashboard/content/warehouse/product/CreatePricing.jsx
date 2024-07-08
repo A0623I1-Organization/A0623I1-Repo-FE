@@ -123,7 +123,7 @@ const CreatePricing = () => {
     useEffect(() => {
         // Filter product types when selectedCategory changes
         setProductTypesByCategory(
-            productTypes.filter(item => item.category.categoryName === selectedCategory)
+            productTypes?.filter(item => item.category?.categoryName === selectedCategory)
         );
     }, [selectedCategory, productTypes]);
 
