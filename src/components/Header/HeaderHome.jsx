@@ -256,9 +256,9 @@ function HeaderHome(props) {
                 </ul>
                 <ul>
                     <li>
-                        <Link to={"/tra-cuu-don-hang"} className={styles.btn}>
+                        <a href='#!' className={styles.btn}>
                             Đơn hàng
-                        </Link>
+                        </a>
                     </li>
                     {/* <li>Đăng ký</li> */}
                 </ul>
