@@ -1,12 +1,13 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8080/api/auth/users";
+const baseURL = "http://localhost:8080/api/users";
 
 export const getAllEmployees = async (token, page, searchContent) => {
     try {
         const temp = await axios.get(`${baseURL}?page=${page}&searchContent=${searchContent}`, {
             headers: {Authorization: `Bearer ${token}`}
         });
+        console.log(temp.data);
         return temp.data.users.content;
     } catch (e) {
         console.log(e)
