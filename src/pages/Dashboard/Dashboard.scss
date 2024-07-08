@@ -153,11 +153,11 @@
               top: 0;
 
               th.emp-name {
-                width: 60%;
+                max-width: 60%;
               }
 
               .emp-price {
-                width: 20%;
+                max-width: 20%;
               }
             }
 
@@ -273,7 +273,7 @@
           .form-operation {
             height: auto;
             padding: 20px;
-            width: 40%;
+            width: 50%;
 
             .form-element {
               margin: 20px 0;
@@ -370,11 +370,11 @@
               }
 
               th.emp-name {
-                width: 100px;
+                max-width: 100px;
               }
 
               .emp-price {
-                width: 20%;
+                max-width: 20%;
               }
             }
 
@@ -638,6 +638,16 @@
           .box-content {
             .table {
               margin: 0 10px;
+            }
+          }
+
+          .flex-content {
+            .form-operation {
+              .form-element {
+                input {
+                  width: 90%;
+                }
+              }
             }
           }
         }

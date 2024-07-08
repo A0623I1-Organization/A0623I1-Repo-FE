@@ -25,7 +25,7 @@ export const PricingView = () => {
 
     }, [state?.productId, page]);
     const getAllPricingByProductId = (productId, pageNumber) => {
-        pricingService.getAllPricinByProductId(productId, pageNumber).then(res => {
+        pricingService.getAllPricingByProductId(productId, pageNumber).then(res => {
             setPricings(res.content);
             console.log(res.content)
             console.log(res.totalPages)
