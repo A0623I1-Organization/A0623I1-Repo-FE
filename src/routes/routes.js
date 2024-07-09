@@ -14,6 +14,7 @@ import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
 import ImportPricing from '../components/Inventory/ImportPricing';
 import {NotificationList} from "../pages/Dashboard/Notification/NotificationList";
+import Loading from '../ui/Loading';
 
 const routes = [
     {
@@ -93,6 +94,10 @@ const routes = [
         path: '/dashboard/salesman/notification',
         element: <NotificationList />,
         private: true,
+    },
+    {
+        path: '/test',  // Ai muốn test thử gì thì dùng đường dẫn này
+        element: <Loading/>,
     },
     {
         path: '*',

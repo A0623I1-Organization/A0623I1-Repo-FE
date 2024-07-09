@@ -14,7 +14,7 @@ function Slick() {
         slidesToScroll: 1,
         autoplay: true,
         pauseOnHover: false,
-        autoplaySpeed: 2000,
+        autoplaySpeed: 3000,
       };
       
     return (
