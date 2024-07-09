@@ -14,7 +14,7 @@ export function HeaderDashboard(props) {
     const [fullName, setFullName] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
-
+    const [darkmode, setDarkmode] = useState(false);
     const navigate = useNavigate();
 
     useEffect(()=> {
@@ -38,6 +38,15 @@ export function HeaderDashboard(props) {
     const handleLogout = () => {
         authenticationService.logout();
         navigate("/login");
+    }
+
+    const handleDarkMode = () => {
+        setDarkmode(!darkmode);
+        if (darkmode) {
+            document.documentElement.classList.add("dark");
+        }else {
+            document.documentElement.classList.remove("dark");
+        }
     }
 
     return (
@@ -92,7 +101,7 @@ export function HeaderDashboard(props) {
                             <FaRegUserCircle/>
                             Thông tin cá nhân
                         </a>
-                        <a className="mode-switch" title="Switch Theme">
+                        <a className="mode-switch" title="Switch Theme" onClick={handleDarkMode}>
                             <FaCloudMoon />
                             Chế độ màn hình tối
                         </a>

@@ -68,6 +68,7 @@ export function EmployeeCreate(){
             data.gender = Number.parseInt(data.gender);
             const token = localStorage.getItem("token");
             let response;
+            console.log(data)
             if (id) {
                 response = await employeeService.updateEmployee(id, data, token);
             } else {
@@ -166,7 +167,7 @@ export function EmployeeCreate(){
                                     </div>
                                     <div className="new-password form-element">
                                     <label>Mật khẩu: </label>
-                                        <input type="password" name="newPassword" {...register("newPassword")}/>
+                                        <input type="password" name="password" {...register("password")}/>
                                         <p className="validate-error">Mật khẩu không đúng định dạng!!</p>
                                     </div>
 
