@@ -66,7 +66,7 @@
         width: 25%;
         text-align: center;
         span {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             background: linear-gradient(to right, #30CFD0 0%, #330867 100%);
             background-clip: text;
@@ -87,8 +87,6 @@
                 position: relative;
                 svg {
                     fill: var(--app-content-main-color);
-                    width: 20px;
-                    height: 20px;
                 }
 
                 .quantity {
@@ -119,6 +117,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0 10px;
             cursor: pointer;
 
             .moon {
@@ -157,8 +156,8 @@
 
             svg {
                 fill: var(--sidebar-main-color);
-                width: 20px;
-                height: 20px;
+                width: 15px;
+                height: 15px;
                 padding: 0 0 5px 5px;
             }
 
@@ -177,25 +176,6 @@
             border: 2px solid var(--table-border);
             background-color: var(--sidebar);
 
-            .user-full-name {
-                padding: 8px 10px;
-                display: none;
-                justify-content: flex-start;
-                align-items: center;
-
-                .avatar {
-                    width: 25px;
-                    border-radius: 50%;
-                    margin-right: 10px;
-                    img {
-                        width: 25px;
-                        border-radius: 50%;
-                    }
-                }
-
-                font-weight: 600;
-            }
-
             a {
                 font-family: "Poppins", sans-serif;
                 color: var(--sidebar-main-color);
@@ -207,8 +187,6 @@
                 svg {
                     fill: var(--sidebar-main-color);
                     margin: 0 5px;
-                    width: 20px;
-                    height: 20px;
                 }
             }
 
@@ -258,12 +236,6 @@
                 border: none;
                 .username {
                     display: none;
-                }
-            }
-
-            .dropdown-content {
-                .user-full-name {
-                    display: flex;
                 }
             }
         }

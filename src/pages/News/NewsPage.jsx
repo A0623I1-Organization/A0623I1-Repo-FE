@@ -1,10 +1,15 @@
 import React from 'react';
+import HeaderHome from '../../components/Header/HeaderHome';
+import FooterHome from '../../components/Footer/FooterHome';
+import MainNews from './MainNews';
 
 function NewsPage(props) {
     return (
-        <div>
-            <h2>Trang tin tức</h2>
-        </div>
+        <>
+            <HeaderHome />
+            <MainNews />
+            <FooterHome />
+        </>
     );
 }
 
