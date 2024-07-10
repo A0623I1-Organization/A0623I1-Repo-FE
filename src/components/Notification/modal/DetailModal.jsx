@@ -11,7 +11,7 @@ export default function DetailModal({notification, showModal,setShowModal}) {
                     <div
                         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
                     >
-                        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                        <div className="relative w-auto my-6 mx-auto max-w-3xl min-w-96">
                             {/*content*/}
                             <div
                                 className="rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -47,7 +47,7 @@ export default function DetailModal({notification, showModal,setShowModal}) {
                                         type="button"
                                         onClick={() => setShowModal(false)}
                                     >
-                                        Close
+                                        Đóng
                                     </button>
                                 </div>
                             </div>
