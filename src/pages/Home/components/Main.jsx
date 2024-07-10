@@ -1,23 +1,61 @@
 import React from 'react';
-// import '../HomePage.scss'
 import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
 import ZaloChat from '../../../ui/ZaloChat';
 import { useState, useEffect } from 'react';
 import * as ProductService from '../../../services/products/PricingService'
+import { fCurrency } from '../../../utils/format-number';
+import Loading from '../../../ui/Loading';
 
 function Main(props) {
 
     const [products, setProducts] = useState([]);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [initialLoad, setInitialLoad] = useState(true); // Trạng thái để kiểm tra lần tải đầu tiên
 
     useEffect(() => {
-        getAllProducts();
-        console.log(products);
-    }, []);
+        if (initialLoad) {
+            loadInitialProducts();
+        }
+    }, [initialLoad]);
 
-    const getAllProducts = async () => {
-        const response = await ProductService.getAll();
-        setProducts(response)
+    const loadInitialProducts = async () => {
+        setLoading(true);
+
+        const response = await ProductService.getAll(0);
+        if (!response || !response.content) {
+            setHasMore(false);
+        } else {
+            setProducts(response.content);
+            setPage(1);
+            if (response.last) {
+                setHasMore(false);
+            }
+        }
+
+        setLoading(false);
+        setInitialLoad(false);
+    };
+
+    const loadMoreProducts = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+
+        const response = await ProductService.getAll(page);
+        if (!response || !response.content) {
+            setHasMore(false);
+        } else {
+            setProducts(prevProducts => [...prevProducts, ...response.content]);
+            setPage(prevPage => prevPage + 1);
+            if (response.last) {
+                setHasMore(false);
+            }
+        }
+
+        setLoading(false);
     };
 
     return (
@@ -102,160 +140,30 @@ function Main(props) {
             <section className={styles.sectionList}>
                 <h3>Sản phẩm mới</h3>
                 <div className={styles.list}>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/acn7004-cam-6.jpg?v=1714533314633"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>215.000 VND</p>
-                                <p>Áo nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-thun-the-thao-nam-stm7061-nav-1.jpg?v=1716339691437"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>238.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/chan-vay-nu-cvn7090-bee-1.jpg?v=1716514305477"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>232.000 VND</p>
-                                <p>Váy</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/quan-au-nu-qan7028-ghd-1.jpg?v=1716514232277"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>345.000 VND</p>
-                                <p>Quần nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-thun-the-thao-nam-stm7073-xam-1.jpg?v=1716273108157"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>135.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/bo-do-nam-bdm7019-den-1.jpg?v=1715658507877"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>435.000 VND</p>
-                                <p>Đồ bộ nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-so-mi-nam-scm7047-tit-1-yodyvn.jpg?v=1715654545740"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/chan-vay-nu-yody-cvn7058-nau-1.jpg?v=1716343150110"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Váy</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/vay-dam-tre-em-tay-bong-yody-vak7110-hog-1.jpg?v=1715048679403"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>135.000 VND</p>
-                                <p>Đồ trẻ em</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-polo-nam-yody-apm7217-tit-4.jpg?v=1716167973680"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>275.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
+                    {products.map(product => (
+                        <div className={styles.item} key={product.id}>
+                            <a href="#!">
+                                <figure>
+                                    <img
+                                        src={product.pricingImgUrl}
+                                        alt={product.pricingName}
+                                        width="100%"
+                                    />
+                                </figure>
+                                <figcaption>
+                                    <p>{fCurrency(product.price)} VND</p>
+                                    <p>{product.pricingName}</p>
+                                </figcaption>
+                            </a>
+                        </div>
+                    ))}
                 </div>
-                <button className={styles.button}>
-                    <a href="#!">Xem thêm</a>
-                </button>
+                {loading && <Loading />}
+                {hasMore && !loading &&
+                    (<button className={styles.button}>
+                        <a href="#!" onClick={loadMoreProducts}>Xem thêm</a>
+                    </button>)
+                }
             </section>
             <section className={styles.sectionBanner1}>
                 <img
@@ -263,7 +171,8 @@ function Main(props) {
                     alt=""
                 />
             </section>
-            <section className={styles.sectionList}>
+            {console.log(products)}
+            {/* <section className={styles.sectionList}>
                 <h3>Sản phẩm áo</h3>
                 <div className={styles.list}>
                     <div className={styles.item}>
@@ -420,7 +329,7 @@ function Main(props) {
                 <button className={styles.button}>
                     <a href="#!">Xem thêm</a>
                 </button>
-            </section>
+            </section> */}
             <section className={styles.sectionBanner2}>
                 <img
                     className={styles.item1}

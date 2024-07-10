@@ -12,13 +12,21 @@ import {EmployeeCreate} from "../pages/Dashboard/EmployeeManagement/EmployeeCrea
 import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
-
+import ImportPricing from '../components/Inventory/ImportPricing';
+import {NotificationList} from "../pages/Dashboard/Notification/NotificationList";
+import Loading from '../ui/Loading';
+import ProductDetail from '../pages/Home/ProductDetail';
+import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCreate";
 
 const routes = [
     {
         path: '/',
         element: <HomePage/>,
         exact: true,
+    },
+    {
+        path: '/product/:id',
+        element: <ProductDetail/>,
     },
     {
         path: '/login',
@@ -45,7 +53,12 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/:role/payment',
+        path: '/dashboard/import-pricing',
+        element: <ImportPricing/>,
+        private: true
+    },
+    {
+        path: '/dashboard/payment',
         element: <BillForm/>,
         private: true,
     },
@@ -84,76 +97,23 @@ const routes = [
         element: <NewsPage/>,
     },
     {
-        path: '*',
-        element: <NotFound/>,
-    },
-    {
-        path: '/',
-        element: <HomePage/>,
-        exact: true,
-    },
-    {
-        path: '/login',
-        element: <LoginPage/>,
-    },
-    {
-        path: '/dashboard',
-        element: <Dashboard/>,
+        path: '/dashboard/salesman/notification',
+        element: <NotificationList />,
         private: true,
     },
     {
-        path: '/dashboard/warehouse',
-        element: <WareHouse/>,
+        path: '/dashboard/warehouse/notification',
+        element: <NotificationList />,
         private: true,
     },
     {
-        path: '/dashboard/pricingView',
-        element: <PricingView/>,
+        path: '/dashboard/storeManager/notification',
+        element: <NotificationCreate />,
         private: true,
     },
     {
-        path: '/dashboard/create-pricing',
-        element: <CreatePricing/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/payment',
-        element: <BillForm/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/infor',
-        element: <PersonInfo/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/employee-list',
-        element: <EmployeeList/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/employee-create',
-        element: <EmployeeCreate/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/employee-create/:id',
-        element: <EmployeeCreate/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/customer/create',
-        element: <CustomerCreate/>,
-        private: true,
-    },
-    {
-        path: '/dashboard/customer/update/:id',
-        element: <CustomerUpdate/>,
-        private: true,
-    },
-    {
-        path: '/news',
-        element: <NewsPage/>,
+        path: '/test',  // Ai muốn test thử gì thì dùng đường dẫn này
+        element: <Loading/>,
     },
     {
         path: '*',

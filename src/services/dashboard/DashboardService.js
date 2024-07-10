@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://10.10.9.189:8080";
+const baseURL = "http://localhost:8080";
 
 export const getTotalCustomer = async () => {
     try {

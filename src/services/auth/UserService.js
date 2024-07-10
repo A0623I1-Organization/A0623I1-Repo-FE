@@ -1,7 +1,7 @@
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
-const baseURL = "http://10.10.9.189:8080";
+const baseURL = "http://localhost:8080";
 
 export const updateAvatarAndBackgroundImage = async (username, avatar, backgroundImage) => {
     try {

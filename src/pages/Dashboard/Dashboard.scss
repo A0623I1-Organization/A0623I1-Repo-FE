@@ -67,7 +67,7 @@
           }
 
           .item-number {
-            font-size: 30px;
+            font-size: 40px;
             color: var(--app-content-main-color);
             padding: 20px;
           }
@@ -282,7 +282,7 @@
               label {
                 font-size: 16px;
                 font-weight: 600;
-                color: var(--app-content-main-color);
+                color: #1c1c1c;
                 margin-top: 20px;
                 display: block;
               }
@@ -462,6 +462,7 @@
                   fill: none;
                   stroke-width: 10;
                   stroke-linecap: round;
+                  stroke-dashoffset: calc(226.2 - (226.2 * 70) / 100);
                   stroke-dasharray: 226.2;
                   transition: stroke-dashoffset 1s;
                   transform: rotate(-90deg);
@@ -480,7 +481,7 @@
               }
               .item-growth {
                 position: absolute;
-                top: 5px;
+                top: -3px;
                 left: -1px;
                 display: flex;
                 align-items: center;
@@ -629,7 +630,6 @@
               justify-content: center;
               align-items: center;
               color: #fd3434;
-              font-size: 18px;
             }
           }
         }

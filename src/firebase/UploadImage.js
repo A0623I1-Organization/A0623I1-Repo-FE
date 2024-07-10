@@ -63,15 +63,16 @@ export const UploadMultipleImage = ({ onImageUrlChange }) => {
     );
 };
 
-export const UploadOneImage = ({ onImageUrlChange, className }) => {
+export const UploadOneImage = ({ onImageUrlChange,getDisabled, className }) => {
     const [image, setImage] = useState(null);
+    const [disabled,setDisabled]= useState(true);
 
     const handleChange = (e) => {
         if ( e.target.files[0]) {
             setImage(e.target.files[0]);
         }
     };
-
+    getDisabled(disabled)
     const handleUpload = async () => {
         if (!image) return; // Đảm bảo đã chọn ít nhất một ảnh
 
@@ -106,7 +107,7 @@ export const UploadOneImage = ({ onImageUrlChange, className }) => {
     useEffect(() => {
         // Auto upload when image state changes
         if (image) {
-            handleUpload().then().catch();
+            handleUpload().then(res=>setDisabled(false)).catch();
         }
     }, [image]);
 

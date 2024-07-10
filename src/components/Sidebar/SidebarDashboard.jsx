@@ -47,12 +47,13 @@ export function SidebarDashboard(props) {
                           <TiArrowSortedDown />
                         </span>
                     </a>
+
                     <div className={showDropdown === "salesMan" ? "dropdown-content" : "dropdown-content show"}>
                         <Link to={"/dashboard/salesMan/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/salesMan/warehouse"}>Nhà kho</Link>
                         <Link to={"/dashboard/salesMan/payment"}>Thanh toán</Link>
                         <a href="#">Thống kê</a>
-                        <a href="#">Xem thông báo</a>
+                        <Link to={"/dashboard/salesman/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
                 {(isWarehouse || isAdmin) &&
@@ -69,7 +70,7 @@ export function SidebarDashboard(props) {
                         <Link to={"/dashboard/warehouse/warehouse"}>Nhà kho</Link>
                         <a href="#">Nhập liệu</a>
                         <a href="#">Thống kê</a>
-                        <a href="#">Xem thông báo</a>
+                        <Link to={"/dashboard/warehouse/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
                 {(isStoreManager || isAdmin) &&
@@ -87,7 +88,7 @@ export function SidebarDashboard(props) {
                         <a href="#">Xem báo cáo</a>
                         <a href="#">Quản lý khách hàng</a>
                         <Link to={"/dashboard/storeManager/employee-list"}>Quản lý nhân viên</Link>
-                        <a href="#">Đăng thông báo</a>
+                        <a href="/dashboard/storeManager/notification">Đăng thông báo</a>
                         <a href="#">Sao lưu/Khôi phục</a>
                     </div>
                 </li>}

@@ -1,7 +1,7 @@
 import React from 'react';
 import './InvoiceModal.scss';
 
-const InvoiceModal = ({ billCode, customerCode, billItems, discount, total, onClose }) => {
+const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClose}) => {
     const handlePrint = () => {
 
         // Lấy nội dung của invoice để in
@@ -41,7 +41,7 @@ const InvoiceModal = ({ billCode, customerCode, billItems, discount, total, onCl
                         
                     }
                     .invoice-summary {
-                        text-align: center;
+                        text-align: right;
                     }
                     table {
                           width: 100%;
@@ -76,7 +76,8 @@ const InvoiceModal = ({ billCode, customerCode, billItems, discount, total, onCl
                     </div>
                     <div className="invoice-customer">
                         <p>Khách hàng: <span>{customerCode}</span></p>
-                        <p>Ngày: <span>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`}</span></p>
+                        <p>Ngày: <span>{`${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`}</span>
+                        </p>
                     </div>
                     <div className="invoice-products">
                         <h3>Sản phẩm đã mua:</h3>
@@ -110,7 +111,9 @@ const InvoiceModal = ({ billCode, customerCode, billItems, discount, total, onCl
                         )}
                     </div>
                     <div className="invoice-summary">
-                        <p>Tổng tiền: {total} VNĐ &emsp;&emsp;&emsp;&emsp;Giảm giá: {discount} VNĐ&emsp;&emsp;&emsp;&emsp;Thành tiền: {total - discount} VNĐ</p>
+                        <p>Tổng tiền: {total} VNĐ </p>
+                        <p>Giảm giá: {discount} VNĐ</p>
+                        <p>Thành tiền: {total - discount} VNĐ</p>
                     </div>
                 </div>
                 <div className="invoice-actions">

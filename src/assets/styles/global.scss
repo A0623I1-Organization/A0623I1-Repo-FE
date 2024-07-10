@@ -40,6 +40,49 @@
   --sidebar-active-link: #1d283c;
   --sidebar-main-color: #fff;
   --filter-shadow: rgba(16, 24, 39, 0.8) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  --background-dashboard: linear-gradient( 109.6deg, rgba(156,252,248,1) 11.2%, rgba(110,123,251,1) 91.1% );
+
+}
+
+.spring:root {
+  --filter-reset: #F9F5F6;
+  --app-bg: #f49dbd;
+  --sidebar: #F9F5F6;
+  --table-border: #e6dade;
+  --table-header: #a57251;
+  --sub-color: #2a9d8f;
+  --app-content-secondary-color: #F8E8EE;
+  --app-content-main-color: #000;
+  --sidebar-link: #000;
+  --sidebar-hover-link: #ead2da;
+  --sidebar-active-link: #FDCEDF;
+  --sidebar-main-color: #000;
+  --action-color: #cc93d1;
+  --filter-shadow: rgba(252, 74, 26, 0.8) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  --background-dashboard: linear-gradient(109.6deg, rgb(253, 206, 223) 11.2%, rgb(242, 190, 209) 91.1%);
+  --background-image: url("../images/spring.jfif");
+}
+
+.summer:root {
+  --filter-reset: #5d3a00;
+  --app-bg: #f4e5bf;
+  --sidebar: rgba(244, 211, 161, 0.75);
+  --table-border: rgba(140, 94, 88, 0.22);
+  --table-header: #f3922c;
+  --sub-color: #f4cea1;
+  --app-content-secondary-color: #f3b486;
+  --app-content-main-color: #000;
+  --sidebar-link: #000;
+  --sidebar-hover-link: #f3bd80;
+  --sidebar-active-link: #edb18b;
+  --sidebar-main-color: #000;
+  --filter-shadow: rgba(255, 179, 71, 0.8) 0px 6px 12px -2px, rgba(252, 141, 89, 0.3) 0px 3px 7px -3px;
+  --background-dashboard: linear-gradient(109.6deg, rgb(242, 172, 85) 11.2%, rgb(239, 122, 69) 91.1%);
+  --background-image: url("../images/summer.jpg");
+}
+
+.autumn:root {
+
 }
 
 body{
