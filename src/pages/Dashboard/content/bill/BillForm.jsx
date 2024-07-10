@@ -12,7 +12,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as billService from "../../../../services/bill/bill-service";
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import Moment from "moment";
 import PromotionModal from "./promotionModal/PromotionModal";
 
@@ -31,6 +31,7 @@ const schema = yup.object().shape({
 });
 
 const BillForm = () => {
+    const {role} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [isQRCodeReaderVisible, setIsQRCodeReaderVisible] = useState(false);
@@ -226,7 +227,7 @@ const BillForm = () => {
     }, [billItems,discount,discountByCustomerType]);
 
     return (
-        <DashboardMain
+        <DashboardMain path={role}
             content={
                 <div className="content-body">
                     <form className="bill-form" onSubmit={handleSubmit(onSubmit)}>

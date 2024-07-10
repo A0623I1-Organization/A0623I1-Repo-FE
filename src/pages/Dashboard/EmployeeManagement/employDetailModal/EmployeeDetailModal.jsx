@@ -29,11 +29,12 @@ export const EmployeeDetailModal = ({isOpen, onClose, id}) => {
     return (
         <div className={`${styles.modal} ${isOpen ? styles.open : ''}`}>
             <div className={styles.modalContent}>
-                <div className={styles.backgroundImage}></div>
+                <div className={styles.backgroundImage} style={{ backgroundImage: `url(${employee?.backgroundImage})` }}></div>
                 {employee &&
                     <div className={styles.boxInfo}>
                         <div className={styles.avatar}>
-                            <img src={avatar} alt="avatar"/>
+                            {employee.avatar ? <img src={employee.avatar} alt="avatar"/>
+                                : <img src={avatar} alt="avatar"/>}
                         </div>
                         <div className={styles.info}>
                             <div className={styles.status}>

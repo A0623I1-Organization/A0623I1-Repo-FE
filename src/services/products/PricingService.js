@@ -9,6 +9,6 @@ export const getAll = async (page = 0) => {
     } catch (e) {
         console.log(e)
         toast.error("Không có sản phẩm");
-        return [] 
+        return []
     }
 }

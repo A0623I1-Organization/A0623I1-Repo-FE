@@ -4,7 +4,9 @@ import { useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import * as CustomerService from '../../../services/customer/CustomerService'
 import { useState } from 'react';
+import {useParams} from "react-router-dom";
 function CustomerCreate() {
+    const {role} = useParams();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
@@ -33,7 +35,7 @@ function CustomerCreate() {
     };
 
     return (
-        <DashboardMain
+        <DashboardMain path={role}
             content={
                 <main id="main-customer">
                     <h2>Thêm mới khách hàng</h2>

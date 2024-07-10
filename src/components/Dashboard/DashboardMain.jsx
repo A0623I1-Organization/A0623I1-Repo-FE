@@ -1,8 +1,8 @@
 import {HeaderDashboard} from "../Header/HeaderDashboard";
 import {SidebarDashboard} from "../Sidebar/SidebarDashboard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
-export function DashboardMain({content}) {
+export function DashboardMain({content, path}) {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
 
     const callbackFunction = (childData) => {
@@ -13,7 +13,7 @@ export function DashboardMain({content}) {
         <div className="app-container">
             <HeaderDashboard parentCallback={callbackFunction}></HeaderDashboard>
             <div id="content-wrapper">
-                <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
+                <SidebarDashboard showSidebar={isShowSidebar} path = {path}></SidebarDashboard>
                 <div className="app-content">
                     {content}
                 </div>

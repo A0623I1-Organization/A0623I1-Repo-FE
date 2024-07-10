@@ -38,7 +38,7 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/warehouse',
+        path: '/dashboard/:role/warehouse',
         element: <WareHouse/>,
         private: true,
     },
@@ -48,7 +48,7 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/create-pricing',
+        path: '/dashboard/:role/create-pricing',
         element: <CreatePricing/>,
         private: true,
     },
@@ -63,32 +63,32 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/infor',
+        path: '/dashboard/:role/infor',
         element: <PersonInfo/>,
         private: true,
     },
     {
-        path: '/dashboard/employee-list',
+        path: '/dashboard/:role/employee-list',
         element: <EmployeeList/>,
         private: true,
     },
     {
-        path: '/dashboard/employee-create',
+        path: '/dashboard/:role/employee-create',
         element: <EmployeeCreate/>,
         private: true,
     },
     {
-        path: '/dashboard/employee-create/:id',
+        path: '/dashboard/:role/employee-create/:id',
         element: <EmployeeCreate/>,
         private: true,
     },
     {
-        path: '/dashboard/customer/create',
+        path: '/dashboard/:role/customer/create',
         element: <CustomerCreate/>,
         private: true,
     },
     {
-        path: '/dashboard/customer/update/:id',
+        path: '/dashboard/:role/customer/update/:id',
         element: <CustomerUpdate/>,
         private: true,
     },
