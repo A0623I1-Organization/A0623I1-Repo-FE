@@ -19,8 +19,9 @@
 
       img {
         margin-left: 50px;
-        width: 200px;
+        width: 100px;
         height: auto;
+        border-radius: 50%;
       }
 
       span {
@@ -72,9 +73,8 @@
         .form {
           position: absolute;
           height: 100%;
-          min-width: 100%;
+          width: 100%;
           display: flex;
-          flex-direction: column;
           justify-content: center;
           align-items: center;
           text-align: center;
@@ -86,10 +86,17 @@
             color: #3a3838;
           }
 
+          .form-content {
+            width: 70%;
+          }
+
           #form_input{
             position: relative;
+            width: 100%;
+
+
             .type {
-              width: 330px;
+              width: 100%;
               height: 48px;
               background-color: #EEEDEF;
               margin: 30px 0;
@@ -120,17 +127,17 @@
               position: absolute;
               top: -15%;
               left: 10%;
-              /*display: flex;*/
+              display: flex;
               justify-content: center;
               align-items: center;
               background-color: #EEEDEF;
-              display: none;
               border-radius: 1.125rem 1.125rem 1.125rem 0;
+              z-index: 1;
 
               .validate-error {
                 text-align: left;
                 padding: 10px;
-                color: #da1075;
+                color: #da639f;
                 font-size: 16px;
                 font-weight: 600;
               }
@@ -255,6 +262,7 @@
       .box {
         width: 80%;
         margin-top: 9%;
+
       }
     }
   }
@@ -286,6 +294,19 @@
         width: 80%;
         height: 80%;
         margin-top: 10%;
+        .form-box {
+          width: 50%;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 992px){
+    .content {
+      .box {
+        width: 80%;
+        height: 70%;
+        margin-top: 15%;
         .form-box {
           width: 50%;
         }
@@ -325,9 +346,9 @@
         .form-box {
           width: 50%;
         }
-        /*.overlay {*/
-        /*    display: none;*/
-        /*}*/
+        .overlay {
+            display: none;
+        }
       }
     }
 
@@ -379,9 +400,24 @@
         border-radius: 0;
       }
     }
-
   }
-
+@media screen and (min-height: 1000px){
+  .content {
+    .box {
+      width: 80%;
+      height: 70%;
+      margin-top: 15%;
+      .form-box {
+        width: 50%;
+        .form {
+          .form-content {
+            width: 80%;
+          }
+        }
+      }
+    }
+  }
+}
   /* -----------------------------CSS cho phần Footer (phần cuối trang web) ---------------------------------*/
   #footer {
     background-color: #fafafa;

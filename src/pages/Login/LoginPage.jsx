@@ -6,7 +6,7 @@ import FooterHome from "../../components/Footer/FooterHome";
 import {useForm} from "react-hook-form";
 import * as authenticationService from "../../services/auth/AuthenticationService";
 import {toast} from "react-toastify";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
 
@@ -14,14 +14,17 @@ function LoginPage(props) {
     const isAuthenticated = authenticationService.isAuthenticated();
     const [openEye, setOpenEye] = useState(false);
     const navigate = useNavigate();
-    const [error, setError] = useState('')
+    const [loginError, setLoginError] = useState('')
     const {register, handleSubmit, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
+    const [showPopupElement, setShowPopupElement] = useState(false);
 
-    if (isAuthenticated) {
-        return <Navigate to="/dashboard" />
-    }
+    useEffect(() => {
+        setTimeout(function () {
+            setShowPopupElement(false);
+        }, 3000);
+    }, [showPopupElement]);
 
     const onSubmit = async (data) => {
         try {
@@ -32,12 +35,21 @@ function LoginPage(props) {
                 const decodedToken = jwtDecode(userData.token);
                 navigate("/dashboard");
                 toast.success("Login successfully!");
-            } else{
-                setError(userData.message);
+            } else {
+                setLoginError(userData.message);
+                setShowPopupElement(true);
             }
         } catch (error) {
             toast.error(error.message);
         }
+    }
+
+    const closePopup = () => {
+
+    }
+
+    if (isAuthenticated) {
+        return <Navigate to="/dashboard"/>
     }
 
     return (
@@ -49,49 +61,59 @@ function LoginPage(props) {
                 </div>
                 <div className="middle-part"></div>
                 <div className="right-part">
-                    <Link to={"/dashboard"} >Quay lại trang chủ</Link>
+                    <Link to={"/dashboard"}>Quay lại trang chủ</Link>
                 </div>
             </div>
             <div className="content">
                 <div className="box">
                     <div className="form-box">
                         <div className="form sign_in">
-                            <h3>Đăng nhập</h3>
-                            <form onSubmit={handleSubmit(onSubmit)} id="form_input">
-                                <div className="type">
-                                    <input
-                                        type="text" {...register("username")}
-                                        className="login-input"
-                                        placeholder="Tên đăng nhập"
-                                        id="username"
-                                    />
-                                    {errors.username && <p style={{color: "red", fontSize: "16px"}}>{errors.username.message}</p>}
+                            <div className="form-content">
+                                <h3>Đăng nhập</h3>
+                                <form onSubmit={handleSubmit(onSubmit)} id="form_input">
+                                    {showPopupElement &&
+                                        <div className="popup">
+                                            <p className="validate-error">
+                                                {loginError}
+                                            </p>
+                                        </div>
+                                    }
+                                    <div className="type">
+                                        <input
+                                            type="text" {...register("username")}
+                                            className="login-input"
+                                            placeholder="Tên đăng nhập"
+                                            id="username"
+                                            style={showPopupElement ? {border: "1px solid #DA1075FF"} : {}}
 
-                                    <div className="popup">
-                                        <p className="validate-error">
-                                            Tên đăng nhập hoặc mật khẩu không đúng!!!
-                                        </p>
+                                        />
+                                        {errors.username &&
+                                            <p style={{color: "red", fontSize: "16px"}}>{errors.username.message}</p>}
+
                                     </div>
-                                </div>
-                                <div className="type">
-                                    <input
-                                        type={openEye ? "text" : "password"} {...register("password")}
-                                        className="login-input"
-                                        placeholder="Mật khẩu"
-                                        id="password"
-                                    />
-                                    {openEye ? <FaEye onClick={() => setOpenEye(!openEye)}></FaEye>: <FaEyeSlash onClick={() => setOpenEye(!openEye)}></FaEyeSlash>}
-                                    {errors.password && <p style={{color: "red", fontSize: "16px"}}>{errors.password.message}</p>}
+                                    <div className="type">
+                                        <input
+                                            type={openEye ? "text" : "password"} {...register("password")}
+                                            className="login-input"
+                                            placeholder="Mật khẩu"
+                                            id="password"
+                                            style={showPopupElement ? {border: "1px solid #DA1075FF"} : {}}
+                                        />
+                                        {openEye ? <FaEye onClick={() => setOpenEye(!openEye)}></FaEye> :
+                                            <FaEyeSlash onClick={() => setOpenEye(!openEye)}></FaEyeSlash>}
+                                        {errors.password &&
+                                            <p style={{color: "red", fontSize: "16px"}}>{errors.password.message}</p>}
 
-                                </div>
-                                <div className="remember-me-and-forgot">
-                                    <label>
-                                        <input type="checkbox" name="remember" defaultValue="true"/>
-                                        Ghi nhớ đăng nhập
-                                    </label>
-                                </div>
-                                <button className="btn bkg">Đăng nhập</button>
-                            </form>
+                                    </div>
+                                    <div className="remember-me-and-forgot">
+                                        <label>
+                                            <input type="checkbox" name="remember" defaultValue="true"/>
+                                            Ghi nhớ đăng nhập
+                                        </label>
+                                    </div>
+                                    <button className="btn bkg">Đăng nhập</button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                     <div className="overlay">
@@ -106,7 +128,7 @@ function LoginPage(props) {
                     </div>
                 </div>
             </div>
-            <FooterHome />
+            <FooterHome/>
         </div>
     );
 }
