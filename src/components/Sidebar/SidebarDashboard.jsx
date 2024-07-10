@@ -131,7 +131,7 @@ export function SidebarDashboard(props) {
                         <a href="#">Nhà kho</a>
                         <a href="#">Nhập liệu</a>
                         <a href="#">Thống kê</a>
-                        <a href="#">Xem thông báo</a>
+                        <Link to={"/dashboard/warehouse/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
                 {(isStoreManager || isAdmin) && <li className="sidebar-list-item paste-button">
@@ -173,7 +173,7 @@ export function SidebarDashboard(props) {
                         <a href="#">Xem báo cáo</a>
                         <a href="#">Quản lý khách hàng</a>
                         <Link to={"/dashboard/employee-list"}>Quản lý nhân viên</Link>
-                        <a href="#">Đăng thông báo</a>
+                        <a href="/dashboard/storeManager/notification">Đăng thông báo</a>
                         <a href="#">Sao lưu/Khôi phục</a>
                     </div>
                 </li>}
