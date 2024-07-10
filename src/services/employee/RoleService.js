@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:8080/api/auth/users";
+const baseURL = "http://localhost:8080/api/users";
 
 export const getAllRoles = async () => {
     try {

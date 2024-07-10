@@ -10,7 +10,7 @@ import {useParams} from "react-router-dom";
 
 export function EmployeeCreate(){
     const { id } = useParams();
-    const [employee, setEmployee] = useState({});
+    const [employee, setEmployee] = useState(null);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [roles,setRoles] = useState([]);
     const {register, handleSubmit, setValue, formState: {errors}} = useForm({
@@ -49,6 +49,10 @@ export function EmployeeCreate(){
             setValue("email", temp.email);
             setValue("address", temp.address);
             setValue("role", JSON.stringify(temp.role));
+            setValue("accountNonExpired", 1);
+            setValue("accountNonLocked", 1);
+            setValue("credentialsNonExpired", 1);
+            setValue("enabled", 1);
             setRoles(temp.roles);
         }
     }
@@ -61,8 +65,10 @@ export function EmployeeCreate(){
     const onSubmit = async (data) => {
         try {
             data.role = JSON.parse(data.role);
+            data.gender = Number.parseInt(data.gender);
             const token = localStorage.getItem("token");
             let response;
+            console.log(data)
             if (id) {
                 response = await employeeService.updateEmployee(id, data, token);
             } else {
@@ -112,13 +118,13 @@ export function EmployeeCreate(){
                                             <span className={"element-title"}>Giới tính: </span>
                                         </label>
                                         <div className="form-gender">
-                                            <input type="radio"
+                                            <input type="radio" defaultChecked={employee?.gender === 0}
                                                    {...register("gender")} value={0}/>
                                             <span>Nam</span>
-                                            <input type="radio"
+                                            <input type="radio" defaultChecked={employee?.gender === 1}
                                                    {...register("gender")} value={1}/>
                                             <span>Nữ</span>
-                                            <input type="radio"
+                                            <input type="radio" defaultChecked={employee?.gender === 2}
                                                    {...register("gender")} value={2}/>
                                             <span>Khác</span>
                                         </div>
@@ -148,7 +154,8 @@ export function EmployeeCreate(){
                                         <select {...register("role")}>
                                             <option value="">--Chọn một vị trí--</option>
                                             {roles && roles.map((item) => (
-                                                <option value={JSON.stringify(item)}>{item.roleName}</option>
+                                                <option selected={item.roleId = employee?.role.roleId}
+                                                    value={JSON.stringify(item)}>{item.roleName}</option>
                                             ))}
                                         </select>
                                     </div>
@@ -160,7 +167,7 @@ export function EmployeeCreate(){
                                     </div>
                                     <div className="new-password form-element">
                                     <label>Mật khẩu: </label>
-                                        <input type="password" name="newPassword" {...register("newPassword")}/>
+                                        <input type="password" name="password" {...register("password")}/>
                                         <p className="validate-error">Mật khẩu không đúng định dạng!!</p>
                                     </div>
 
@@ -168,7 +175,7 @@ export function EmployeeCreate(){
                             </div>
                             <div className="button-save">
                                 <button type="submit" className="btn-submit">
-                                    Thêm mới
+                                    {employee ? "Sửa đổi": "Thêm mới"}
                                 </button>
                             </div>
                         </form>

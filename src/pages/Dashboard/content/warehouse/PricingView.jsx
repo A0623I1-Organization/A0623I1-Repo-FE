@@ -6,7 +6,7 @@ import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFir
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
 
 export const PricingView = () => {
-    const { state } = useLocation();
+    const {state} = useLocation();
     const [pricings, setPricings] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [page, setPage] = useState(0);
@@ -23,12 +23,14 @@ export const PricingView = () => {
         getAllPricingByProductId(state?.productId, keyword, sortBy, ascending, page);
     }, [state?.productId, sortBy, ascending, page]);
 
-    const getAllPricingByProductId = (productId, keyword, sortBy, ascending, pageNumber) => {
-        pricingService.getAllPricingByProductId(productId, keyword, sortBy, ascending, pageNumber)
-            .then(res => {
-                setPricings(res.content);
-                setTotalPages(res.totalPages);
-            })
+
+    const getAllPricingByProductId = (productId, pageNumber) => {
+        pricingService.getAllPricingByProductId(productId, pageNumber).then(res => {
+            setPricings(res.content);
+            console.log(res.content)
+            console.log(res.totalPages)
+            setTotalPages(res.totalPages);
+        })
             .catch(err => console.error("Error fetching pricings: ", err));
     };
 

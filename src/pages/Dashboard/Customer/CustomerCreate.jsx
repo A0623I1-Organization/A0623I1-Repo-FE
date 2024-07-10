@@ -2,7 +2,7 @@ import { DashboardMain } from '../../../components/Dashboard/DashboardMain';
 import './Customer.scss'
 import { useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
-import * as CustomerService from '../../../services/customer/CusromerService'
+import * as CustomerService from '../../../services/customer/CustomerService'
 import { useState } from 'react';
 function CustomerCreate() {
 

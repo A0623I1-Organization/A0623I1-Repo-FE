@@ -285,7 +285,8 @@ const BillForm = () => {
                                         <td>{item.size}</td>
                                         <td>{item.price}</td>
                                         <td>{item.total}</td>
-                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>                                    </tr>
+                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>
+                                    </tr>
                                 ))}
                                 </tbody>
                             </table>

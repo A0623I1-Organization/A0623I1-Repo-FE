@@ -31,31 +31,27 @@ export function PersonInfo() {
     }, [])
 
     const getUserInfo = async () => {
-        const temp = await authenticationService.getYourProfile(localStorage.getItem("token"));
-        if (temp) {
-            setUserInfo(temp);
-            setValue("userId", temp.userId)
-            setValue("username", temp.username)
-            setValue("userCode", temp.userCode)
-            setValue("phoneNumber", temp.phoneNumber)
-            setValue("gender", temp.gender)
-            setValue("address", temp.address)
-            setValue("fullName", temp.fullName)
-            setValue("dateOfBirth", temp.dateOfBirth)
-            setValue("email", temp.email)
-            setValue("dateCreate", temp.dateCreate)
-            setValue("avatar", temp.avatar)
-            setValue("role", JSON.stringify(temp.role));
-            setRoles(temp.roles);
+        try {
+            const temp = await authenticationService.getYourProfile(localStorage.getItem("token"));
+            if (temp) {
+                setUserInfo(temp);
+                setValue("userId", temp.userId);
+                setValue("username", temp.username);
+                setRoles(temp.roles);
+            }
+        } catch (e) {
+            if (e.response.status === 401) {
+                authenticationService.logout();
+                window.location.href = "/login";
+            }
         }
     }
 
     const onSubmit = async (data) => {
         try {
-            data.role = JSON.parse(data.role);
             console.log(data);
             const token = localStorage.getItem("token");
-            const response = await authenticationService.updateUser(data, token);
+            const response = await authenticationService.updatePasswordUser(data, token);
             console.log(response);
             toast.success(response.message);
             setUserInfo(response);
@@ -173,9 +169,10 @@ export function PersonInfo() {
                                     <div className="confirm-password form-element">
                                         <label>Nhập lại mật khẩu: </label>
                                         <span className="inputValue">
-                                        <input type={openEyeThree ? "text" : "password"} name="confirmPassword" {...register("confirmPassword", {
-                                            validate: value => value === getValues('newPassword') || "Mật khẩu không trùng khớp!"
-                                        })}/>
+                                        <input type={openEyeThree ? "text" : "password"} name="confirmPassword" {...register("confirmPassword")}/>
+                                        {/*    , {*/}
+                                        {/*    validate: value => value === getValues('newPassword') || "Mật khẩu không trùng khớp!"*/}
+                                        {/*})}/>*/}
                                             {openEyeThree ? <FaEye onClick={() => handleShowPassword(3)}/>
                                                 : <FaEyeSlash onClick={() => handleShowPassword(3)}/>}
                                         </span>
