@@ -91,13 +91,13 @@ const BillForm = () => {
             setQuantity('');
             setPricingCode('');
             setTotal(total + newItem.total);
-            const sum =total + newItem.total -discountByCustomerType*(total + newItem.total )
-            // Update finalTotal based on discount
-            if (discount <= 1) {
-                setFinalTotal(sum -discount*(total + sum));
-            } else {
-                setFinalTotal(sum- discount);
-            }
+            // const sum =total + newItem.total -discountByCustomerType*(total + newItem.total )
+            // // Update finalTotal based on discount
+            // if (discount <= 1) {
+            //     setFinalTotal(sum -discount*(total + sum));
+            // } else {
+            //     setFinalTotal(sum- discount);
+            // }
 
             // setFinalTotal(total + newItem.total - discount);
 
@@ -134,14 +134,14 @@ const BillForm = () => {
 
 
     const fetchUniqueBillCode = () => {
-        generateUniqueCode( `http://localhost:8080/api/bills/generateAndCheckBillCode`)
+        generateUniqueCode( `http://localhost:8080/api/auth/bills/generateAndCheckBillCode`)
             .then(res => {
                 setBillCode(res);
                 setValue('billCode', res);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err)
+        );
     };
-
     useEffect(() => {
         fetchPricingByCode(pricingCode);
     }, [pricingCode]);
@@ -199,11 +199,14 @@ const BillForm = () => {
     const toggleQRCodeReader = () => setIsQRCodeReaderVisible(!isQRCodeReaderVisible);
 
     const handlePrintInvoice = () => setPrintInvoice(true);
-    const handlePayment= (promotion) => {
-      setDiscount(promotion.discount);
-      setValue("promotionCode",promotion.promotionCode);
-      handleSubmit(onSubmit)();
-
+    const handlePayment =  (promotion) => {
+        try {
+            setDiscount(promotion.discount);
+            setValue("promotionCode", promotion.promotionCode);
+            handleSubmit(onSubmit)();
+        } catch (error) {
+            console.error("Failed to use promotion:", error);
+        }
     };
 
     const handleCustomerSelect = (selectedCustomer) => {
@@ -216,11 +219,17 @@ const BillForm = () => {
         // Update finalTotal when discount changes
         const sum = total - discountByCustomerType*total;
         let newFinalTotal;
-        if (discount <= 1) {
-            newFinalTotal = sum - discount * (total + sum);
-        } else {
-            newFinalTotal = sum - discount;
+        if(discount)
+        {
+            if (discount <= 1) {
+                newFinalTotal = sum - discount * (total + sum);
+            } else {
+                newFinalTotal = sum - discount;
+            }
+        }else {
+            newFinalTotal = sum;
         }
+
         setFinalTotal(newFinalTotal);
     }, [billItems,discount,discountByCustomerType]);
 

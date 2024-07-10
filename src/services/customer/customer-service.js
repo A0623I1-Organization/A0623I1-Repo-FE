@@ -1,8 +1,8 @@
-import axios from "axios";
+import axiosInstance from '../../utils/axiosInstance';
 
 export const getAllCustomer =async (page)=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/customer?page=${page}`)
+        let temp = await axiosInstance.get(`/customer?page=${page}`)
         return temp.data;
     }catch (e)
     {

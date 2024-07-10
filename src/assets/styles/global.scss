@@ -57,3 +57,16 @@ body::-webkit-scrollbar-thumb{
 body::-webkit-scrollbar-track{
   background-color: #ccc;
 }
+
+.slick-dots{
+  bottom: 10px !important;
+  // li{
+  //   button{
+  //     width: 40px !important;
+  //     &::before{
+  //       width: 40px !important;
+  //     }
+  //   }
+
+  // }
+}

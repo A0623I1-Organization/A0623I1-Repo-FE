@@ -80,7 +80,7 @@ const CreatePricing = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getAllCategory();
+            await getAllCategory(); // Xóa bỏ cái asyc await đi nha
             await getAllColor();
             await getAllProductType();
             await  fetchUniqueProductCode();
@@ -99,12 +99,12 @@ const CreatePricing = () => {
 
 
     const fetchUniqueProductCode = () => {
-        generateUniqueCode(`http://localhost:8080/api/products/generateAndCheckProductCode`).then(res=>{
+        generateUniqueCode(`http://localhost:8080/api/auth/products/generateAndCheckProductCode`).then(res=>{
             setValue('productCode', res);
         }).catch(err=>console.log(err));
     };
     const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode(`http://localhost:8080/api/pricing/generateAndCheckPricingCode`)
+        return generateUniqueCode(`http://localhost:8080/api/auth/pricing/generateAndCheckPricingCode`)
             .then(res => {
                 setValue(`pricingList[${index}].pricingCode`, res);
                 return res;
@@ -124,6 +124,7 @@ const CreatePricing = () => {
         // Filter product types when selectedCategory changes
         setProductTypesByCategory(
             productTypes?.filter(item => item.category?.categoryName === selectedCategory)
+
         );
     }, [selectedCategory, productTypes]);
 

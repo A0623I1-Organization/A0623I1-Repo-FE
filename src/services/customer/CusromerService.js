@@ -1,0 +1,29 @@
+import axiosInstance from '../../utils/axiosInstance';
+
+export const createCustomer = async (item) => {
+    try {
+        const temp = await axiosInstance.post("/customer/create",item);
+        return temp.data;
+    } catch (error) {
+        throw error.response.data.errors;
+    }
+}
+
+export const updateCustomer = async (id,item) => {
+    try {
+        const temp = await axiosInstance.put(`/customer/${id}`,item);
+        return temp.data;
+    } catch (error) {
+        throw error.response.data.errors;
+    }
+}
+
+export const findById = async (id) => {
+    try {
+        const temp = await axiosInstance.get(`/customer/${id}`);
+        return temp.data;
+    } catch (e) {
+        console.log(e)
+        return {};
+    }
+}

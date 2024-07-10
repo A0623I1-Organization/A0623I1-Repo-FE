@@ -3,7 +3,7 @@ import NotFound from '../pages/ErrorPage/NotFound';
 import LoginPage from '../pages/Login/LoginPage';
 import NewsPage from '../pages/News/NewsPage';
 import { PersonInfo } from '../pages/Dashboard/PersonInfo/PersonInfo';
-import {WareHouse} from "../pages/Dashboard/content/warehouse/WareHouse";
+import { WareHouse } from "../pages/Dashboard/content/warehouse/WareHouse";
 import CreatePricing from "../pages/Dashboard/content/warehouse/product/CreatePricing";
 import PricingView from "../pages/Dashboard/content/warehouse/PricingView";
 import BillForm from "../pages/Dashboard/content/bill/BillForm";
@@ -12,6 +12,7 @@ import { EmployeeCreate } from "../pages/Dashboard/EmployeeManagement/EmployeeCr
 import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
+
 
 const routes = [
   {
@@ -28,26 +29,26 @@ const routes = [
     element: <Dashboard />,
     private: true,
   },
-    {
-        path: '/dashboard/warehouse',
-        element: <WareHouse />,
-        private: true,
-    },
-    {
-        path: '/dashboard/pricingView',
-        element: <PricingView />,
-        private: true,
-    },
-    {
-        path: '/dashboard/create-pricing',
-        element: <CreatePricing />,
-        private: true,
-    },
-    {
-        path: '/dashboard/payment',
-        element: <BillForm />,
-        private: true,
-    },
+  {
+    path: '/dashboard/warehouse',
+    element: <WareHouse />,
+    private: true,
+  },
+  {
+    path: '/dashboard/pricingView',
+    element: <PricingView />,
+    private: true,
+  },
+  {
+    path: '/dashboard/create-pricing',
+    element: <CreatePricing />,
+    private: true,
+  },
+  {
+    path: '/dashboard/payment',
+    element: <BillForm />,
+    private: true,
+  },
   {
     path: '/dashboard/infor',
     element: <PersonInfo />,
