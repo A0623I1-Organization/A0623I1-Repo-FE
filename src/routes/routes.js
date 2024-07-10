@@ -12,11 +12,7 @@ import {EmployeeCreate} from "../pages/Dashboard/EmployeeManagement/EmployeeCrea
 import CustomerCreate from '../pages/Dashboard/Customer/CustomerCreate';
 import CustomerUpdate from '../pages/Dashboard/Customer/CustomerUpdate';
 import {Dashboard} from "../pages/Dashboard/Dashboard";
-<<<<<<< HEAD
-=======
 import ImportPricing from '../components/Inventory/ImportPricing';
-import ListOfNotification from "../components/Notification/list/ListOfNotification";
->>>>>>> a77a6f611cb3789112ce63b6dc82f804ba503d84
 import {NotificationList} from "../pages/Dashboard/Notification/NotificationList";
 import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCreate";
 
@@ -171,7 +167,6 @@ const routes = [
     path: '/dashboard/salesman/notification',
     element: <NotificationList />,
     private: true,
-<<<<<<< HEAD
   },
   {
     path: '/dashboard/warehouse/notification',
@@ -183,13 +178,10 @@ const routes = [
     element: <NotificationCreate />,
     private: true,
   },
-=======
-    },
     {
         path: '*',
         element: <NotFound/>,
-    },
->>>>>>> a77a6f611cb3789112ce63b6dc82f804ba503d84
+    }
 ];
 
 export default routes;
