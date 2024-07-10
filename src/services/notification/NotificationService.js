@@ -72,4 +72,3 @@ export const addNewNotification = async (token,data) => {
         return "Error fetching data";
     }
 }
-
