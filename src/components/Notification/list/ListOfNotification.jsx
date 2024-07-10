@@ -13,7 +13,7 @@ export default function ListOfNotification(props) {
     }
     const [listByRead, setListByRead] = useState([]);
     const [listByUnRead, setListByUnRead] = useState([]);
-    const [notification,setNotification]=useState(null);
+    const [notification, setNotification] = useState(null);
     const [showModal, setShowModal] = useState(false);
     useEffect(() => {
         const fetchData = async () => {
@@ -46,7 +46,7 @@ export default function ListOfNotification(props) {
 
 
     }
-    const getItem =async (item) => {
+    const getItem = async (item) => {
         const token = localStorage.getItem("token");
         console.log("notifId:", item.notifId);
         setNotification(item);
@@ -59,42 +59,45 @@ export default function ListOfNotification(props) {
 
     return (
         <>
-            <div className="container">
-                <header>
+            <div className="container-listNotification-nhi">
+                <header className="header-notification-nhi">
                     <div className="notif_box">
                         <h2 className="title">
-                            Notifications
+                            Thông báo
                             <DetailModal/>
                         </h2>
                         <span id="notifes">{listByUnRead.length}</span>
                     </div>
-                    <p id="mark_all" onClick={markAll}>
-                        Mark all as read
+                    <p className="tag-p-notification" id="mark_all" onClick={markAll}>
+                        Đánh dấu tất cả đã đọc
                     </p>
                 </header>
-                <main style={{overflowY: overflow}}>
+                <main className="main-notification-nhi" style={{overflowY: overflow}}>
                     {
                         listByUnRead && listByUnRead.map((item, index) => (
-                            <div >
-                                <div key={item.notif_id} onClick={()=>getItem(item)} className="notif_card unread">
-                                    <img
-                                        alt="manager--v2"
-                                        height="52"
-                                        src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
-                                        width="18"
+                            <div>
+                                <div key={item.notif_id} onClick={() => getItem(item)} className="notif_card unread">
+                                    <img className="img-tag-notification-nhi"
+                                         alt="manager--v2"
+                                         height="52"
+                                         src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
+                                         width="18"
                                     />
                                     <div className="description">
-                                        <p className="user_activity">
-                                            <strong>
-                                                Store Manager
+                                        <p className="user_activity tag-p-notification">
+                                            <strong className="strong-tag-notification-nhi">
+                                                Quản lý cửa hàng
                                             </strong>
-                                            {' '}remind you of {' '}
+                                            {' '} có thông báo cho bạn về {' '}
                                             <b>
                                                 {item.topic}{' '}
                                             </b>
                                         </p>
-                                        <p className="time">
-                                            1m ago
+                                        <p className="time tag-p-notification">
+                                            {formatDistanceToNow(new Date(item.createDate), {
+                                                addSuffix: true,
+                                                locale: vi
+                                            })}
                                         </p>
                                     </div>
                                 </div>
@@ -104,30 +107,31 @@ export default function ListOfNotification(props) {
                     }
                     {
                         listByRead && listByRead.map((item, index) => (
-                            <div >
-                                <div key={item.notif_id} onClick={()=>getItem(item)} className="notif_card">
-                                    <img
-                                        alt="manager--v2"
-                                        height="52"
-                                        src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
-                                        width="18"
+                            <div>
+                                <div key={item.notif_id} onClick={() => getItem(item)} className="notif_card">
+                                    <img className="img-tag-notification-nhi"
+                                         alt="manager--v2"
+                                         height="52"
+                                         src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
+                                         width="18"
                                     />
                                     <div className="description">
-                                        <p className="user_activity">
-                                            <strong>
-                                                Store Manager
+                                        <p className="user_activity tag-p-notification">
+                                            <strong className="strong-tag-notification-nhi">
+                                                Quản lý cửa hàng
                                             </strong>
-                                            {' '}remind you of {' '}
+                                            {' '} có thông báo cho bạn về {' '}
                                             <b>
-                                                {}
                                                 {item.topic}{' '}
                                             </b>
                                         </p>
-                                        <p className="time">
-                                            <span>{formatDistanceToNow(new Date(item.createDate), {
-                                                addSuffix: true,
-                                                locale: vi
-                                            })}</span>
+                                        <p className="time tag-p-notification">
+                                            <span>
+                                                {formatDistanceToNow(new Date(item.createDate), {
+                                                    addSuffix: true,
+                                                    locale: vi
+                                                })}
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
@@ -136,14 +140,13 @@ export default function ListOfNotification(props) {
                         ))
                     }
                     {
-                        showModal && <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal}/>
+                        showModal &&
+                        <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal}/>
                     }
-
-
                 </main>
                 <div className="see-all-button">
                     <button onClick={handleSeeAllNotification}>
-                        See all notifications
+                        Xem tất cả
                     </button>
                 </div>
             </div>

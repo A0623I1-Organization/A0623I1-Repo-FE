@@ -1,36 +1,35 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap");
-
-* {
-  margin: 0;
-  padding: 0;
+/* CSS */
+.container-createNotification-nhi {
+  width: 100%;
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 13px 37px;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-
+  margin: auto;
+  margin-top: 80px;
+  margin-bottom: 5px;
+  margin-left: 5%;
+  margin-right: 5%;
+  height: fit-content;
 }
 
-body {
+.title-createNotification-nhi {
   display: flex;
-  height: 100vh;
   justify-content: center;
   align-items: center;
-  background-color: lightgoldenrodyellow;
-}
-
-.container {
-  max-width: 700px;
   width: 100%;
-  background: #fff;
-  padding: 25px 30px;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  padding: 15px 40px;
+  border-radius: 10px;
+  background-color: var(--Blue);
+  color: var(--White);
 }
 
-.container .title {
-  font-size: 25px;
-  font-weight: 500;
+.title-createNotification-nhi .b-tag-create-notification {
+  font-size: 1.7rem;
+  line-height: 2.5rem;
 }
 
-.container .title::before {
+.container-createNotification-nhi .title-createNotification-nhi::before {
   content: '';
   position: absolute;
   left: 0;
@@ -40,7 +39,7 @@ body {
   background: linear-gradient(135deg, #71b7e6, #9b59b6);
 }
 
-.container form .user-details {
+.container-createNotification-nhi form .user-details {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -49,7 +48,7 @@ body {
 
 form .user-details .input-box {
   margin-bottom: 15px;
-  width:100%;
+  width: 100%;
 }
 
 .user-details .input-box .details {
@@ -58,7 +57,7 @@ form .user-details .input-box {
   margin-bottom: 5px;
 }
 
-.user-details .input-box input {
+.user-details .input-box .user-details-input-nhi {
   height: 45px;
   width: 100%;
   outline: none;
@@ -69,47 +68,46 @@ form .user-details .input-box {
   border-bottom-width: 2px;
   transition: all 0.3s ease;
 }
+
 .user-details .input-box textarea {
-  height: 300px;
+  height: 100px;
   width: 100%;
   outline: none;
   border-radius: 5px;
   border: 1px solid #ccc;
-  padding-left: 15px;
+  padding: 15px;
   font-size: 16px;
   border-bottom-width: 2px;
   transition: all 0.3s ease;
 }
+
 .user-details .input-box input:focus,
 .user-details .input-box textarea:focus,
 .user-details .input-box input:valid {
   border-color: lightblue;
 }
-form .gender-details{
+
+form .object-receive {
   width: 100%;
 }
-form .gender-details .gender-title {
-  font-size: 20px;
-  font-weight: 500;
-}
 
-form .gender-details .category {
+form .object-receive .category {
   display: flex;
   justify-content: space-between;
   margin: 14px 0;
   width: 100%;
 }
 
-.gender-details .category label {
+.object-receive .category label {
   display: flex;
   align-items: center;
   flex-grow: 1;
   justify-content: center;
   text-align: center;
-
+  position: relative;
 }
 
-.gender-details .category .dot {
+.object-receive .category .dot {
   height: 18px;
   width: 18px;
   background: #d9d9d9;
@@ -119,28 +117,26 @@ form .gender-details .category {
   transition: all 0.3s ease;
 }
 
-#dot-1:checked ~ .category label .one,
-#dot-2:checked ~ .category label .two,
-#dot-3:checked ~ .category label .three {
+form input[type="radio"]{
+  display: none;
+}
+
+#dot-1:checked + label .dot,
+#dot-2:checked + label .dot,
+#dot-3:checked + label .dot {
   border: 5px solid black;
   background-color: #71b7e6;
 }
 
-
-form input[type="radio"] {
-  display: none;
-}
-
-form .button {
-  height: 45px;
+form .button-post-notification {
+  height: 35px;
   display: flex;
-  flex-grow:2 ;
-
+  flex-grow: 2;
 }
 
-form .button input {
+form .button-post-notification input {
   height: 100%;
-  width: 100%;
+  width: 50%;
   outline: none;
   color: #fff;
   border: none;
@@ -151,19 +147,35 @@ form .button input {
   background: lightblue;
   margin: 0 30px;
 }
-form .button input:hover{
+
+form .button-post-notification .send:hover {
   background: white;
   color: black;
-  border:2px solid lightblue ;
+  border: 2px solid lightblue;
   cursor: pointer;
 }
-@media (max-width: 584px){
-  .container{
+form .button-post-notification .cancel {
+  background: #cccccc;
+  color: black;
+  cursor: pointer;
+}
+
+form .button-post-notification .cancel:hover {
+  background: #c4bdbd;
+  color: black;
+  cursor: pointer;
+}
+
+.error-create-notification {
+  color: red;
+}
+
+@media (max-width: 584px) {
+  .container-createNotification-nhi {
     max-width: 100%;
   }
   form .user-details .input-box {
     margin-bottom: 15px;
-    width:100%;
+    width: 100%;
   }
-
 }

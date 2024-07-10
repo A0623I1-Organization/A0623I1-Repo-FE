@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;800&display=swap");
+
 :root {
   --Red: hsl(1, 90%, 64%);
   --Blue: hsl(219, 85%, 26%);
@@ -10,13 +10,8 @@
   --Dark-grayish-blue: hsl(219, 12%, 42%);
   --Very-dark-blue: hsl(224, 21%, 14%);
 }
-* {
-  font-family: "Plus Jakarta Sans", sans-serif;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-.container {
+
+.container-listNotification-nhi {
   width: 100%;
   background-color: var(--Light-grayish-blue-1);
   border-radius: 0.5rem;
@@ -30,7 +25,7 @@
   margin-left: 5%;
   margin-right: 5%;
 }
-header {
+.header-notification-nhi {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,10 +53,10 @@ header {
 #mark_all:hover {
   color: var(--Blue);
 }
-p {
+.tag-p-notification {
   color: var(--Dark-grayish-blue);
 }
-main {
+.main-notification-nhi {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -79,7 +74,7 @@ main {
   cursor:pointer;
   background-color:#8acafa;
 }
-img{
+.img-tag-notification-nhi{
   width: 50px;
 }
 .description{
@@ -88,11 +83,11 @@ img{
   flex-direction: column;
   justify-content: space-between;
 }
-strong{
+.strong-tag-notification-nhi{
   color: var(--Very-dark-blue);
   cursor: pointer;
 }
-strong:hover{
+.strong-tag-notification-nhi:hover{
   color: var(--Blue);
 }
 .unread{
@@ -126,7 +121,7 @@ strong:hover{
 }
 
 @media screen and (max-width:550px) {
-  .container{
+  .container-listNotification-nhi{
     margin: 0;
   }
 }
@@ -134,16 +129,16 @@ strong:hover{
 
 
 
-.container::-webkit-scrollbar {
+.container-listNotification-nhi::-webkit-scrollbar {
   width: 10px;
 }
 
-.container::-webkit-scrollbar-thumb {
+.container-listNotification-nhi::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
 }
 
-.container::-webkit-scrollbar-thumb:hover {
+.container-listNotification-nhi::-webkit-scrollbar-thumb:hover {
   background: #555;
 
 }
