@@ -15,12 +15,17 @@ import {Dashboard} from "../pages/Dashboard/Dashboard";
 import ImportPricing from '../components/Inventory/ImportPricing';
 import {NotificationList} from "../pages/Dashboard/Notification/NotificationList";
 import Loading from '../ui/Loading';
+import ProductDetail from '../pages/Home/ProductDetail';
 
 const routes = [
     {
         path: '/',
         element: <HomePage/>,
         exact: true,
+    },
+    {
+        path: '/product/:id',
+        element: <ProductDetail/>,
     },
     {
         path: '/login',
