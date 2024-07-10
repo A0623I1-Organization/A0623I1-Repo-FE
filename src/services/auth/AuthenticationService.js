@@ -1,7 +1,7 @@
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 
-const baseURL = "http://localhost:8080";
+const baseURL = "http://10.10.9.189:8080";
 
 export const login = async (data) => {
     try {
@@ -90,8 +90,7 @@ export const updateUser = async (userData, token) => {
 
 export const updatePasswordUser = async (userData, token) => {
     try{
-        const userId = userData.userId;
-        const response = await axios.put(`${baseURL}/auth/update-password/${userId}`, userData,
+        const response = await axios.put(`${baseURL}/auth/update-password`, userData,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })

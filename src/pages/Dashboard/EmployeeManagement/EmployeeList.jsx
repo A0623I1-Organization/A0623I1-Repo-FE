@@ -6,7 +6,7 @@ import {useForm} from "react-hook-form";
 import {toast} from "react-toastify";
 import "./Employee.scss";
 import Moment from "moment";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {MdOutlineModeEdit} from "react-icons/md";
 import {BiSolidShow} from "react-icons/bi";
 import {IoTrashSharp} from "react-icons/io5";
@@ -14,6 +14,7 @@ import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
 import {EmployeeDetailModal} from "./employDetailModal/EmployeeDetailModal";
 
 export function EmployeeList() {
+    const {role} = useParams();
     const [employeeList, setEmployeeList] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [userId, setUserId] = useState(null);
@@ -56,7 +57,7 @@ export function EmployeeList() {
     const closeDetailModal = () => setIsModalOpen(false);
 
     return (
-        <DashboardMain
+        <DashboardMain path={role}
             content={
                 <div className="content-body">
                     <div className="content-element">
@@ -66,7 +67,7 @@ export function EmployeeList() {
                                        placeholder="Nhập nội dung tìm kiếm"/>
                                 <button className="btn btn-search">Search</button>
                             </form>
-                            <Link to={"/dashboard/employee-create"} className="link-move">Thêm mới nhân
+                            <Link to={"/dashboard/storeManager/employee-create"} className="link-move">Thêm mới nhân
                                 viên</Link>
                         </div>
                         <div className="box-content">
@@ -94,7 +95,7 @@ export function EmployeeList() {
                                             <a onClick={() => openDetailModal(employee.userId)}>
                                                 <BiSolidShow fill="#3dc8d8"/>
                                             </a>
-                                            <Link to={`/dashboard/employee-create/${employee.userId}`}>
+                                            <Link to={`/dashboard/storeManager/employee-create/${employee.userId}`}>
                                                 <MdOutlineModeEdit fill="#00a762"/>
                                             </Link>
                                             <a>

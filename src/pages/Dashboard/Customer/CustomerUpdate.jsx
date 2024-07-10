@@ -9,6 +9,7 @@ import ModalDelete from '../../../ui/ModalDelete';
 import { useParams } from 'react-router-dom';
 
 function CustomerUpdate() {
+    const {role} = useParams();
     const [isModalOpen, setModalOpen] = useState(false);
     const [customer, setCustomer] = useState(null);
     const [customerType, setCustomerType] = useState(null);
@@ -89,7 +90,7 @@ function CustomerUpdate() {
     };
 
     return (
-        <DashboardMain
+        <DashboardMain path={role}
             content={
                 <main id="main-customer">
                     <h2>Sửa khách hàng</h2>

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getAllPricing =async (page)=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/pricing/all?page=${page}`)
+        let temp = await axios.get(`http://10.10.9.189:8080/api/pricing/all?page=${page}`)
         return temp.data;
     }catch (e)
     {
@@ -11,7 +11,7 @@ export const getAllPricing =async (page)=>{
 }
 export const getAllPricingByProductId = async (productId,page)=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/pricing/byProductId/${productId}?page=${page}`)
+        let temp = await axios.get(`http://10.10.9.189:8080/api/pricing/byProductId/${productId}?page=${page}`)
         return temp.data;
     }catch (e)
     {
@@ -20,7 +20,7 @@ export const getAllPricingByProductId = async (productId,page)=>{
 }
 export const getPricingByPricingCode = async (pricingCode) => {
     try {
-        const temp = await axios.get(`http://localhost:8080/api/pricing/byCode`, {
+        const temp = await axios.get(`http://10.10.9.189:8080/api/pricing/byCode`, {
             params: {
                 pricingCode: pricingCode
             }

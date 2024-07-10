@@ -3,11 +3,12 @@ import { SidebarDashboard } from "../../../../components/Sidebar/SidebarDashboar
 import { useEffect, useState } from "react";
 import './warehouse.scss';
 import * as productService from '../../../../services/products/product-service';
-import {NavLink, useNavigate} from "react-router-dom";
+import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
 import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
 import {DashboardMain} from "../../../../components/Dashboard/DashboardMain";
 
 export const WareHouse = () => {
+    const {role} = useParams();
     const navigate = useNavigate()
     const [products, setProducts] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -79,10 +80,10 @@ export const WareHouse = () => {
     };
 
     return (
-       <DashboardMain content={
+       <DashboardMain path={role} content={
                     <div className="content-body">
                         <div className="nav-link-container">
-                            <NavLink className="nav-link" to='/dashboard/create-pricing'>Thêm Hàng Hóa</NavLink>
+                            <Link className="nav-link" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</Link>
                         </div>
                         <div className="header-search">
                             {/* Header search content */}
