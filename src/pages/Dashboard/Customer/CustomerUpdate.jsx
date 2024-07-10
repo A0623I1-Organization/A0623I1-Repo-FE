@@ -3,8 +3,8 @@ import { DashboardMain } from '../../../components/Dashboard/DashboardMain';
 import './Customer.scss'
 import { useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
-import * as CustomerService from '../../../services/customer/CusromerService'
-import * as CustomerTypeService from '../../../services/customer/CusromerTypeService'
+import * as CustomerService from '../../../services/customer/CustomerService'
+import * as CustomerTypeService from '../../../services/customer/CustomerTypeService'
 import ModalDelete from '../../../ui/ModalDelete';
 import { useParams } from 'react-router-dom';
 
