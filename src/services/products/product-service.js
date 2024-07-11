@@ -1,7 +1,8 @@
 import axios from "axios";
+
 export const getAllProduct = async (keyword, sortBy, ascending, page) => {
     try {
-        let url = `http://localhost:8080/api/products?page=${page}`;
+        let url = `http://localhost:8080/api/auth/products?page=${page}`;
 
         // Add keyword if provided
         if (keyword) {
@@ -24,7 +25,7 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
 
 export const createProduct =async (product)=>{
     try {
-        await axios.post(`http://localhost:8080/api/products`,product)
+        await axios.post(`http://localhost:8080/auth/api/products`,product)
     }catch (e)
     {
         console.log(e)

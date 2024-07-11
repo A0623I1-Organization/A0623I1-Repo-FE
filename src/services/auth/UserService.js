@@ -11,7 +11,7 @@ export const updateAvatarAndBackgroundImage = async (username, avatar, backgroun
             backgroundImage: backgroundImage
         }
         const token = localStorage.getItem("token");
-        const response = await axios.patch(`${baseURL}/auth/update-image`, userData,
+        const response = await axios.patch(`${baseURL}/api/auth/update-image`, userData,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })

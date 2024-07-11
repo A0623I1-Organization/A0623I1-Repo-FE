@@ -1,9 +1,7 @@
-import { HeaderDashboard } from "../../../../components/Header/HeaderDashboard";
-import { SidebarDashboard } from "../../../../components/Sidebar/SidebarDashboard";
 import { useEffect, useState } from "react";
 import './warehouse.scss';
 import * as productService from '../../../../services/products/product-service';
-import { NavLink, useNavigate } from "react-router-dom";
+import {NavLink, useNavigate, useParams} from "react-router-dom";
 import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
 
@@ -107,7 +105,7 @@ export const WareHouse = () => {
         <DashboardMain path={role} content={
             <div className="content-body">
                 <div className="nav-link-container">
-                    <NavLink className="nav-link" to='/dashboard/create-pricing'>Thêm Hàng Hóa</NavLink>
+                    <NavLink className="nav-link" to='/dashboard/salesMan/create-pricing'>Thêm Hàng Hóa</NavLink>
                 </div>
                 <div className="header-search">
                     {/* Header search content */}

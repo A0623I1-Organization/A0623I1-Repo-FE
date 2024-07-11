@@ -1,14 +1,8 @@
-import axios from "axios";
-
-const baseURL = "http://localhost:8080";
+import axiosInstance from "../../utils/axiosInstance";
 
 export const getTotalCustomer = async () => {
     try {
-        const token = localStorage.getItem("token");
-        const temp = await axios.get(`${baseURL}/api/auth/dashboard/total-customer`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const temp = await axiosInstance.get(`/dashboard/total-customer`)
         return temp.data;
     } catch (e) {
         console.log(e)
@@ -18,11 +12,7 @@ export const getTotalCustomer = async () => {
 
 export const getTotalBills = async () => {
     try {
-        const token = localStorage.getItem("token");
-        const temp = await axios.get(`${baseURL}/api/auth/dashboard/total-bill`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const temp = await axiosInstance.get(`/dashboard/total-bill`)
         return temp.data;
     } catch (e) {
         console.log(e)
@@ -32,11 +22,7 @@ export const getTotalBills = async () => {
 
 export const getRevenues = async (option) => {
     try {
-        const token = localStorage.getItem("token");
-        const temp = await axios.get(`${baseURL}/api/auth/dashboard/revenues/${option}`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const temp = await axiosInstance.get(`/dashboard/revenues/${option}`)
         return temp.data;
     } catch (e) {
         console.log(e)
@@ -46,11 +32,7 @@ export const getRevenues = async (option) => {
 
 export const getBestSalespersons = async () => {
     try {
-        const token = localStorage.getItem("token");
-        const temp = await axios.get(`${baseURL}/api/auth/dashboard/best-salesperson`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const temp = await axiosInstance.get(`/dashboard/best-salesperson`)
         return temp.data;
     } catch (e) {
         console.log(e)
@@ -60,11 +42,7 @@ export const getBestSalespersons = async () => {
 
 export const getNewBills = async () => {
     try {
-        const token = localStorage.getItem("token");
-        const temp = await axios.get(`${baseURL}/api/auth/dashboard/new-bills`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const temp = await axiosInstance.get(`/dashboard/new-bills`)
         return temp.data;
     } catch (e) {
         console.log(e)
