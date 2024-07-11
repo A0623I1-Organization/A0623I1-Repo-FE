@@ -7,12 +7,14 @@ import "./Employee.scss";
 import * as roleService from "../../../services/employee/RoleService";
 import * as employeeService from "../../../services/employee/EmployeeService";
 import {useParams} from "react-router-dom";
+import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
 
-export function EmployeeCreate(){
-    const { id } = useParams();
+export function EmployeeCreate() {
+    const {role} = useParams();
+    const {id} = useParams();
     const [employee, setEmployee] = useState(null);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
-    const [roles,setRoles] = useState([]);
+    const [roles, setRoles] = useState([]);
     const {register, handleSubmit, setValue, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
@@ -84,104 +86,97 @@ export function EmployeeCreate(){
         }
     }
 
-    return(
-        <div className="app-container">
-            <HeaderDashboard parentCallback={callbackFunction}></HeaderDashboard>
-            <div id={"content-wrapper"}>
-                <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
-                <div className="app-content">
-
-                    <div className="content-body">
-                        <form className="content-element" onSubmit={handleSubmit(onSubmit)}>
-                            <div className="flex-content">
-                                <div className="form-operation">
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Mã nhân viên: </span>
-                                        </label>
-                                        <input type="text" {...register("userCode")} />
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Tên nhân viên: </span>
-                                        </label>
-                                        <input type="text" {...register("fullName")}/>
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Ngày sinh: </span>
-                                        </label>
-                                        <input type="date" {...register("dateOfBirth")} />
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Giới tính: </span>
-                                        </label>
-                                        <div className="form-gender">
-                                            <input type="radio" defaultChecked={employee?.gender === 0}
-                                                   {...register("gender")} value={0}/>
-                                            <span>Nam</span>
-                                            <input type="radio" defaultChecked={employee?.gender === 1}
-                                                   {...register("gender")} value={1}/>
-                                            <span>Nữ</span>
-                                            <input type="radio" defaultChecked={employee?.gender === 2}
-                                                   {...register("gender")} value={2}/>
-                                            <span>Khác</span>
-                                        </div>
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Email: </span>
-                                        </label>
-                                        <input type="email" {...register("email")}/>
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Địa chỉ: </span>
-                                        </label>
-                                        <input type="text" {...register("address")} />
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Số điện thoại: </span>
-                                        </label>
-                                        <input type="text" {...register("phoneNumber")} />
-                                    </div>
-                                    <div className="form-element">
-                                        <label>
-                                            <span className={"element-title"}>Chức vụ: </span>
-                                        </label>
-                                        <select {...register("role")}>
-                                            <option value="">--Chọn một vị trí--</option>
-                                            {roles && roles.map((item) => (
-                                                <option selected={item.roleId = employee?.role.roleId}
-                                                    value={JSON.stringify(item)}>{item.roleName}</option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="form-operation">
-                                    <div className="form-element">
-                                        <label>Tên tài khoản: </label>
-                                        <input type="text" {...register("username")} name="username"/>
-                                    </div>
-                                    <div className="new-password form-element">
-                                    <label>Mật khẩu: </label>
-                                        <input type="password" name="password" {...register("password")}/>
-                                        <p className="validate-error">Mật khẩu không đúng định dạng!!</p>
-                                    </div>
-
+    return (
+        <DashboardMain path={role} content={
+            <div className="content-body">
+                <form className="content-element" onSubmit={handleSubmit(onSubmit)}>
+                    <div className="flex-content">
+                        <div className="form-operation">
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Mã nhân viên: </span>
+                                </label>
+                                <input type="text" {...register("userCode")} />
+                            </div>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Tên nhân viên: </span>
+                                </label>
+                                <input type="text" {...register("fullName")}/>
+                            </div>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Ngày sinh: </span>
+                                </label>
+                                <input type="date" {...register("dateOfBirth")} />
+                            </div>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Giới tính: </span>
+                                </label>
+                                <div className="form-gender">
+                                    <input type="radio" defaultChecked={employee?.gender === 0}
+                                           {...register("gender")} value={0}/>
+                                    <span>Nam</span>
+                                    <input type="radio" defaultChecked={employee?.gender === 1}
+                                           {...register("gender")} value={1}/>
+                                    <span>Nữ</span>
+                                    <input type="radio" defaultChecked={employee?.gender === 2}
+                                           {...register("gender")} value={2}/>
+                                    <span>Khác</span>
                                 </div>
                             </div>
-                            <div className="button-save">
-                                <button type="submit" className="btn-submit">
-                                    {employee ? "Sửa đổi": "Thêm mới"}
-                                </button>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Email: </span>
+                                </label>
+                                <input type="email" {...register("email")}/>
                             </div>
-                        </form>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Địa chỉ: </span>
+                                </label>
+                                <input type="text" {...register("address")} />
+                            </div>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Số điện thoại: </span>
+                                </label>
+                                <input type="text" {...register("phoneNumber")} />
+                            </div>
+                            <div className="form-element">
+                                <label>
+                                    <span className={"element-title"}>Chức vụ: </span>
+                                </label>
+                                <select {...register("role")}>
+                                    <option value="">--Chọn một vị trí--</option>
+                                    {roles && roles.map((item) => (
+                                        <option selected={item.roleId = employee?.role.roleId}
+                                                value={JSON.stringify(item)}>{item.roleName}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="form-operation">
+                            <div className="form-element">
+                                <label>Tên tài khoản: </label>
+                                <input type="text" {...register("username")} name="username"/>
+                            </div>
+                            <div className="new-password form-element">
+                                <label>Mật khẩu: </label>
+                                <input type="password" name="password" {...register("password")}/>
+                                <p className="validate-error">Mật khẩu không đúng định dạng!!</p>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
+                    <div className="button-save">
+                        <button type="submit" className="btn-submit">
+                            {employee ? "Sửa đổi" : "Thêm mới"}
+                        </button>
+                    </div>
+                </form>
             </div>
-        </div>
+        }/>
     );
 }

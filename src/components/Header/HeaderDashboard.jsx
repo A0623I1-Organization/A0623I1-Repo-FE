@@ -12,18 +12,25 @@ import { IoIosLogOut } from "react-icons/io";
 
 export function HeaderDashboard(props) {
     const [fullName, setFullName] = useState("");
+    const [avatarUrl, setAvatarUrl] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
-    const [darkmode, setDarkmode] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
     const navigate = useNavigate();
 
     useEffect(()=> {
         getUserName();
+        getAvatar();
     },[])
 
     const getUserName = () => {
         const fullName = localStorage.getItem('fullName')
         setFullName(fullName);
+    }
+
+    const getAvatar = () => {
+        const avatar = localStorage.getItem('avatar')
+        setAvatarUrl(avatar)
     }
 
     const handleShowUserMenu = () => {
@@ -41,8 +48,8 @@ export function HeaderDashboard(props) {
     }
 
     const handleDarkMode = () => {
-        setDarkmode(!darkmode);
-        if (darkmode) {
+        setDarkMode(!darkMode);
+        if (darkMode) {
             document.documentElement.classList.add("dark");
         }else {
             document.documentElement.classList.remove("dark");
@@ -78,10 +85,7 @@ export function HeaderDashboard(props) {
                 </div>
                 <div className="user-box show-dropdown" onClick={handleShowUserMenu}>
                     <div className="avatar">
-                        <img
-                            src={avatar}
-                            alt="avatar"
-                        />
+                        {avatarUrl ? <img src={avatarUrl} alt="avatar"/> : <img src={avatar} alt="avatar"/>}
                     </div>
                     <div className="username">{fullName}</div>
                     <TiArrowSortedDown/>
@@ -90,17 +94,14 @@ export function HeaderDashboard(props) {
                     <div className="dropdown-content">
                         <div className="user-full-name">
                             <div className="avatar">
-                                <img
-                                    src={avatar}
-                                    alt="avatar"
-                                />
+                                {avatarUrl ? <img src={avatarUrl} alt="avatar"/> : <img src={avatar} alt="avatar"/>}
                             </div>
                             {fullName}
                         </div>
-                        <a href="#">
+                        <Link to={`/dashboard/infor`}>
                             <FaRegUserCircle/>
                             Thông tin cá nhân
-                        </a>
+                        </Link>
                         <a className="mode-switch" title="Switch Theme" onClick={handleDarkMode}>
                             <FaCloudMoon />
                             Chế độ màn hình tối

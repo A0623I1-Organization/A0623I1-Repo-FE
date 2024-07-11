@@ -9,7 +9,7 @@ import * as colorService from '../../../../../services/products/color-service'
 import * as categoryService from '../../../../../services/products/category-service'
 import * as productTypeService from '../../../../../services/products/productType-service'
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {color} from "framer-motion";
 import {generateAndUploadQRCode} from "../../../../../firebase/generateAndUploadQRCode";
 import {DashboardMain} from "../../../../../components/Dashboard/DashboardMain";
@@ -42,6 +42,7 @@ const schema = yup.object().shape({
 });
 
 const CreatePricing = () => {
+    const {role} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [colors, setColors] = useState([])
@@ -206,7 +207,7 @@ const CreatePricing = () => {
 
 
     return (
-        <DashboardMain content={
+        <DashboardMain path={role} content={
             <div className="content-body">
                 <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.formGroup}>

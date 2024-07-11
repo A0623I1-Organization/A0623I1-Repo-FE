@@ -8,6 +8,7 @@ import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFir
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
 
 export const WareHouse = () => {
+    const {role} = useParams();
     const navigate = useNavigate()
     const [products, setProducts] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -105,7 +106,7 @@ export const WareHouse = () => {
     };
 
     return (
-        <DashboardMain content={
+        <DashboardMain path={role} content={
             <div className="content-body">
                 <div className="nav-link-container">
                     <NavLink className="nav-link" to='/dashboard/create-pricing'>Thêm Hàng Hóa</NavLink>

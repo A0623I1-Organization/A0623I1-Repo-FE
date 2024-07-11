@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import './warehouse.scss';
 import * as pricingService from '../../../../services/products/pricing-service';
-import { NavLink, useLocation } from "react-router-dom";
+import {NavLink, useLocation, useParams} from "react-router-dom";
 import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
 
 export const PricingView = () => {
-    const {state} = useLocation();
+    const {role} = useParams();
+    const {state} = useLocation()
     const [pricings, setPricings] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [page, setPage] = useState(0);
@@ -97,7 +98,7 @@ export const PricingView = () => {
     };
 
     return (
-        <DashboardMain content={
+        <DashboardMain path={role} content={
             <div className="content-body">
                 <div>
                     <div className="nav-link-container">

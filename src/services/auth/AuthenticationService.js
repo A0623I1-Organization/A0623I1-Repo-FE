@@ -90,8 +90,7 @@ export const updateUser = async (userData, token) => {
 
 export const updatePasswordUser = async (userData, token) => {
     try{
-        const userId = userData.userId;
-        const response = await axios.put(`${baseURL}/auth/update-password/${userId}`, userData,
+        const response = await axios.put(`${baseURL}/auth/update-password`, userData,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
