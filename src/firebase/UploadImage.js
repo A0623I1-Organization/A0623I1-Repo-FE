@@ -63,7 +63,7 @@ export const UploadMultipleImage = ({ onImageUrlChange }) => {
     );
 };
 
-export const UploadOneImage = ({ onImageUrlChange,getDisabled, className }) => {
+export const UploadOneImage = ({ onImageUrlChange, getDisabled, className }) => {
     const [image, setImage] = useState(null);
     const [disabled,setDisabled]= useState(true);
 

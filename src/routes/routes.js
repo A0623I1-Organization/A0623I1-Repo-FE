@@ -58,7 +58,7 @@ const routes = [
         private: true
     },
     {
-        path: '/dashboard/payment',
+        path: '/dashboard/:role/payment',
         element: <BillForm/>,
         private: true,
     },

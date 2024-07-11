@@ -20,7 +20,8 @@ export function PersonInfo() {
     const [openEyeOne, setOpenEyeOne] = useState(false);
     const [openEyeTwo, setOpenEyeTwo] = useState(false);
     const [openEyeThree, setOpenEyeThree] = useState(false);
-    const [roles, setRoles] = useState([])
+    const [roles, setRoles] = useState([]);
+    const [disabled, setDisabled] = useState(true);
     const {register, handleSubmit, setValue, getValues, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
@@ -128,7 +129,11 @@ export function PersonInfo() {
                             <div className="input-file">
                                 <UploadOneImage
                                     className ="avatar-input"
+                                    getDisabled={(e)=>setDisabled(e)}
                                     onImageUrlChange ={(url) => handleOneImageUrlChange(url, "avatar")}/>
+                            </div>
+                            <div className="person-name">
+                                <span>{userInfo.fullName}</span>
                             </div>
                         </div>
                         <div className="update-bg">
@@ -139,6 +144,7 @@ export function PersonInfo() {
                             <UploadOneImage
                                 className="background-input"
                                 style={{ display: "none" }}
+                                getDisabled={(e)=>setDisabled(e)}
                                 onImageUrlChange={(url) => handleOneImageUrlChange(url, "background")}/>
                             </div>
                             <span>Chỉnh sửa ảnh bìa</span>
@@ -146,12 +152,12 @@ export function PersonInfo() {
                     </div>
                     <div className="flex-content">
                     <div className="person-info">
-                            <div className="info-element">
-                                <label>
-                                    <span className={"element-title"}>Tên nhân viên: </span>
-                                    <span className="element-value">{userInfo.fullName}</span>
-                                </label>
-                            </div>
+                            {/*<div className="info-element">*/}
+                            {/*    <label>*/}
+                            {/*        <span className={"element-title"}>Tên nhân viên: </span>*/}
+                            {/*        <span className="element-value">{userInfo.fullName}</span>*/}
+                            {/*    </label>*/}
+                            {/*</div>*/}
                             <div className="info-element">
                                 <label>
                                     <span className={"element-title"}>Mã nhân viên: </span>
