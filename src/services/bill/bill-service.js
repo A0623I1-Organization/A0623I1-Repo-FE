@@ -1,5 +1,4 @@
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
 
 export const createBill =async (bill)=>{
     try {
@@ -21,7 +20,7 @@ export const getDailySalesRevenue = async(date) => {
                 date: date
             }
         })
-        console.log(response.data);
+        return response.data;
     }catch(e){
         console.log(e);
     }
@@ -34,7 +33,7 @@ export const getMonthlySalesRevenue = async(month) => {
                 month: month
             }
         })
-        console.log(response.data);
+        return response.data;
     }catch(e){
         console.log(e);
     }
@@ -48,6 +47,32 @@ export const getDailySalesRevenueForMonth = async(month) => {
             }
         })
         console.log(response.data);
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const getDailySoldPricings = async(date) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/bills/sold-pricings/daily`,{
+            params: {
+                date: date
+            }
+        })
+        return response.data;
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const getMonthlySoldPricings = async(month) => {
+    try {
+        const response = await axios.get(`http://localhost:8080/api/bills/sold-pricings/monthly`,{
+            params: {
+                month: month
+            }
+        })
+        return response.data;
     }catch(e){
         console.log(e);
     }
