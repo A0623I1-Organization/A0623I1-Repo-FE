@@ -1,8 +1,8 @@
-import axios from "axios";
+import axiosInstance from '../../utils/axiosInstance';
 
 export const getAllCategory =async ()=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/category`)
+        let temp = await axiosInstance.get(`/category`)
         return temp.data;
     }catch (e)
     {
