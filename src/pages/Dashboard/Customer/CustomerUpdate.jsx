@@ -1,68 +1,175 @@
-import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DashboardMain } from '../../../components/Dashboard/DashboardMain';
+import './Customer.scss'
+import { useForm } from 'react-hook-form';
+import { toast } from "react-toastify";
+import * as CustomerService from '../../../services/customer/CusromerService'
+import * as CustomerTypeService from '../../../services/customer/CusromerTypeService'
 import ModalDelete from '../../../ui/ModalDelete';
+import { useParams } from 'react-router-dom';
 
 function CustomerUpdate() {
     const [isModalOpen, setModalOpen] = useState(false);
+    const [customer, setCustomer] = useState(null);
+    const [customerType, setCustomerType] = useState(null);
+    // const [customerTypes, setCustomerTypes] = useState([]);
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm();
+    const { id } = useParams()
+    const [validateError, setValidateError] = useState([])
+
+    useEffect(() => {
+        getCustomer()
+        getAllCustomerType()
+    }, []);
+
+    useEffect(() => {
+        if (customer !== null) {
+            setValue('customerCode', customer?.customerCode);
+            setValue('customerName', customer?.customerName);
+            setValue('dateOfBirth', customer?.dateOfBirth);
+            setValue('gender', customer?.gender);
+            setValue('email', customer?.email);
+            setValue('phoneNumber', customer?.phoneNumber);
+            setValue('address', customer?.address);
+            setValue('accumulatedPoints', customer?.accumulatedPoints);
+            setValue('customerType', JSON.stringify(customer.customerType));
+        }
+    }, [customer]);
+
+    const getCustomer = async () => {
+        try {
+            const response = await CustomerService.findById(id);
+            setCustomer(response);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const getAllCustomerType = async () => {
+        try {
+            const response = await CustomerTypeService.getAll();
+            setCustomerType(response)
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
-    const handleSubmit = () => {
-        console.log('Xác nhận');
+
+    const handleSubmitDelete = () => {
         closeModal();
+    };
+
+    const handleChangeSelect = (event) => {
+        setValue('customerType', event.target.value);
+    };
+
+    const onSubmit = async (data) => {
+        try {
+            data.customerType = JSON.parse(data.customerType)
+            console.log(data);
+            await CustomerService.updateCustomer(id, data);
+            setValidateError([])
+            toast.success("Sửa khách hàng thành công")
+        } catch (error) {
+            setValidateError(error);
+        }
+    };
+
+
+
+    const validateDateOfBirth = (value) => {
+        const selectedDate = new Date(value);
+        const currentDate = new Date();
+        if (selectedDate >= currentDate) {
+            return 'Ngày sinh phải là ngày quá khứ !';
+        }
+        return true;
     };
 
     return (
         <DashboardMain
             content={
-                <main id="main">
+                <main id="main-customer">
                     <h2>Sửa khách hàng</h2>
                     <div className="create">
-                        <form action="" className="form">
+                        <form className="form" onSubmit={handleSubmit(onSubmit)}>
                             <div className="item1">
                                 <label htmlFor="">
-                                    <span>Mã khách hàng</span>
-                                    <input type="text" name="" placeholder="" />
+                                    <span>Mã khách hàng*</span>
+                                    <input type="text" placeholder=""  {...register("customerCode", {
+                                        required: 'Mã khách hàng không được để trống !', pattern: {
+                                            value: /^KH-\d{3,}$/,
+                                            message: 'Mã khách hàng phải có định dạng KH-XXX',
+                                        },
+                                    })} />
+                                    {errors.customerCode && <small>{errors.customerCode.message}</small>}
+                                    <small>{validateError?.customerCode}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Giới tính</span>
-                                    <select name="" id="">
-                                        <option value="">Nam</option>
-                                        <option value="">Nữ</option>
-                                        <option value="">Khác</option>
+                                    <span>Giới tính*</span>
+                                    <select id="" {...register("gender", { required: 'Giới tính không được để trống !', })}>
+                                        <option value="" disabled>-- Chọn giới tính --</option>
+                                        <option value="0">Nam</option>
+                                        <option value="1">Nữ</option>
+                                        <option value="2">Khác</option>
                                     </select>
+                                    {errors.gender && <small>{errors.gender.message}</small>}
+                                    <small>{validateError?.gender}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Họ tên</span>
-                                    <input type="text" name="" placeholder="" />
+                                    <span>Họ tên*</span>
+                                    <input type="text" {...register("customerName", { required: 'Tên khách hàng không được để trống !', })} placeholder="" />
+                                    {errors.customerName && <small>{errors.customerName.message}</small>}
+                                    <small>{validateError?.customerName}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Số điện thoại</span>
-                                    <input type="text" name="" placeholder="" />
+                                    <span>Số điện thoại*</span>
+                                    <input type="text" {...register("phoneNumber", {
+                                        required: 'Số điện thoại không được để trống !', pattern: {
+                                            // value: /^+84|0\d{9}/,
+                                            value: /^(\+84|0\d{9})$/,
+                                            message: 'Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!',
+                                        },
+                                    })} placeholder="" />
+                                    {errors.phoneNumber && <small>{errors.phoneNumber.message}</small>}
+                                    <small>{validateError?.phoneNumber}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Ngày sinh</span>
-                                    <input type="date" name="" placeholder="" />
+                                    <span>Ngày sinh*</span>
+                                    <input type="date" {...register("dateOfBirth", { required: 'Ngày sinh không được để trống !', validate: validateDateOfBirth })} placeholder="" />
+                                    {errors.dateOfBirth && <small>{errors.dateOfBirth.message}</small>}
+                                    <small>{validateError?.dateOfBirth}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Email</span>
-                                    <input type="text" name="" placeholder="" />
+                                    <span>Email*</span>
+                                    <input type="text" {...register("email", { required: 'Địa chỉ email không được để trống !', })} placeholder="" />
+                                    {errors.email && <small>{errors.email.message}</small>}
+                                    <small>{validateError?.email}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Địa chỉ</span>
-                                    <input type="text" name="" placeholder="" />
+                                    <span>Địa chỉ*</span>
+                                    <input type="text" {...register("address", { required: 'Địa chỉ không được để trống !', })} placeholder="" />
+                                    {errors.address && <small>{errors.address.message}</small>}
+                                    <small>{validateError?.address}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Điểm</span>
-                                    <input type="text" name="" placeholder="" />
+                                    <span>Điểm*</span>
+                                    <input type="text" {...register("accumulatedPoints", {})} placeholder="" />
+                                    <small>{validateError?.accumulatedPoints}</small>
                                 </label>
                                 <label htmlFor="">
-                                    <span>Cấp bậc</span>
-                                    <select name="" id="">
-                                        <option value="">VIP</option>
-                                        <option value="">VIP 1</option>
-                                        <option value="">VIP 2</option>
+                                    <span>Cấp bậc*</span>
+                                    <select {...register("customerType", {required: 'Cấp bậc không được để trống !',})}  onChange={handleChangeSelect}>
+                                        <option value="" disabled>-- Chọn cấp bậc --</option>
+                                        {
+                                            customerType?.map((item) => (
+                                                <option key={item.id} value={JSON.stringify(item)} >{item.typeName}</option>
+                                            ))
+                                        }
                                     </select>
+                                    {errors.customerType && <small>{errors.customerType.message}</small>}
                                 </label>
                             </div>
                             <div className="item2">
@@ -77,9 +184,9 @@ function CustomerUpdate() {
                             </div>
                         </form>
                     </div>
-                    <ModalDelete isOpen={isModalOpen} onClose={closeModal} title={"Xóa khách hàng"} content={"Xác nhận xóa khách hàng A"} submit={handleSubmit} />
+                    <ModalDelete isOpen={isModalOpen} onClose={closeModal} title={"Xóa khách hàng"} content={"Xác nhận xóa khách hàng A"} submit={handleSubmitDelete} />
                 </main>
-                
+
             }
         />
     );

@@ -129,7 +129,7 @@ const BillForm = () => {
         const today = new Date();
         setValue("dateCreate", Moment(today).format("DD/MM/yyyy"));
 
-        fetchUniqueBillCode();
+        // fetchUniqueBillCode();
     }, []);
 
 
@@ -139,7 +139,8 @@ const BillForm = () => {
                 setBillCode(res);
                 setValue('billCode', res);
             })
-            .catch(err => console.log(err));
+            .catch(err => console.log(err)
+        );
     };
 
     useEffect(() => {
@@ -276,7 +277,8 @@ const BillForm = () => {
                                         <td>{item.size}</td>
                                         <td>{item.price}</td>
                                         <td>{item.total}</td>
-                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>                                    </tr>
+                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>
+                                    </tr>
                                 ))}
                                 </tbody>
                             </table>
