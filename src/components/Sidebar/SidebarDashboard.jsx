@@ -116,7 +116,7 @@ export function SidebarDashboard(props) {
                     <div className={showDropdown === "warehouse" ? "dropdown-content show" : "dropdown-content"}>
                         <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/warehouse"}>Nhà kho</Link>
-                        <a href="#">Nhập liệu</a>
+                        <Link to={"/dashboard/import-pricings"}>Nhập liệu</Link>
                         <a href="#">Thống kê</a>
                         <a href="#">Xem thông báo</a>
                     </div>
