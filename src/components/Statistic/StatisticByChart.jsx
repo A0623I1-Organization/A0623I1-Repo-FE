@@ -10,6 +10,7 @@ const StatisticByChart = () => {
   const [time, setTime] = useState("");
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
+  const [noData, setNoData] = useState(false); // State to track if there is no data
 
   useEffect(() => {
     if (time) {
@@ -18,10 +19,23 @@ const StatisticByChart = () => {
   }, [time]);
 
   const fetchData = async (time) => {
-    const list = await getDailySalesRevenueForMonth(time);
-    const filledData = fillMissingDays(list, time);
-    setRevenueList(filledData);
-    updateChart(filledData);
+    try {
+      const list = await getDailySalesRevenueForMonth(time);
+
+      // Check if list is empty or null
+      if (!list || list.length === 0) {
+        setRevenueList([]);
+        setNoData(true); // Set noData state to true
+        return;
+      }
+
+      const filledData = fillMissingDays(list, time);
+      setRevenueList(filledData);
+      setNoData(false); // Set noData state to false when there is data
+      updateChart(filledData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleTimeChange = (e) => {
@@ -50,8 +64,8 @@ const StatisticByChart = () => {
       chartInstanceRef.current.destroy();
     }
 
-    const labels = data.map(item => item.day);
-    const revenues = data.map(item => item.revenue);
+    const labels = data.map((item) => item.day);
+    const revenues = data.map((item) => item.revenue);
 
     chartInstanceRef.current = new Chart(ctx, {
       type: "bar",
@@ -66,6 +80,8 @@ const StatisticByChart = () => {
         ],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false, // Disable the aspect ratio to control size with CSS
         scales: {
           x: {
             beginAtZero: true,
@@ -99,8 +115,15 @@ const StatisticByChart = () => {
                       required
                   />
                 </div>
-                <div className="chart-container flex justify-center" style={{ position: "relative", height: "70vh", width: "80vw" }}>
-                  <canvas id="myChart" ref={chartRef} style={{ height: '100%', width: '100%' }}></canvas>
+                <div
+                    className="chart-container flex justify-center"
+                    style={{ position: "relative", height: "70vh", width: "70vw" }}
+                >
+                  {noData ? (
+                      <p className="text-center text-gray-500">Không có dữ liệu cho thời gian đã chọn</p>
+                  ) : (
+                      <canvas id="myChart" ref={chartRef} style={{ height: "100%", width: "100%" }}></canvas>
+                  )}
                 </div>
               </div>
             </div>
