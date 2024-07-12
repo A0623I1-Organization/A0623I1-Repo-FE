@@ -136,8 +136,8 @@ export function PersonInfo() {
                                 <span>{userInfo.fullName}</span>
                             </div>
                         </div>
-                        <div className="update-bg">
-                            <div className="edit-button" onClick={() => triggerFileInput(".background-input")}>
+                        <div className="update-bg" onClick={() => triggerFileInput(".background-input")}>
+                            <div className="edit-button">
                                 <MdOutlineModeEdit/>
                             </div>
                             <div className="input-file">

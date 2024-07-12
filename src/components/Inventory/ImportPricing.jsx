@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {jwtDecode} from "jwt-decode";
 
-import "./ImportPricing.scss";
+// import "./ImportPricing.scss";
 import { HeaderDashboard } from "../Header/HeaderDashboard";
 import { SidebarDashboard } from "../Sidebar/SidebarDashboard";
 import { getPricingList, createReceipt, updatePricingQuantity } from "../../services/pricing/PricingService";
