@@ -35,13 +35,14 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          height: 200px;
+          height: 250px;
           background-repeat: no-repeat;
           background-position: left top;
           border-radius: 10px 10px 0 0;
           position: relative;
           margin-bottom: 100px;
           cursor: pointer;
+          background-size: cover;
 
           .update-avatar {
             width: 170px;

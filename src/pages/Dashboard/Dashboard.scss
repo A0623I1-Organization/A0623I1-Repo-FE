@@ -11,13 +11,18 @@
   margin: 0 auto;
   max-height: 100%;
   display: flex;
+  background-image: var(--background-image);
+  //background-repeat: no-repeat;
+  //background-position: center center;
+  //background-size: cover;
+
   .app-content {
     padding: 16px;
     height: 100%;
     display: flex;
     width: 100%;
     overflow: auto;
-    background: var(--background-dashboard);
+    //background: var(--background-dashboard);
 
     .content-body {
       margin-top: 60px;

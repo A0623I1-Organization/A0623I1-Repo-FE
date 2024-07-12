@@ -1,11 +1,9 @@
-import axios from "axios";
-
-const baseURL = "http://localhost:8080/api/users";
+import axiosInstance from "../../utils/axiosInstance";
 
 export const getAllRoles = async () => {
     try {
-        const response = await axios.get(`${baseURL}/roles`);
-        console.log(response.data);
+        const response = await axiosInstance.get(`roles`);
+        console.log('Response:', response.data);
         return response.data;
     }catch (e) {
         console.log(e);

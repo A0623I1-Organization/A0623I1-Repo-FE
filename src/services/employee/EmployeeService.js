@@ -1,12 +1,8 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
-const baseURL = "http://localhost:8080/api/users";
-
-export const getAllEmployees = async (token, page, searchContent) => {
+export const getAllEmployees = async (page, searchContent) => {
     try {
-        const temp = await axios.get(`${baseURL}?page=${page}&searchContent=${searchContent}`, {
-            headers: {Authorization: `Bearer ${token}`}
-        });
+        const temp = await axiosInstance.get(`/users?page=${page}&searchContent=${searchContent}`)
         console.log(temp.data);
         return temp.data.users.content;
     } catch (e) {
@@ -15,11 +11,9 @@ export const getAllEmployees = async (token, page, searchContent) => {
     }
 }
 
-export const findEmployeeById = async (token ,id) => {
+export const findEmployeeById = async (id) => {
     try {
-        const temp = await axios.get(`${baseURL}/${id}`, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
+        const temp = await axiosInstance.get(`/users/${id}`)
         console.log(temp.data);
         return temp.data;
     }catch(e){
@@ -27,11 +21,9 @@ export const findEmployeeById = async (token ,id) => {
     }
 }
 
-export const saveEmployee = async (employee, token) => {
+export const saveEmployee = async (employee) => {
     try {
-        const temp = await axios.post(`${baseURL}`, employee, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
+        const temp = await axiosInstance.post(`/users`, employee)
         console.log(temp.data);
         return temp.data;
     }catch (e) {
@@ -40,11 +32,9 @@ export const saveEmployee = async (employee, token) => {
     }
 }
 
-export const updateEmployee = async (id, employee, token) => {
+export const updateEmployee = async (id, employee) => {
     try {
-        const temp = await axios.put(`${baseURL}/${id}`, employee, {
-            headers: {Authorization: `Bearer ${token}`}
-        })
+        const temp = await axiosInstance.put(`users/${id}`, employee)
         console.log(temp.data);
         return temp.data;
     } catch (e) {
