@@ -174,7 +174,7 @@ const CreatePricing = () => {
                 })),
                 productType: JSON.parse(data.productType)
             };
-
+            console.log(updatedData);
             productService.createProduct(updatedData)
                 .then(() => {
                     toast.success('Create Success');

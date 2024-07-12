@@ -49,7 +49,7 @@ const BillForm = () => {
     const [customer, setCustomer] = useState('');
     const [promotionCode, setPromotionCode] = useState('');
     const [discount,setDiscount] = useState('0')
-   
+
     // React Hook Form setup
     const { register, handleSubmit, setValue, control, formState: { errors } } = useForm({
         resolver: yupResolver(schema),

@@ -2,6 +2,10 @@ import axiosInstance from '../../utils/axiosInstance';
 
 export const getAllPricingByProductId = async (productId,keyword, sortBy, ascending, page) => {
     try {
+        if(page === undefined)
+        {
+            page = 0;
+        }
         let url = `/pricing/all/${productId}?page=${page}`;
 
         // Add keyword if provided
