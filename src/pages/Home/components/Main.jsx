@@ -189,23 +189,24 @@ function Main(props) {
                 <h3>Thời trang nam nữ</h3>
                 <div className={styles.list}>
                     {products.map(product => (
-                        <div className={styles.item} key={product.id}>
+                        <div className={styles.item} key={product.productId}>
                             <a href="#!">
                                 <figure>
                                     <img
-                                        src={product.pricingImgUrl}
-                                        alt={product.pricingName}
+                                        src={product.productImages[0]?.imageUrl}
+                                        alt={product.productName}
                                         width="100%"
                                     />
                                 </figure>
                                 <figcaption>
-                                    <p>{fCurrency(product.price)} VND</p>
-                                    <p>{product.pricingName}</p>
+                                    <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
+                                    <p>{product.productName}</p>
                                 </figcaption>
                             </a>
                         </div>
                     ))}
                 </div>
+                {console.log(products)}
                 {loading && <Loading />}
                 {hasMore && !loading &&
                     (<button className={styles.button}>
@@ -213,7 +214,7 @@ function Main(props) {
                     </button>)
                 }
                 {
-                    products.length == 0 &&
+                    products.length == 0 && !loading &&
                     (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
                 }
             </section>
@@ -229,31 +230,31 @@ function Main(props) {
                 <h3>Sản phẩm mới</h3>
                 <div className={styles.list}>
                     {productsNew.map(product => (
-                        <div className={styles.item} key={product.id}>
+                        <div className={styles.item} key={product.productId}>
                             <a href="#!">
                                 <figure>
                                     <img
-                                        src={product.pricingImgUrl}
-                                        alt={product.pricingName}
+                                        src={product.productImages[0]?.imageUrl}
+                                        alt={product.productName}
                                         width="100%"
                                     />
                                 </figure>
                                 <figcaption>
-                                    <p>{fCurrency(product.price)} VND</p>
-                                    <p>{product.pricingName}</p>
+                                    <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
+                                    <p>{product.productName}</p>
                                 </figcaption>
                             </a>
                         </div>
                     ))}
                 </div>
                 {loading && <Loading />}
-                {hasMoreNew && !loading && pageNew != 4 &&
+                {hasMoreNew && !loading && pageNew != 2 &&
                     (<button className={styles.button}>
                         <a href="#!" onClick={loadMoreProductsNew}>Xem thêm</a>
                     </button>)
                 }
                 {
-                    productsNew.length == 0 &&
+                    productsNew.length == 0 && !loading &&
                     (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
                 }
             </section>

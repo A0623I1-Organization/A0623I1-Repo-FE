@@ -104,6 +104,7 @@ function CustomerUpdate() {
                                             value: /^KH-\d{3,}$/,
                                             message: 'Mã khách hàng phải có định dạng KH-XXX',
                                         },
+                                        disabled: true
                                     })} />
                                     {errors.customerCode && <small>{errors.customerCode.message}</small>}
                                     <small>{validateError?.customerCode}</small>
