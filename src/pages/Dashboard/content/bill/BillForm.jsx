@@ -49,7 +49,7 @@ const BillForm = () => {
     const [customer, setCustomer] = useState('');
     const [promotionCode, setPromotionCode] = useState('');
     const [discount,setDiscount] = useState('0')
-
+   
     // React Hook Form setup
     const { register, handleSubmit, setValue, control, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
@@ -135,7 +135,7 @@ const BillForm = () => {
 
 
     const fetchUniqueBillCode = () => {
-        generateUniqueCode( `http://localhost:8080/api/auth/bills/generateAndCheckBillCode`)
+        generateUniqueCode( `/bills/generateAndCheckBillCode`)
             .then(res => {
                 setBillCode(res);
                 setValue('billCode', res);
@@ -179,7 +179,7 @@ const BillForm = () => {
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate('/dashboard/payment');
+                    navigate(`/dashboard/${role}/payment`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');

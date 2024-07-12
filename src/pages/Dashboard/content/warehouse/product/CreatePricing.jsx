@@ -100,12 +100,12 @@ const CreatePricing = () => {
 
 
     const fetchUniqueProductCode = () => {
-        generateUniqueCode(`http://localhost:8080/api/auth/products/generateAndCheckProductCode`).then(res=>{
+        generateUniqueCode(`/products/generateAndCheckProductCode`).then(res=>{
             setValue('productCode', res);
         }).catch(err=>console.log(err));
     };
     const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode(`http://localhost:8080/api/auth/pricing/generateAndCheckPricingCode`)
+        return generateUniqueCode(`/pricing/generateAndCheckPricingCode`)
             .then(res => {
                 setValue(`pricingList[${index}].pricingCode`, res);
                 return res;
@@ -178,7 +178,7 @@ const CreatePricing = () => {
             productService.createProduct(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate('/dashboard/warehouse');
+                    navigate(`/dashboard/${role}/warehouse`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');

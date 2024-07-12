@@ -1,10 +1,9 @@
-import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import axiosInstance from '../../utils/axiosInstance';
 
 export const createBill =async (bill)=>{
     try {
         const token = localStorage.getItem('token')
-        await axios.post(`http://localhost:8080/api/auth/bills`,bill,{
+        await axiosInstance.post(`/bills`,bill,{
             headers: {Authorization: `Bearer ${token}`}
         })
     }catch (e)
