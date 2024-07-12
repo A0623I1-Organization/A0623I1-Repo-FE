@@ -1,15 +1,8 @@
-import axios from "axios";
-
-export const api = axios.create({
-    baseURL: "http://localhost:8080/api/pricing"
-});
+import axiosInstance from "../../utils/axiosInstance";
 
 export const getPricingList = async (token) => {
     try {
-        const response = await api.get("/list", {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        console.log(response.data); 
+        const response = await axiosInstance.get("/pricing/list");
         return response.data; 
     } catch (error) {
         console.error("Error retrieving pricings:", error);
@@ -19,10 +12,7 @@ export const getPricingList = async (token) => {
 
 export const createReceipt = async (token) => {
     try {
-        const response = await api.get("/update", {
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        console.log(response.data); 
+        const response = await axiosInstance.get("/pricing/update")
         return response.data; 
     } catch (error) {
         console.error("Error creating receipt:", error);
@@ -32,9 +22,7 @@ export const createReceipt = async (token) => {
 
 export const updatePricingQuantity = async (token, warehouseReceipt) => {
     try {
-        const response = await api.put("/update", warehouseReceipt, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await axiosInstance.put("/pricing/update", warehouseReceipt);
         console.log(response.data); 
         return response.data; 
     } catch (error) {
