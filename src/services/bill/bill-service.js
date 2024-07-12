@@ -39,18 +39,20 @@ export const getMonthlySalesRevenue = async(month) => {
     }
 }
 
-export const getDailySalesRevenueForMonth = async(month) => {
+export const getDailySalesRevenueForMonth = async (month) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/bills/revenue/daily/month`,{
+        const response = await axios.get('http://localhost:8080/api/bills/revenue/daily/month', {
             params: {
-                month: month
-            }
-        })
-        console.log(response.data);
-    }catch(e){
-        console.log(e);
+                month: month,
+            },
+        });
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        return [];
     }
-}
+};
+
 
 export const getDailySoldPricings = async(date) => {
     try {

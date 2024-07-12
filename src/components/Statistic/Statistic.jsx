@@ -7,6 +7,7 @@ import {
   getMonthlySalesRevenue,
   getMonthlySoldPricings
 } from "../../services/bill/bill-service";
+import {Link} from "react-router-dom";
 
 const Statistic = () => {
   const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -141,7 +142,9 @@ const Statistic = () => {
                           type="button"
                           className="btn-submit px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                       >
-                        Hiển thị biểu đồ
+                        <Link to={'/dashboard/statistic-by-chart'}>
+                          Hiển thị biểu đồ
+                        </Link>
                       </button>
                     </div>
                   </form>
