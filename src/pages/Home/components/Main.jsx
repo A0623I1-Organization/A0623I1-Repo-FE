@@ -10,16 +10,26 @@ import Loading from '../../../ui/Loading';
 function Main(props) {
 
     const [products, setProducts] = useState([]);
+    const [productsNew, setProductsNew] = useState([]);
     const [page, setPage] = useState(0);
+    const [pageNew, setPageNew] = useState(0);
     const [hasMore, setHasMore] = useState(true);
+    const [hasMoreNew, setHasMoreNew] = useState(true);
     const [loading, setLoading] = useState(false);
     const [initialLoad, setInitialLoad] = useState(true); // Trạng thái để kiểm tra lần tải đầu tiên
+    const [initialLoadNew, setInitialLoadNew] = useState(true); // Trạng thái để kiểm tra lần tải đầu tiên
 
     useEffect(() => {
         if (initialLoad) {
             loadInitialProducts();
         }
     }, [initialLoad]);
+
+    useEffect(() => {
+        if (initialLoadNew) {
+            loadInitialProductsNew();
+        }
+    }, [initialLoadNew]);
 
     const loadInitialProducts = async () => {
         setLoading(true);
@@ -39,6 +49,24 @@ function Main(props) {
         setInitialLoad(false);
     };
 
+    const loadInitialProductsNew = async () => {
+        setLoading(true);
+
+        const response = await ProductService.getAllNew(0);
+        if (!response || !response.content) {
+            setHasMoreNew(false);
+        } else {
+            setProductsNew(response.content);
+            setPageNew(1);
+            if (response.last) {
+                setHasMoreNew(false);
+            }
+        }
+
+        setLoading(false);
+        setInitialLoadNew(false);
+    };
+
     const loadMoreProducts = async () => {
         if (loading || !hasMore) return;
 
@@ -52,6 +80,25 @@ function Main(props) {
             setPage(prevPage => prevPage + 1);
             if (response.last) {
                 setHasMore(false);
+            }
+        }
+
+        setLoading(false);
+    };
+
+    const loadMoreProductsNew = async () => {
+        if (loading || !hasMoreNew) return;
+
+        setLoading(true);
+
+        const response = await ProductService.getAllNew(pageNew);
+        if (!response || !response.content) {
+            setHasMoreNew(false);
+        } else {
+            setProductsNew(prevProducts => [...prevProducts, ...response.content]);
+            setPageNew(prevPage => prevPage + 1);
+            if (response.last) {
+                setHasMoreNew(false);
             }
         }
 
@@ -137,8 +184,9 @@ function Main(props) {
                     </li>
                 </ul>
             </section>
+            {/* Sản phẩm thời trang nam nữ */}
             <section className={styles.sectionList}>
-                <h3>Sản phẩm mới</h3>
+                <h3>Thời trang nam nữ</h3>
                 <div className={styles.list}>
                     {products.map(product => (
                         <div className={styles.item} key={product.id}>
@@ -164,172 +212,52 @@ function Main(props) {
                         <a href="#!" onClick={loadMoreProducts}>Xem thêm</a>
                     </button>)
                 }
+                {
+                    products.length == 0 &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
+                }
             </section>
+            {/* ----------------------------- */}
             <section className={styles.sectionBanner1}>
                 <img
                     src="https://media-fmplus.cdn.vccloud.vn/uploads/sliders/48773c7d-80e2-4207-8ccc-ad79b804397a.png"
                     alt=""
                 />
             </section>
-            {console.log(products)}
-            {/* <section className={styles.sectionList}>
-                <h3>Sản phẩm áo</h3>
+            {/* Sản phẩm mới */}
+            <section className={styles.sectionList}>
+                <h3>Sản phẩm mới</h3>
                 <div className={styles.list}>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-thun-yoguu-retro-yody-gut7058-bee-sjn3052-xnh-11.jpg?v=1709608715057"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/gut7050-tra-qsm6037-tan-5.jpg?v=1710487363020"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-thun-nu-yoguu-co-cao-yodygut7028-nau-sjn6004-xah-3.jpg?v=1708998641850"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/gut7056-den-3.jpg?v=1709691727563"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam đi chơi</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/sam6045-nav-3.jpg?v=1715055609597"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/cvn5096-den-apn5046-ddo-1.jpg?v=1690163788930"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-polo-nam-cafe-yody-apm7187-nau-qsm6029-tit-5.jpg?v=1711444822920"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/apm5083-vag-6.jpg?v=1702607264500"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-polo-nam-yody-apm7053-ghd-qkm6013-vag-3.jpg?v=1705630093473"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/smm3010-gsa-qam3002-xad-8.jpg?v=1692606393950"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo sơ mi nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
+                    {productsNew.map(product => (
+                        <div className={styles.item} key={product.id}>
+                            <a href="#!">
+                                <figure>
+                                    <img
+                                        src={product.pricingImgUrl}
+                                        alt={product.pricingName}
+                                        width="100%"
+                                    />
+                                </figure>
+                                <figcaption>
+                                    <p>{fCurrency(product.price)} VND</p>
+                                    <p>{product.pricingName}</p>
+                                </figcaption>
+                            </a>
+                        </div>
+                    ))}
                 </div>
-                <button className={styles.button}>
-                    <a href="#!">Xem thêm</a>
-                </button>
-            </section> */}
+                {loading && <Loading />}
+                {hasMoreNew && !loading && pageNew != 4 &&
+                    (<button className={styles.button}>
+                        <a href="#!" onClick={loadMoreProductsNew}>Xem thêm</a>
+                    </button>)
+                }
+                {
+                    productsNew.length == 0 &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
+                }
+            </section>
+            {/* -------------------------------- */}
             <section className={styles.sectionBanner2}>
                 <img
                     className={styles.item1}
