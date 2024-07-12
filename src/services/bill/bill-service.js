@@ -1,9 +1,9 @@
-import axios from "axios";
+import axiosInstance from "../../utils/axiosInstance";
 
 export const createBill =async (bill)=>{
     try {
         const token = localStorage.getItem('token')
-        await axios.post(`http://localhost:8080/api/auth/bills`,bill,{
+        await axiosInstance.post(``,bill,{
             headers: {Authorization: `Bearer ${token}`}
         })
     }catch (e)
@@ -15,7 +15,7 @@ export const createBill =async (bill)=>{
 
 export const getDailySalesRevenue = async(date) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/bills/revenue/daily`,{
+        const response = await axiosInstance.get(`/bills/revenue/daily`,{
             params: {
                 date: date
             }
@@ -28,7 +28,7 @@ export const getDailySalesRevenue = async(date) => {
 
 export const getMonthlySalesRevenue = async(month) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/bills/revenue/monthly`,{
+        const response = await axiosInstance.get(`/bills/revenue/monthly`,{
             params: {
                 month: month
             }
@@ -41,7 +41,7 @@ export const getMonthlySalesRevenue = async(month) => {
 
 export const getDailySalesRevenueForMonth = async (month) => {
     try {
-        const response = await axios.get('http://localhost:8080/api/bills/revenue/daily/month', {
+        const response = await axiosInstance.get('/bills/revenue/daily/month', {
             params: {
                 month: month,
             },
@@ -56,7 +56,7 @@ export const getDailySalesRevenueForMonth = async (month) => {
 
 export const getDailySoldPricings = async(date) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/bills/sold-pricings/daily`,{
+        const response = await axiosInstance.get(`/bills/sold-pricings/daily`,{
             params: {
                 date: date
             }
@@ -69,7 +69,7 @@ export const getDailySoldPricings = async(date) => {
 
 export const getMonthlySoldPricings = async(month) => {
     try {
-        const response = await axios.get(`http://localhost:8080/api/bills/sold-pricings/monthly`,{
+        const response = await axiosInstance.get(`/bills/sold-pricings/monthly`,{
             params: {
                 month: month
             }

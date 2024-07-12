@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HeaderDashboard } from "../Header/HeaderDashboard";
 import { SidebarDashboard } from "../Sidebar/SidebarDashboard";
 import {
@@ -7,7 +7,7 @@ import {
   getMonthlySalesRevenue,
   getMonthlySoldPricings
 } from "../../services/bill/bill-service";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Statistic = () => {
   const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -17,6 +17,20 @@ const Statistic = () => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [noData, setNoData] = useState(false);
 
+  useEffect(() => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    if (inputType === "date") {
+      setTime(`${year}-${month}-${day}`);
+    } else if (inputType === "month") {
+      setTime(`${year}-${month}`);
+    }
+    fetchData(time);
+  }, []);
+
   const fetchData = async (time) => {
     try {
       let revenue, pricings;
@@ -25,7 +39,7 @@ const Statistic = () => {
         pricings = await getDailySoldPricings(time);
       } else if (inputType === "month") {
         revenue = await getMonthlySalesRevenue(time);
-        pricings = await getMonthlySoldPricings(time); // Update this to the correct function if needed
+        pricings = await getMonthlySoldPricings(time);
       }
       if (revenue === 0 || pricings.length === 0) {
         setNoData(true);
@@ -57,7 +71,7 @@ const Statistic = () => {
             <div className="content-body">
               <div className="content-element">
                 <div className="box-content bg-white p-6 rounded-lg shadow-md">
-                  <h2 className="text-center">Thống kê doanh thu theo ngày và tháng</h2>
+                  <h2 className="text-center m-5">Thống kê doanh thu theo ngày và tháng</h2>
                   <div className="flex justify-end mb-4">
                     <button
                         className={`btn-toggle ${
@@ -93,6 +107,7 @@ const Statistic = () => {
                           id={inputType}
                           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
                           onChange={handleTimeChange}
+                          value={time} // Bind time value for controlled input
                           required
                       />
                     </div>
@@ -142,7 +157,7 @@ const Statistic = () => {
                           type="button"
                           className="btn-submit px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                       >
-                        <Link to={'/dashboard/statistic-by-chart'}>
+                        <Link to={'/dashboard/statistic-by-chart'} style={{color:"white"}}>
                           Hiển thị biểu đồ
                         </Link>
                       </button>

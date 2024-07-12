@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import {jwtDecode} from "jwt-decode";
-
 import "./ImportPricing.scss";
 import { HeaderDashboard } from "../Header/HeaderDashboard";
 import { SidebarDashboard } from "../Sidebar/SidebarDashboard";
@@ -22,6 +21,10 @@ const ImportPricing = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setIsConfirmed(selectedItems.length > 0);
+  }, [selectedItems]);
 
   const getReceipt = async () => {
     const token = localStorage.getItem("token");
@@ -62,13 +65,12 @@ const ImportPricing = () => {
   const handleConfirm = useCallback(async () => {
     try {
       setReceipt(prevReceipt => ({ ...prevReceipt, pricingList: selectedItems }));
-      setIsConfirmed(true);
       const token = localStorage.getItem("token");
       await updatePricingQuantity(token, { ...receipt, pricingList: selectedItems });
       toast.success('Xác nhận thành công!');
       setTimeout(() => {
         window.location.reload();
-      }, 3000); // Refresh the page after 3 seconds
+      }, 1000);
     } catch (error) {
       toast.error('Có lỗi xảy ra. Vui lòng thử lại.');
     }
@@ -83,8 +85,8 @@ const ImportPricing = () => {
         <HeaderDashboard parentCallback={callbackFunction}></HeaderDashboard>
         <div id="content-wrapper">
           <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
-          <div className="app-content">
-            <div className="content-body">
+          <div className="import-pricing">
+            <div className="content-body mt-14">
               <div className="content-element">
                 <div className="flex justify-center">
                   <form className="m-5 w-full">
@@ -101,7 +103,7 @@ const ImportPricing = () => {
                           type="text"
                           value={receipt.receiptId}
                           disabled
-                          className="w-1/2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="w-3/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>
                     <div className="flex justify-center m-5 gap-16">
@@ -116,7 +118,7 @@ const ImportPricing = () => {
                           type="text"
                           value={receipt.username}
                           disabled
-                          className="w-4/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="w-3/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>
                     <div className="flex justify-center m-5 gap-16">
@@ -131,7 +133,7 @@ const ImportPricing = () => {
                           type="text"
                           value={receipt.date}
                           disabled
-                          className="w-4/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="w-3/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       />
                     </div>
                     <div className="flex justify-center m-5 gap-16">
@@ -143,7 +145,7 @@ const ImportPricing = () => {
                       </label>
                       <select
                           id="countries"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="w-3/5 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block  p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                           onChange={handleSelect}
                       >
                         <option value="">Chọn hàng hóa</option>
@@ -203,7 +205,8 @@ const ImportPricing = () => {
                       <button
                           type="button"
                           onClick={handleConfirm}
-                          className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center me-2 mb-2"
+                          disabled={!isConfirmed}
+                          className={`text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-2 py-2 text-center me-2 mb-2 ${!isConfirmed ? "opacity-50 cursor-not-allowed" : ""}`}
                       >
                         Xác nhận
                       </button>

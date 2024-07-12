@@ -81,12 +81,12 @@ const StatisticByChart = () => {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false, // Disable the aspect ratio to control size with CSS
+        maintainAspectRatio: false,
         scales: {
           x: {
             beginAtZero: true,
             ticks: {
-              autoSkip: false, // Ensure all labels are displayed
+              autoSkip: false,
               maxRotation: 90,
               minRotation: 90,
             },
@@ -107,6 +107,7 @@ const StatisticByChart = () => {
           <div className="app-content">
             <div className="content-body">
               <div className="content-element box-content bg-white my-1 w-0.5 rounded-lg shadow-md">
+                <h2 className="text-center p-3">Thống kê bằng biểu đồ</h2>
                 <div className="flex justify-center mb-6 px-2">
                   <input
                       type="month"
@@ -117,14 +118,15 @@ const StatisticByChart = () => {
                 </div>
                 <div
                     className="chart-container flex justify-center"
-                    style={{ position: "relative", height: "70vh", width: "70vw" }}
+                    style={{position: "relative", height: "70vh", width: "70vw", paddingLeft: "50px"}}
                 >
                   {noData ? (
                       <p className="text-center text-gray-500">Không có dữ liệu cho thời gian đã chọn</p>
                   ) : (
-                      <canvas id="myChart" ref={chartRef} style={{ height: "100%", width: "100%" }}></canvas>
+                      <canvas id="myChart" ref={chartRef} style={{height: "100%", width: "100%"}}></canvas>
                   )}
                 </div>
+
               </div>
             </div>
           </div>
