@@ -25,7 +25,7 @@ const routes = [
         exact: true,
     },
     {
-        path: '/product/:id',
+        path: '/product/:productId',
         element: <ProductDetail/>,
     },
     {

@@ -197,7 +197,7 @@ function HeaderHome(props) {
             <nav className={styles.navMain}>
                 <ul>
                     <li>
-                        <a href="#!">FM</a>
+                        <Link to="/">FM</Link>
                     </li>
                 </ul>
                 <ul>

@@ -3,9 +3,10 @@ import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
 import ZaloChat from '../../../ui/ZaloChat';
 import { useState, useEffect } from 'react';
-import * as ProductService from '../../../services/products/PricingService'
+import * as ProductService from '../../../services/products/ProductService'
 import { fCurrency } from '../../../utils/format-number';
 import Loading from '../../../ui/Loading';
+import { Link } from 'react-router-dom';
 
 function Main(props) {
 
@@ -189,8 +190,9 @@ function Main(props) {
                 <h3>Thời trang nam nữ</h3>
                 <div className={styles.list}>
                     {products.map(product => (
+                        product.pricingList?.length > 0 &&
                         <div className={styles.item} key={product.productId}>
-                            <a href="#!">
+                            <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
                                         src={product.productImages[0]?.imageUrl}
@@ -202,7 +204,7 @@ function Main(props) {
                                     <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
                                     <p>{product.productName}</p>
                                 </figcaption>
-                            </a>
+                            </Link>
                         </div>
                     ))}
                 </div>
@@ -230,8 +232,9 @@ function Main(props) {
                 <h3>Sản phẩm mới</h3>
                 <div className={styles.list}>
                     {productsNew.map(product => (
+                        product.pricingList?.length > 0 &&
                         <div className={styles.item} key={product.productId}>
-                            <a href="#!">
+                            <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
                                         src={product.productImages[0]?.imageUrl}
@@ -243,7 +246,7 @@ function Main(props) {
                                     <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
                                     <p>{product.productName}</p>
                                 </figcaption>
-                            </a>
+                            </Link>
                         </div>
                     ))}
                 </div>

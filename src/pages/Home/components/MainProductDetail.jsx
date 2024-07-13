@@ -1,19 +1,59 @@
-import styles from './MainProductDetail.module.scss'
+import styles from './MainProductDetail.module.scss';
+import { useState, useEffect } from 'react';
+import * as ProductService from '../../../services/products/ProductService';
+import { useParams } from 'react-router-dom';
 
 function MainProductDetail(props) {
+    const [product, setProduct] = useState();
+    const [currentPricing, setCurrentPricing] = useState();
+    const { productId } = useParams();
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
+    useEffect(() => {
+        getProductById();
+    }, []);
+
+    const getProductById = async () => {
+        const response = await ProductService.getProductById(productId);
+        console.log(response);
+        setProduct(response);
+        setCurrentPricing(response.pricingList[0]); // Set phần tử đầu tiên của pricingList làm mặc định
+    };
+
+    const handlePricingChange = (index) => {
+        setCurrentPricing(product.pricingList[index]);
+    };
+
     return (
         <main id={styles.main}>
             <section className={styles.sectionOne}>
                 <div className={styles.item}>
-                    <img src="https://m.yodycdn.com/fit-in/filters:format(webp)/100/438/408/products/tsn6176-tr1-7.jpg?v=1690163487050" alt="" />
+                    <img src={product?.productImages[0].imageUrl} alt="" />
                 </div>
                 <div className={styles.item}>
-                    <b>T-shirt Nữ Dáng Rộng In Ignite Bột Ngô</b>
-                    <p>Mã sản phẩm: TSN6176-TR1-S</p>
-                    <p>Size: M</p>
-                    <p>Màu: Trắng</p>
-                    <p>Số lượng còn lại: 100</p>
-                    <p>Giá: 150.000 VND</p>
+                    <b>{product?.productName}</b>
+                    <p>Mã sản phẩm: {currentPricing?.pricingCode}</p>
+                    <p>Size: {currentPricing?.size}</p>
+                    <p>Màu: {currentPricing?.color.colorName}</p>
+                    <p>Số lượng còn lại: {currentPricing?.quantity}</p>
+                    <p>Giá: {currentPricing?.price.toLocaleString()} VND</p>
+                    <>
+                        <p>Danh sách sản phẩm:</p>
+                        <div className={styles.listSize}>
+                            {product?.pricingList.map((pricing, index) => (
+                                <button 
+                                    key={pricing.pricingId} 
+                                    onClick={() => handlePricingChange(index)} 
+                                    className={`${styles.itemSize} ${currentPricing === pricing ? styles.active : ''}`}
+                                >
+                                    {product?.productName} size {pricing.size} màu {pricing.color.colorName}
+                                </button>
+                            ))}
+                        </div>
+                    </>
                 </div>
             </section>
         </main>
