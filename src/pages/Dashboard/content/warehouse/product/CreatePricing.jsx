@@ -3,7 +3,6 @@ import styles from './createPricing.module.scss';
 import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {UploadMultipleImage, UploadOneImage} from '../../../../../firebase/UploadImage';
 import * as productService from '../../../../../services/products/product-service'
 import * as colorService from '../../../../../services/products/color-service'
 import * as categoryService from '../../../../../services/products/category-service'
@@ -14,6 +13,7 @@ import {color} from "framer-motion";
 import {generateAndUploadQRCode} from "../../../../../firebase/generateAndUploadQRCode";
 import {DashboardMain} from "../../../../../components/Dashboard/DashboardMain";
 import {generateUniqueCode} from "../../../../../services/bill/random_mhd";
+import {UploadMultipleImage,UploadOneImage} from "../../../../../firebase/UploadImage";
 
 const schema = yup.object().shape({
     productCode: yup.string().required('Product Code is required'),

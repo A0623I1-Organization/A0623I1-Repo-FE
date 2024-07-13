@@ -1,29 +1,47 @@
 import React, { useState } from 'react';
 import './PromotionModal.scss';
-import * as promotionService from "../../../../../services/promotion/promotion-service"; // Import SCSS file
+import * as promotionService from "../../../../../services/promotion/promotion-service";
 
 const PromotionModal = ({ isOpen, onClose, onPayment }) => {
     const [promotionCode, setPromotionCode] = useState('');
     const [discount, setDiscount] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
 
     const applyPromotion = async () => {
         try {
             if (promotionCode.trim() !== '') {
                 const promotion = await promotionService.usePromotionByPromotionCode(promotionCode);
-                setDiscount(promotion);
+                if (promotion.enabled) {
+                    setErrorMessage('Mã giảm giá đã được áp dụng thành công.');
+                    setDiscount(promotion);
+                    setPromotionCode('')
+                } else {
+                    setErrorMessage('Mã giảm giá đã hết hạn.');
+                    setDiscount('');
+                }
             } else {
+                setErrorMessage('Mã giảm giá không tồn tại.');
                 setDiscount('');
             }
         } catch (error) {
-            console.error("Failed to use promotion:", error);
+            setErrorMessage('Mã giảm giá không hợp lệ');
         }
     };
+
     const handleApplyPromotion = () => {
         applyPromotion().then().catch();
+        setDiscount('')
     };
+
     const handlePayment = () => {
-        onPayment(discount);
+        if (discount) {
+            onPayment(discount);
+        }
         onClose();
+    };
+
+    const clearErrorMessage = () => {
+        setErrorMessage('');
     };
 
     return (
@@ -36,10 +54,14 @@ const PromotionModal = ({ isOpen, onClose, onPayment }) => {
                         type="text"
                         id="discountInput"
                         value={promotionCode}
-                        onChange={e => setPromotionCode(e.target.value)}
+                        onChange={(e) => {
+                            setPromotionCode(e.target.value);
+                            clearErrorMessage(); // Clear error message on input change
+                        }}
                     />
                     <button className="apply-btn" onClick={handleApplyPromotion}>Áp dụng</button>
                 </div>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
                 <div className="modal-button">
                     <button onClick={handlePayment}>Xác nhận</button>
                     <button onClick={onClose}>Đóng</button>
