@@ -121,6 +121,10 @@
             align-items: center;
             cursor: pointer;
 
+            img {
+                width: 20px;
+            }
+
             .moon {
                 fill: var(--app-content-main-color);
             }
@@ -203,6 +207,7 @@
                 text-decoration: none;
                 display: block;
                 transition: 0.1s;
+                cursor: pointer;
 
                 svg {
                     fill: var(--sidebar-main-color);

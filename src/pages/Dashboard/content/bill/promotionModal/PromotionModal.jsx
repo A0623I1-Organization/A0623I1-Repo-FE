@@ -25,18 +25,16 @@ const PromotionModal = ({ isOpen, onClose, onPayment }) => {
             }
         } catch (error) {
             setErrorMessage('Mã giảm giá không hợp lệ');
+            setDiscount('');
         }
     };
 
     const handleApplyPromotion = () => {
         applyPromotion().then().catch();
-        setDiscount('')
     };
 
     const handlePayment = () => {
-        if (discount) {
             onPayment(discount);
-        }
         onClose();
     };
 

@@ -18,6 +18,7 @@ export function EmployeeList() {
     const [employeeList, setEmployeeList] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [userId, setUserId] = useState(null);
+    const [roles, setRoles] = useState([]);
     const {register, handleSubmit, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
@@ -35,15 +36,13 @@ export function EmployeeList() {
     }, [])
 
     const getEmployeeList = async () => {
-        const token = localStorage.getItem("token");
-        const temp = await employeeService.getAllEmployees(token, '', '');
+        const temp = await employeeService.getAllEmployees('', '');
         setEmployeeList(temp);
     }
 
     const onSubmit = async (data) => {
         try {
-            const token = localStorage.getItem("token");
-            const temp = await employeeService.getAllEmployees(token, '', data.searchContent);
+            const temp = await employeeService.getAllEmployees('', data.searchContent);
             setEmployeeList(temp);
         } catch (error) {
             toast.error(error.message);

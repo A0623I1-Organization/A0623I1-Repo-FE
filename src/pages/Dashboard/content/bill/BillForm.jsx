@@ -182,8 +182,13 @@ const BillForm = () => {
     const handlePrintInvoice = () => setPrintInvoice(true);
     const handlePayment =  (promotion) => {
         try {
-            setDiscount(promotion.discount);
-            setValue("promotionCode", promotion.promotionCode);
+            if (promotion) {
+                setDiscount(promotion.discount);
+                setValue("promotionCode", promotion.promotionCode);
+            } else {
+                setDiscount(0); // Set default discount value if no promotion applied
+                setValue("promotionCode", ''); // Set default promotion code if no promotion applied
+            }
             handleSubmit(onSubmit)();
         } catch (error) {
             console.error("Failed to use promotion:", error);

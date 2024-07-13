@@ -2,6 +2,7 @@ import {DashboardMain} from "../../components/Dashboard/DashboardMain";
 import "./Dashboard.scss";
 import {useEffect, useState} from "react";
 import * as dashboardService from "../../services/dashboard/DashboardService";
+import { fCurrency } from '../../utils/format-number';
 
 export function Dashboard() {
     const [totalCustomers, setTotalCustomers] = useState(null);
@@ -148,7 +149,7 @@ export function Dashboard() {
                                     </select>
                                 </label>
                             </span>
-                                <span className="item-number">{revenues.totalRevenue} VNĐ</span>
+                                <span className="item-number">{fCurrency(revenues.totalRevenue)} VNĐ</span>
 
                             </div>
                             <div className="percentage">
@@ -157,8 +158,8 @@ export function Dashboard() {
                                             strokeDashoffset={revenuesGrowthOffset}></circle>
                                 </svg>
                                 <span className="item-growth">
-                                {revenues.growth > 0 ? `Tăng ${Math.round(revenues.growth)}%`
-                                    : `Giảm ${Math.round(revenues.growth)}%`}
+                                {revenues.growth > 0 ? `Tăng ${fCurrency(Math.round(revenues.growth))}%`
+                                    : `Giảm ${fCurrency(Math.round(revenues.growth))}%`}
                             </span>
                             </div>
                         </div>
@@ -179,7 +180,7 @@ export function Dashboard() {
                             {bestSalesPersons && bestSalesPersons.map((item, index) => (
                                 <tr key={index}>
                                     <td>{item.fullName}</td>
-                                    <td>{item.revenue} VNĐ</td>
+                                    <td>{fCurrency(item.revenue)} VNĐ</td>
                                     <td>{item.quantity}</td>
                                 </tr>
                             ))}
