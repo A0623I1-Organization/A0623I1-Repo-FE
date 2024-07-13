@@ -214,7 +214,7 @@ function Main(props) {
                     </button>)
                 }
                 {
-                    products.length == 0 && !loading &&
+                    products.length === 0 && !loading &&
                     (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
                 }
             </section>
@@ -248,13 +248,13 @@ function Main(props) {
                     ))}
                 </div>
                 {loading && <Loading />}
-                {hasMoreNew && !loading && pageNew != 2 &&
+                {hasMoreNew && !loading && pageNew !== 2 &&
                     (<button className={styles.button}>
                         <a href="#!" onClick={loadMoreProductsNew}>Xem thêm</a>
                     </button>)
                 }
                 {
-                    productsNew.length == 0 && !loading &&
+                    productsNew.length === 0 && !loading &&
                     (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
                 }
             </section>

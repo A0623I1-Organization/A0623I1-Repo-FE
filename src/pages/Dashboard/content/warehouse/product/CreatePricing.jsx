@@ -178,7 +178,7 @@ const CreatePricing = () => {
             productService.createProduct(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate('/dashboard/warehouse');
+                    navigate('/dashboard/warehouse/warehouse');
                 })
                 .catch(err => {
                     toast.error('Create Failed');

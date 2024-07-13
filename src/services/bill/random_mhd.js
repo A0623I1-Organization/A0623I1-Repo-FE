@@ -1,4 +1,5 @@
 import axios from "axios";
+import axiosInstance from '../../utils/axiosInstance';
 
 // export const generateBillCode = (prefix) => {
 //     const suffix = Math.floor(100000 + Math.random() * 900000).toString();
@@ -28,7 +29,7 @@ import axios from "axios";
 // };
 export const generateUniqueCode =async (url)=>{
     try {
-        const temp = await axios.post(url);
+        const temp = await axiosInstance.post(url);
         return temp.data.code;
     } catch (error) {
         console.error('Error checking code uniqueness:', error);

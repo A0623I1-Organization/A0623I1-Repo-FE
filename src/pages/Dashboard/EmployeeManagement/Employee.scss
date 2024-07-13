@@ -179,7 +179,7 @@
                 font-size: 14px;
                 font-weight: 500;
                 position: relative;
-                color: #fff;
+                color: var(--button-char-color);
                 cursor: pointer;
                 text-align: center;
               border: none;
@@ -408,7 +408,7 @@
               font-weight: 600;
               left: 20%;
               position: relative;
-              color: #fff;
+              color: var(--button-char-color);
             }
 
             button:hover {
@@ -431,7 +431,7 @@
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
-            color: #fff;
+            color: var(--button-char-color);
             margin: 20px 0;
           }
           button:hover {

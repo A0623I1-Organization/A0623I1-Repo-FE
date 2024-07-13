@@ -36,7 +36,7 @@
 
         .box-element {
           width: 30%;
-          background-color: var(--sidebar);
+          background-color: var(--content-bg);
           height: 250px;
           margin: auto;
           box-shadow: 2px 2px 5px 0 #4d4b4b;
@@ -120,7 +120,7 @@
       }
 
       .content-element {
-        background-color: var(--sidebar);
+        background-color: var(--content-bg);
         width: 96%;
 
         border-radius: 10px;
@@ -193,7 +193,7 @@
             }
 
             .customer-name {
-              color: var(--sidebar-main-color);
+              color: var(--app-content-main-color);
               display: block;
               padding: 6px 0;
             }
@@ -312,15 +312,15 @@
             }
 
             .btn-submit {
-              width: 140px;
+              width: 120px;
               height: 50px;
               background-color: var(--action-color);
               border-radius: 10px;
-              font-size: 16px;
+              font-size: 0.9rem;
               font-weight: 600;
               left: 20%;
               position: relative;
-              color: #fff;
+              color: var(--button-char-color);
             }
 
             button:hover {
