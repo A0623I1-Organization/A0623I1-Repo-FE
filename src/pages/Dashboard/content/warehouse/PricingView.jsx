@@ -102,7 +102,7 @@ export const PricingView = () => {
             <div className="content-body">
                 <div>
                     <div className="nav-link-container">
-                        <NavLink className="nav-link" to='/dashboard/create-pricing'>Thêm Hàng Hóa</NavLink>
+                        <NavLink className="nav-link" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
                     </div>
                     <div className="header-search">
                         <form onSubmit={handleSearch}>

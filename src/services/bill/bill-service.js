@@ -1,11 +1,10 @@
-import axiosInstance from "../../utils/axiosInstance";
+
+import axiosInstance from '../../utils/axiosInstance';
+
 
 export const createBill =async (bill)=>{
     try {
-        const token = localStorage.getItem('token')
-        await axiosInstance.post(``,bill,{
-            headers: {Authorization: `Bearer ${token}`}
-        })
+        await axiosInstance.post(`/bills`,bill);
     }catch (e)
     {
         console.log(e)
