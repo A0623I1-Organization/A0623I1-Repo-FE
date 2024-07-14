@@ -1,10 +1,9 @@
-// Import the functions you need from the SDKs you need
+// Import the functions you need from the Firebase SDKs
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from "firebase/database";
-import { getStorage,ref,getDownloadURL  } from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getAuth, signInWithCustomToken } from "firebase/auth";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -20,8 +19,11 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const database = getDatabase(app);
-const storage = getStorage(app);
-export { app, analytics, database ,storage,ref,getDownloadURL };
+const app = initializeApp(firebaseConfig);  // Initialize Firebase app with configuration
+const analytics = getAnalytics(app);  // Initialize Firebase analytics
+const database = getDatabase(app);    // Get a reference to the Firebase Realtime Database
+const storage = getStorage(app);      // Get a reference to Firebase Storage
+const auth = getAuth(app);            // Get a reference to Firebase Authentication
+
+// Export Firebase references for use throughout the application
+export { app, analytics, database, storage, ref, getDownloadURL, auth, signInWithCustomToken };

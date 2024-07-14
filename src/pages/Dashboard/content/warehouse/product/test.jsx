@@ -5,7 +5,7 @@ import {SidebarDashboard} from '../../../../../components/Sidebar/SidebarDashboa
 import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import UploadImage from '../../../../../firebase/UploadImage';
+import UploadImage from '../../../../../firebase/UploadMultipleImage';
 import * as productService from '../../../../../services/products/product-service'
 import * as colorService from '../../../../../services/products/color-service'
 import * as categoryService from '../../../../../services/products/category-service'

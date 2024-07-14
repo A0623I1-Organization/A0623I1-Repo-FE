@@ -36,8 +36,7 @@ export function EmployeeCreate() {
     }, [id])
 
     const getEmpById = async (id) => {
-        const token = localStorage.getItem("token");
-        const temp = await employeeService.findEmployeeById(token, id);
+        const temp = await employeeService.findEmployeeById(id);
         if (temp) {
             setEmployee(temp);
             setValue("userId", temp.userId);
@@ -67,20 +66,20 @@ export function EmployeeCreate() {
     const onSubmit = async (data) => {
         try {
             data.role = JSON.parse(data.role);
+            console.log(data.role)
             data.gender = Number.parseInt(data.gender);
-            const token = localStorage.getItem("token");
             let response;
             console.log(data)
-            if (id) {
-                response = await employeeService.updateEmployee(id, data, token);
-            } else {
-                response = await employeeService.saveEmployee(data, token);
-            }
-            if (response.statusCode === 200) {
-                toast.success(response.message);
-            } else {
-                toast.error(response.message);
-            }
+            // if (id) {
+            //     response = await employeeService.updateEmployee(id, data);
+            // } else {
+            //     response = await employeeService.saveEmployee(data);
+            // }
+            // if (response.statusCode === 200) {
+            //     toast.success(response.message);
+            // } else {
+            //     toast.error(response.message);
+            // }
         } catch (error) {
             toast.error(error.message);
         }
@@ -115,14 +114,20 @@ export function EmployeeCreate() {
                                     <span className={"element-title"}>Giới tính: </span>
                                 </label>
                                 <div className="form-gender">
-                                    <input type="radio" defaultChecked={employee?.gender === 0}
-                                           {...register("gender")} value={0}/>
+                                    {id && employee?.gender === 0 ?
+                                        <input type="radio" checked {...register("gender")} value={0}/>
+                                        : <input type="radio"{...register("gender")} value={0}/>
+                                    }
                                     <span>Nam</span>
-                                    <input type="radio" defaultChecked={employee?.gender === 1}
-                                           {...register("gender")} value={1}/>
+                                    {id && employee?.gender === 1 ?
+                                        <input type="radio" checked {...register("gender")} value={1}/>
+                                        : <input type="radio"{...register("gender")} value={1}/>
+                                    }
                                     <span>Nữ</span>
-                                    <input type="radio" defaultChecked={employee?.gender === 2}
-                                           {...register("gender")} value={2}/>
+                                    {id && employee?.gender === 2 ?
+                                        <input type="radio" checked {...register("gender")} value={2}/>
+                                        : <input type="radio"{...register("gender")} value={2}/>
+                                    }
                                     <span>Khác</span>
                                 </div>
                             </div>
@@ -151,7 +156,7 @@ export function EmployeeCreate() {
                                 <select {...register("role")}>
                                     <option value="">--Chọn một vị trí--</option>
                                     {roles && roles.map((item) => (
-                                        <option selected={item.roleId = employee?.role.roleId}
+                                        <option selected={item.roleId === employee?.role.roleId}
                                                 value={JSON.stringify(item)}>{item.roleName}</option>
                                     ))}
                                 </select>

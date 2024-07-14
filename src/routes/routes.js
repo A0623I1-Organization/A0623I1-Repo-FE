@@ -18,6 +18,8 @@ import Loading from '../ui/Loading';
 import ProductDetail from '../pages/Home/ProductDetail';
 import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCreate";
 import LookOrder from '../pages/Home/LookOrder';
+import Statistic from "../components/Statistic/Statistic";
+import StatisticByChart from "../components/Statistic/StatisticByChart";
 
 const routes = [
     {
@@ -60,6 +62,16 @@ const routes = [
     {
         path: '/dashboard/import-pricing',
         element: <ImportPricing/>,
+        private: true
+    },
+    {
+        path: '/dashboard/statistic',
+        element: <Statistic/>,
+        private: true
+    },
+    {
+        path: '/dashboard/statistic-by-chart',
+        element: <StatisticByChart/>,
         private: true
     },
     {

@@ -285,7 +285,7 @@ function Main(props) {
                     ))}
                 </div>
                 {loading && <Loading />}
-                {hasMoreNew && !loading && pageNew != 2 &&
+                {hasMoreNew && !loading && pageNew !== 2 &&
                     (<button className={styles.button}>
                         <a onClick={loadMoreProductsNew}>Xem thêm</a>
                     </button>)

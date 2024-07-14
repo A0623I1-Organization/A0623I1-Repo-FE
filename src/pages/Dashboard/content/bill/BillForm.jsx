@@ -4,7 +4,6 @@ import QRCodeReader from './scanQr/QRCodeReader';
 import CustomerModal from "./customerModal/CustomerModal";
 import InvoiceModal from "./invoice/InvoiceModal";
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
-import PaymentModal from "./paymentModal/PaymentModal";
 import { generateUniqueCode } from "../../../../services/bill/random_mhd";
 import * as pricingService from "../../../../services/products/pricing-service"
 import { useFieldArray, useForm } from "react-hook-form";
@@ -47,7 +46,6 @@ const BillForm = () => {
     const [pricingByCode, setPricingByCode] = useState('');
     const [quantity, setQuantity] = useState('');
     const [customer, setCustomer] = useState('');
-    const [promotionCode, setPromotionCode] = useState('');
     const [discount,setDiscount] = useState('0')
 
     // React Hook Form setup
@@ -92,16 +90,6 @@ const BillForm = () => {
             setQuantity('');
             setPricingCode('');
             setTotal(total + newItem.total);
-            // const sum =total + newItem.total -discountByCustomerType*(total + newItem.total )
-            // // Update finalTotal based on discount
-            // if (discount <= 1) {
-            //     setFinalTotal(sum -discount*(total + sum));
-            // } else {
-            //     setFinalTotal(sum- discount);
-            // }
-
-            // setFinalTotal(total + newItem.total - discount);
-
             append({ pricing: JSON.stringify(pricingByCode), quantity: newItem.quantity });
         } else {
             console.error('Invalid pricing data');
@@ -109,18 +97,10 @@ const BillForm = () => {
     };
 
     const deleteBillItem = (index) => {
-        remove(index); // This removes the item from billItemList managed by react-hook-form
-
-        // Create a copy of billItems array
+        remove(index);
         const updatedBillItems = [...billItems];
-
-        // Remove the item at the specified index
         updatedBillItems.splice(index, 1);
-
-        // Update the state with the new array without the deleted item
         setBillItems(updatedBillItems);
-
-        // Recalculate total and finalTotal if needed
         const newTotal = updatedBillItems.reduce((acc, item) => acc + item.total, 0);
         setTotal(newTotal);
     };
@@ -135,7 +115,7 @@ const BillForm = () => {
 
 
     const fetchUniqueBillCode = () => {
-        generateUniqueCode( `http://localhost:8080/api/auth/bills/generateAndCheckBillCode`)
+        generateUniqueCode( `/bills/generateAndCheckBillCode`)
             .then(res => {
                 setBillCode(res);
                 setValue('billCode', res);
@@ -173,13 +153,13 @@ const BillForm = () => {
                     }
                 )),
                 customer: JSON.parse(data.customer),
-                dateCreate: Moment(data.dateCreate).format("yyyy-MM-DD") // Định dạng ngày tháng
+                dateCreate: Moment(data.dateCreate,"yyyy-MM-DD")// Định dạng ngày tháng
             };
 
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate('/dashboard/payment');
+                    navigate(`/dashboard/${role}/payment`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');
@@ -202,8 +182,13 @@ const BillForm = () => {
     const handlePrintInvoice = () => setPrintInvoice(true);
     const handlePayment =  (promotion) => {
         try {
-            setDiscount(promotion.discount);
-            setValue("promotionCode", promotion.promotionCode);
+            if (promotion) {
+                setDiscount(promotion.discount);
+                setValue("promotionCode", promotion.promotionCode);
+            } else {
+                setDiscount(0); // Set default discount value if no promotion applied
+                setValue("promotionCode", ''); // Set default promotion code if no promotion applied
+            }
             handleSubmit(onSubmit)();
         } catch (error) {
             console.error("Failed to use promotion:", error);
