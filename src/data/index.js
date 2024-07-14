@@ -41,7 +41,7 @@ export const categories = [
     },
     {
         src: "https://media-fmplus.cdn.vccloud.vn/uploads/categories/75c4fe5f-e6ea-4a12-91a2-f26afaea6ef8.png",
-        link: "?keyword=Áo Tây"
+        link: "?keyword=Quần Tây"
     },
     {
         src: "https://media-fmplus.cdn.vccloud.vn/uploads/categories/e87112ef-d67c-4fe3-9c28-f40b95a57e62.png",
