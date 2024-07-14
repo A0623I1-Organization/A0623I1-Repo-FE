@@ -3,6 +3,7 @@ import "./Dashboard.scss";
 import {useEffect, useState} from "react";
 import * as dashboardService from "../../services/dashboard/DashboardService";
 import { fCurrency } from '../../utils/format-number';
+import Moment from "moment";
 
 export function Dashboard() {
     const [totalCustomers, setTotalCustomers] = useState(null);
@@ -194,7 +195,7 @@ export function Dashboard() {
                         <ol className="styled-list">
                             {newBills && newBills.map((item, index) => (
                                 <li key={index}>
-                                    <span className="date">{item.dateCreate}</span>
+                                    <span className="date">{Moment(item.dateCreate).format("DD/MM/yyyy")}</span>
                                     <span className="customer-name">{item.customerName}</span>
                                 </li>
                             ))}
