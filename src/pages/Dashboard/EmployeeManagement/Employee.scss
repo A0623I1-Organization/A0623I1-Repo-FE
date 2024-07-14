@@ -222,7 +222,7 @@
 
         .box-content {
           padding: 10px;
-          width: 100%;
+          //width: 100%;
           height: 100%;
 
           p.title {
@@ -259,6 +259,9 @@
               height: 20px;
               top: 0;
 
+              th.no {
+                max-width: 20%;
+              }
               th.emp-name {
                 max-width: 60%;
               }
@@ -475,6 +478,9 @@
           .box-content {
             .table {
               font-size: 12px;
+              th {
+                padding: 0 5px !important;
+              }
               .gender {
                 display: none;
               }
@@ -516,6 +522,14 @@
             }
           }
         }
+        @media screen and (max-width: 680px) {
+          .box-content {
+            .table {
+              font-size: 12px;
+
+            }
+          }
+        }
 
         @media screen and (max-width: 680px) {
           .box-content {
@@ -534,6 +548,21 @@
               font-size: 12px;
               .email {
                 display: none;
+              }
+            }
+          }
+        }
+
+        @media screen and (max-width: 480px) {
+          .box-content {
+            .table {
+              font-size: 12px;
+
+              .no {
+                display: none;
+              }
+              .emp-code {
+                max-width: 20%;
               }
             }
           }

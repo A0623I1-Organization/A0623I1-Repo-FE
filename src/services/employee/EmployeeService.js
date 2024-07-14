@@ -31,7 +31,7 @@ export const saveEmployee = async (employee) => {
         return temp.data;
     }catch (e) {
         console.log(e)
-        throw ("Không thể thêm mới!");
+        throw e.response.data.errors;
     }
 }
 
@@ -41,6 +41,6 @@ export const updateEmployee = async (id, employee) => {
         console.log(temp.data);
         return temp.data;
     } catch (e) {
-        throw ("Không thể cập nhật!");
+        throw e.response.data.errors;
     }
 }
