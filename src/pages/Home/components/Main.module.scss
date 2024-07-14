@@ -78,6 +78,7 @@
                     overflow: hidden;
                     transition: transform 0.3s ease;
                     background-color: #ccc;
+                    aspect-ratio: 3/4;
                 }
                 
                 &:hover img {
@@ -88,6 +89,9 @@
             figcaption {
                 background-color: white;
                 padding: 8px;
+                p{
+                    padding: 4px 0;
+                }
                 p:first-child {
                     color: red;
                 }
@@ -96,7 +100,6 @@
                 }
             }
             &:hover{
-                // border-bottom: 2px solid #feb71c;
                 box-shadow: 0 1.4px 0px #feb71c ;
             }
         }

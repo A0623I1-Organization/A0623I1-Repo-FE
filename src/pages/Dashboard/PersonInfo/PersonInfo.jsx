@@ -21,6 +21,7 @@ export function PersonInfo() {
     const [openEyeTwo, setOpenEyeTwo] = useState(false);
     const [openEyeThree, setOpenEyeThree] = useState(false);
     const [roles, setRoles] = useState([]);
+    const [validateError, setValidateError] = useState([])
     const [disabled, setDisabled] = useState(true);
     const {register, handleSubmit, setValue, getValues, formState: {errors}} = useForm({
         criteriaMode: "all"
@@ -86,7 +87,7 @@ export function PersonInfo() {
             toast.success(response.message);
             setUserInfo(response);
         } catch (error) {
-            toast.error(error.message);
+            setValidateError(error);
         }
     }
 
@@ -128,7 +129,7 @@ export function PersonInfo() {
                             </div>
                             <div className="input-file">
                                 <UploadOneImage
-                                    className ="avatar-input"
+                                    className={"avatar-input"}
                                     getDisabled={(e)=>setDisabled(e)}
                                     onImageUrlChange ={(url) => handleOneImageUrlChange(url, "avatar")}/>
                             </div>
@@ -136,13 +137,13 @@ export function PersonInfo() {
                                 <span>{userInfo.fullName}</span>
                             </div>
                         </div>
-                        <div className="update-bg">
-                            <div className="edit-button" onClick={() => triggerFileInput(".background-input")}>
+                        <div className="update-bg" onClick={() => triggerFileInput(".background-input")}>
+                            <div className="edit-button">
                                 <MdOutlineModeEdit/>
                             </div>
                             <div className="input-file">
                             <UploadOneImage
-                                className="background-input"
+                                className={"background-input"}
                                 style={{ display: "none" }}
                                 getDisabled={(e)=>setDisabled(e)}
                                 onImageUrlChange={(url) => handleOneImageUrlChange(url, "background")}/>
@@ -152,12 +153,12 @@ export function PersonInfo() {
                     </div>
                     <div className="flex-content">
                     <div className="person-info">
-                            {/*<div className="info-element">*/}
-                            {/*    <label>*/}
-                            {/*        <span className={"element-title"}>Tên nhân viên: </span>*/}
-                            {/*        <span className="element-value">{userInfo.fullName}</span>*/}
-                            {/*    </label>*/}
-                            {/*</div>*/}
+                            <div className="info-element">
+                                <label>
+                                    <span className={"element-title"}>Tên nhân viên: </span>
+                                    <span className="element-value">{userInfo.fullName}</span>
+                                </label>
+                            </div>
                             <div className="info-element">
                                 <label>
                                     <span className={"element-title"}>Mã nhân viên: </span>
@@ -174,8 +175,8 @@ export function PersonInfo() {
                                 <label>
                                     <span className={"element-title"}>Giới tính: </span>
                                     <span className="element-value">
-                                                    {userInfo?.gender === 0 ? "Nam" : userInfo.gender === 1 ? "Nữ" : "Khác"}
-                                                </span>
+                                        {userInfo?.gender === 0 ? "Nam" : userInfo.gender === 1 ? "Nữ" : "Khác"}
+                                    </span>
 
                                 </label>
                             </div>
@@ -202,10 +203,10 @@ export function PersonInfo() {
                                 <label>
                                     <span className={"element-title"}>Chức vụ: </span>
                                     <span className="element-value">
-                                                        {userInfo.role?.roleName === "ROLE_MANAGER" ? "Quản lý cửa hàng"
-                                                            : userInfo.role?.roleName === "ROLE_WAREHOUSE" ? "Quản lý kho"
-                                                                : "Nhân viên bán hàng"}
-                                                </span>
+                                        {userInfo.role?.roleName === "ROLE_MANAGER" ? "Quản lý cửa hàng"
+                                            : userInfo.role?.roleName === "ROLE_WAREHOUSE" ? "Quản lý kho"
+                                                : "Nhân viên bán hàng"}
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -220,38 +221,47 @@ export function PersonInfo() {
                                 <label>Mật khẩu cũ: </label>
                                 <span className="inputValue">
                                         <input type={openEyeOne ? "text" : "password"}
-                                               name="oldPassword" {...register("oldPassword")}/>
+                                               name="oldPassword" {...register("oldPassword",{
+                                               required: "Mật khẩu không được để trống"
+                                        })}/>
                                     {openEyeOne ? <FaEye onClick={() => handleShowPassword(1)}/>
                                         : <FaEyeSlash onClick={() => handleShowPassword(1)}/>}
-                                        </span>
-                                <p className="validate-error"></p>
+                                </span>
+                                {errors.password && <p className="validate-error">{errors.password.message}</p>}
+                                {validateError && <p className="validate-error">{validateError.password}</p>}
                             </div>
                             <div className="new-password form-element">
                                 <label>Mật khẩu mới: </label>
                                 <span className="inputValue">
                                             <input type={openEyeTwo ? "text" : "password"}
-                                                   name="newPassword" {...register("newPassword")}/>
+                                                   name="newPassword" {...register("newPassword", {
+                                                       required: "Mật khẩu không được để trống!",
+                                                        minLength: {value: 8, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
+                                                        maxLength: {value: 50, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
+                                                        pattern : {
+                                                           value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,50}$/,
+                                                            message: "Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, và một chữ số, và phải dài từ 8 đến 50 ký tự!"
+                                                        }
+                                                })}/>
                                     {openEyeTwo ? <FaEye onClick={() => handleShowPassword(2)}/>
                                         : <FaEyeSlash onClick={() => handleShowPassword(2)}/>}
                                         </span>
-                                <p className="validate-error"></p>
+                                {errors.newPassword && <p className="validate-error">{errors.newPassword.message}</p>}
+                                {validateError && <p className="validate-error">{validateError.newPassword}</p>}
                             </div>
                             <div className="confirm-password form-element">
                                 <label>Nhập lại mật khẩu: </label>
                                 <span className="inputValue">
                                         <input type={openEyeThree ? "text" : "password"}
-                                               name="confirmPassword" {...register("confirmPassword")}/>
-                                    {/*    , {*/}
-                                    {/*    validate: value => value === getValues('newPassword') || "Mật khẩu không trùng khớp!"*/}
-                                    {/*})}/>*/}
+                                               name="confirmPassword" {...register("confirmPassword"
+                                        , {
+                                        validate: value => value === getValues('newPassword') || "Mật khẩu không trùng khớp!"
+                                    })}/>
                                     {openEyeThree ? <FaEye onClick={() => handleShowPassword(3)}/>
                                         : <FaEyeSlash onClick={() => handleShowPassword(3)}/>}
                                         </span>
-                                {errors.confirmPassword &&
-                                    <p style={{
-                                        color: "red",
-                                        fontSize: "16px"
-                                    }}>{errors.confirmPassword.message}</p>}
+                                {errors.confirmPassword && <p className="validate-error">{errors.confirmPassword.message}</p>}
+                                {validateError && <p className="validate-error">{validateError.confirmPassword}</p>}
                             </div>
                             <div className="form-element">
                                 <button type="submit" className="btn-submit">

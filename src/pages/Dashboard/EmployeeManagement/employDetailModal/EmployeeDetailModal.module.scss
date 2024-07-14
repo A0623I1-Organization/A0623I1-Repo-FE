@@ -105,7 +105,7 @@
           border: none;
           border-radius: 5px;
           background: var(--action-color);
-          color: #fff;
+          color: var(--button-char-color);
 
           &:hover {
             background: var(--button-bg-hover);

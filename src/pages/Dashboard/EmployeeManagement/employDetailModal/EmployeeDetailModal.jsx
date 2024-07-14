@@ -20,8 +20,7 @@ export const EmployeeDetailModal = ({isOpen, onClose, id}) => {
     }, [isOpen, id, hasOpened]);
 
     const getEmpById = async (id) => {
-        const token = localStorage.getItem("token");
-        const temp = await employeeService.findEmployeeById(token, id);
+        const temp = await employeeService.findEmployeeById(id);
         setEmployee(temp);
     }
 

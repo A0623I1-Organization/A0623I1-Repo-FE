@@ -3,7 +3,6 @@ import styles from './createPricing.module.scss';
 import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {UploadMultipleImage, UploadOneImage} from '../../../../../firebase/UploadImage';
 import * as productService from '../../../../../services/products/product-service'
 import * as colorService from '../../../../../services/products/color-service'
 import * as categoryService from '../../../../../services/products/category-service'
@@ -14,6 +13,7 @@ import {color} from "framer-motion";
 import {generateAndUploadQRCode} from "../../../../../firebase/generateAndUploadQRCode";
 import {DashboardMain} from "../../../../../components/Dashboard/DashboardMain";
 import {generateUniqueCode} from "../../../../../services/bill/random_mhd";
+import {UploadMultipleImage,UploadOneImage} from "../../../../../firebase/UploadImage";
 
 const schema = yup.object().shape({
     productCode: yup.string().required('Product Code is required'),
@@ -100,12 +100,12 @@ const CreatePricing = () => {
 
 
     const fetchUniqueProductCode = () => {
-        generateUniqueCode(`http://localhost:8080/api/auth/products/generateAndCheckProductCode`).then(res=>{
+        generateUniqueCode(`/products/generateAndCheckProductCode`).then(res=>{
             setValue('productCode', res);
         }).catch(err=>console.log(err));
     };
     const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode(`http://localhost:8080/api/auth/pricing/generateAndCheckPricingCode`)
+        return generateUniqueCode(`/pricing/generateAndCheckPricingCode`)
             .then(res => {
                 setValue(`pricingList[${index}].pricingCode`, res);
                 return res;
@@ -174,11 +174,11 @@ const CreatePricing = () => {
                 })),
                 productType: JSON.parse(data.productType)
             };
-
+            console.log(updatedData);
             productService.createProduct(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate('/dashboard/warehouse');
+                    navigate(`/dashboard/${role}/warehouse`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');

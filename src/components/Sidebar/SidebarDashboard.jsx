@@ -39,8 +39,9 @@ export function SidebarDashboard(props) {
                     </Link>
                 </li>
                 {(isSalesMan || isAdmin) &&
-                    <li className={functionCall === "salesMan" ? `sidebar-list-item paste-button active` : `sidebar-list-item paste-button`}>
-                    <a className="show-dropdown" onClick={() => handleToggleDropdown("salesMan")}>
+                    <li className={`sidebar-list-item paste-button`}>
+                    <a className={functionCall === "salesMan" ? `show-dropdown active`: `show-dropdown`}
+                        onClick={() => handleToggleDropdown("salesMan")}>
                         <MdPointOfSale/>
                         <span>
                           Người bán hàng
@@ -57,8 +58,9 @@ export function SidebarDashboard(props) {
                     </div>
                 </li>}
                 {(isWarehouse || isAdmin) &&
-                    <li className={functionCall === "warehouse" ? `sidebar-list-item paste-button active` : `sidebar-list-item paste-button`}>
-                    <a className="show-dropdown" onClick={() => handleToggleDropdown("warehouse")}>
+                    <li className={`sidebar-list-item paste-button`}>
+                    <a className={functionCall === "warehouse" ? `show-dropdown active`: `show-dropdown`}
+                        onClick={() => handleToggleDropdown("warehouse")}>
                         <FaWarehouse/>
                         <span>
                           Quản lý kho
@@ -74,8 +76,9 @@ export function SidebarDashboard(props) {
                     </div>
                 </li>}
                 {(isStoreManager || isAdmin) &&
-                    <li className={functionCall === "storeManager" ? `sidebar-list-item paste-button active` : `sidebar-list-item paste-button`}>
-                    <a className="show-dropdown" onClick={() => handleToggleDropdown("storeManager")}>
+                    <li className={`sidebar-list-item paste-button`}>
+                    <a className={functionCall === "storeManager" ? `show-dropdown active`: `show-dropdown`}
+                       onClick={() => handleToggleDropdown("storeManager")}>
                         <GrUserManager/>
                         <span>
                           Quản lý cửa hàng

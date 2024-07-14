@@ -3,12 +3,12 @@ import avatar from "./avatar.jpg";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import * as authenticationService from "../../services/auth/AuthenticationService";
-import {jwtDecode} from "jwt-decode";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { FaRegBell } from "react-icons/fa";
 import { FaRegUserCircle } from "react-icons/fa";
-import { FaCloudMoon } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
+import {TopicModal} from "./TopicModal/TopicModal";
+import { GiLargePaintBrush } from "react-icons/gi";
 
 export function HeaderDashboard(props) {
     const [fullName, setFullName] = useState("");
@@ -16,6 +16,7 @@ export function HeaderDashboard(props) {
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [darkMode, setDarkMode] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
 
     useEffect(()=> {
@@ -56,6 +57,11 @@ export function HeaderDashboard(props) {
         }
     }
 
+    const openModal = () => {
+        setIsModalOpen(true);
+    }
+    const closeModal = () => setIsModalOpen(false);
+
     return (
         <header className="dashboard-header">
             <div className="btn-bar" onClick={handleShowSidebar}>
@@ -68,7 +74,7 @@ export function HeaderDashboard(props) {
                 </svg>
             </div>
             <div className="search-header">
-                <input className="search-bar" placeholder="tìm kiếm..." type="text"/>
+                <input className="search-bar" placeholder="Tìm kiếm..." type="text"/>
             </div>
             {/*-------------logon-brand----------*/}
             <div className="logo-brand">
@@ -102,9 +108,9 @@ export function HeaderDashboard(props) {
                             <FaRegUserCircle/>
                             Thông tin cá nhân
                         </Link>
-                        <a className="mode-switch" title="Switch Theme" onClick={handleDarkMode}>
-                            <FaCloudMoon />
-                            Chế độ màn hình tối
+                        <a className="mode-switch" title="Switch Theme" onClick={openModal}>
+                            <GiLargePaintBrush />
+                            Chủ đề giao diện
                         </a>
                         <a onClick={handleLogout}>
                             <IoIosLogOut />
@@ -113,6 +119,7 @@ export function HeaderDashboard(props) {
                     </div>
                 }
             </div>
+            <TopicModal isOpen={isModalOpen} onClose={closeModal}></TopicModal>
         </header>
     );
 }
