@@ -47,7 +47,9 @@ export function HeaderDashboard(props) {
     useEffect(() => {
         getUserName();
         getQuantityNotificationUnread();
+        getAvatar()
         }, [])
+
     const getQuantityNotificationUnread = async () => {
         const temp = await getAllByStatusRead(0);
         if (temp.length > 99) {
@@ -55,8 +57,6 @@ export function HeaderDashboard(props) {
         }
         setQuantityUnread(temp.length);
     };
-        getAvatar();
-    },[])
 
     const getUserName = () => {
         const fullName = localStorage.getItem('fullName')
