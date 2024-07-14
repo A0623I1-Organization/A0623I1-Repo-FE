@@ -143,11 +143,11 @@ export function EmployeeList() {
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th className={"No"}>
+                                    <th className={"no"}>
                                         STT
                                     </th>
                                     <th className={"emp-code"}>
-                                        Mã nhân viên
+                                        <span>Mã nhân viên</span>
                                         {codeSort.direction === "" ?
                                             <button className="sort-button"
                                                     onClick={() => setCodeSort({field: "userCode", direction: "asc"})}>
@@ -168,7 +168,7 @@ export function EmployeeList() {
                                         }
                                     </th>
                                     <th className={"emp-name"}>
-                                        Họ và tên
+                                        <span>Họ và tên</span>
                                         {nameSort.direction === "" ?
                                             <button className="sort-button"
                                                     onClick={() => setNameSort({
@@ -195,7 +195,7 @@ export function EmployeeList() {
                                         }
                                     </th>
                                     <th className={"emp-role"}>
-                                        Chức vụ
+                                        <span>Chức vụ</span>
                                         {roleSort.direction === "" ?
                                             <button className="sort-button"
                                                     onClick={() => setRoleSort({
@@ -233,7 +233,7 @@ export function EmployeeList() {
                                 <tbody>
                                 {employeeList && employeeList.map((employee, index) => (
                                     <tr key={employee.userId}>
-                                        <td className={"No"}>{++index}</td>
+                                        <td className={"no"}>{++index}</td>
                                         <td className={"emp-code"}>{employee.userCode}</td>
                                         <td className={"emp-name"}>{employee.fullName}</td>
                                         <td className={"emp-role"}>
