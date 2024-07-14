@@ -17,12 +17,17 @@ import {NotificationList} from "../pages/Dashboard/Notification/NotificationList
 import Loading from '../ui/Loading';
 import ProductDetail from '../pages/Home/ProductDetail';
 import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCreate";
+import LookOrder from '../pages/Home/LookOrder';
 
 const routes = [
     {
         path: '/',
         element: <HomePage/>,
         exact: true,
+    },
+    {
+        path: '/lich-su-mua-hang',
+        element: <LookOrder/>,
     },
     {
         path: '/product/:productId',

@@ -1,12 +1,15 @@
-#main{
+#main {
     margin-top: 124px;
-    padding: 100px;
+    padding: 40px;
+
     // text-align: center;
-    .section{
-        h2{
+    .section {
+        h3 {
             text-align: center;
+            text-transform: uppercase;
         }
-        .list{
+
+        .list {
             margin: 2rem 0;
             --columns: 3;
             --space: 16px;
@@ -14,16 +17,23 @@
             flex-wrap: wrap;
             gap: var(--space);
             margin-left: var(--space);
-            .item{
+
+            .item {
                 width: calc(100% / var(--columns) - var(--space));
                 border: 1px solid #ccc;
                 cursor: pointer;
                 overflow: hidden;
+
+                a {
+                    color: #3b95da;
+                }
+
                 figure {
                     position: relative;
                     width: 100%;
                     aspect-ratio: 2/1;
-                    img{
+
+                    img {
                         width: 100%;
                         transition: transform 0.3s;
                         position: absolute;
@@ -31,23 +41,63 @@
                         overflow: hidden;
                         transition: transform 0.3s ease;
                         background-color: #ccc;
-                        }
-                            &:hover img{
-                                transform: scale(1.05);
-                                box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
-                            }
+                    }
+
+                    &:hover img {
+                        transform: scale(1.05);
+                        box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+                    }
                 }
-                figcaption{
+
+                figcaption {
                     background-color: white;
                     padding: 8px;
-                    p:first-child{
+
+                    p:first-child {
                         color: red;
                     }
-                    p:last-child{
+
+                    p:last-child {
                         color: black;
                     }
+                }
+                &:hover{
+                    box-shadow: 0 1.4px 0px #feb71c ;
                 }
             }
         }
     }
 }
+
+
+
+/* ------------------------------------------Responsive -------------------------------------------*/
+
+/* Màn hình Tablet lớn */
+@media screen and (max-width: 992px) {
+    #main {
+        .section {
+            .list {
+                --columns: 2;
+            }
+        }
+    }
+}
+
+/* Màn hình Tablet */
+@media screen and (max-width: 768px) {}
+
+/* Màn hình Mobile */
+@media screen and (max-width : 534px) {
+    #main {
+        .section {
+            .list {
+                --columns: 1;
+            }
+        }
+    }
+
+}
+
+/* Màn hình Mobile cực nhỏ */
+@media screen and (max-width : 320px) {}
