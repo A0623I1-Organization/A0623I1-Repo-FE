@@ -4,11 +4,15 @@ import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import * as authenticationService from "../../services/auth/AuthenticationService";
 import {jwtDecode} from "jwt-decode";
-import { TiArrowSortedDown } from "react-icons/ti";
-import { FaRegBell } from "react-icons/fa";
-import { FaRegUserCircle } from "react-icons/fa";
-import { FaCloudMoon } from "react-icons/fa";
-import { IoIosLogOut } from "react-icons/io";
+import {TiArrowSortedDown} from "react-icons/ti";
+import {FaRegBell} from "react-icons/fa";
+import {FaRegUserCircle} from "react-icons/fa";
+import {FaCloudMoon} from "react-icons/fa";
+import {IoIosLogOut} from "react-icons/io";
+import {getAllByStatusRead} from "../../services/notification/NotificationService";
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
+import {isSalesMan, isWarehouse} from "../../services/auth/AuthenticationService";
 
 export function HeaderDashboard(props) {
     const [fullName, setFullName] = useState("");
@@ -16,10 +20,37 @@ export function HeaderDashboard(props) {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [darkmode, setDarkmode] = useState(false);
     const navigate = useNavigate();
+    const [quantityUnread, setQuantityUnread] = useState([]);
+    const [stompClient, setStompClient] = useState(null);
 
-    useEffect(()=> {
+    useEffect(() => {
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            stompClient.subscribe('/topic/notification', (message) => {
+                    getQuantityNotificationUnread();
+                }
+            )
+        });
+        setStompClient(stompClient);
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect();
+            }
+        }
+    }, []);
+
+    useEffect(() => {
         getUserName();
-    },[])
+        getQuantityNotificationUnread();
+        }, [])
+    const getQuantityNotificationUnread = async () => {
+        const temp = await getAllByStatusRead(0);
+        if (temp.length > 99) {
+            setQuantityUnread("99+")
+        }
+        setQuantityUnread(temp.length);
+    };
 
     const getUserName = () => {
         const fullName = localStorage.getItem('fullName')
@@ -44,11 +75,10 @@ export function HeaderDashboard(props) {
         setDarkmode(!darkmode);
         if (darkmode) {
             document.documentElement.classList.add("dark");
-        }else {
+        } else {
             document.documentElement.classList.remove("dark");
         }
     }
-
     return (
         <header className="dashboard-header">
             <div className="btn-bar" onClick={handleShowSidebar}>
@@ -70,12 +100,16 @@ export function HeaderDashboard(props) {
             {/*-----------login-box-----------*/}
             <div className="login-btn">
                 {/*------------------notification-----------------------------*/}
-                <div className="layout-notif" id="btn-notification">
-                    <div className="notification">
-                        <FaRegBell/>
-                        <span className="quantity">99</span>
-                    </div>
-                </div>
+                {
+                    (isSalesMan() || isWarehouse()) && (
+                        <div className="layout-notif" id="btn-notification" onClick={props.onClick}>
+                            <div className="notification">
+                                <FaRegBell size={27}/>
+                                <span className="quantity">{quantityUnread}</span>
+                            </div>
+                        </div>
+                    )
+                }
                 <div className="user-box show-dropdown" onClick={handleShowUserMenu}>
                     <div className="avatar">
                         <img
@@ -102,11 +136,11 @@ export function HeaderDashboard(props) {
                             Thông tin cá nhân
                         </a>
                         <a className="mode-switch" title="Switch Theme" onClick={handleDarkMode}>
-                            <FaCloudMoon />
+                            <FaCloudMoon/>
                             Chế độ màn hình tối
                         </a>
                         <a onClick={handleLogout}>
-                            <IoIosLogOut />
+                            <IoIosLogOut/>
                             Đăng xuất
                         </a>
                     </div>

@@ -10,12 +10,10 @@
   --Dark-grayish-blue: hsl(219, 12%, 42%);
   --Very-dark-blue: hsl(224, 21%, 14%);
 }
-
 .container-listNotification-nhi {
   width: 100%;
   background-color: var(--Light-grayish-blue-1);
   border-radius: 0.5rem;
-  max-height: 90vh;
   overflow-y: hidden;
   padding: 20px;
   box-sizing: border-box;
@@ -24,6 +22,7 @@
   margin-bottom: 15px;
   margin-left: 5%;
   margin-right: 5%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 .header-notification-nhi {
   display: flex;
@@ -166,4 +165,5 @@
 .see-all-button button:hover {
   background-color: var(--Red);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
