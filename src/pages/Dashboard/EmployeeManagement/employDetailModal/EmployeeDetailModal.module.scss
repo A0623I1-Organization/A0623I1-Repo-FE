@@ -23,6 +23,7 @@
     height: 550px;
 
     .backgroundImage {
+      border-radius: 15px 15px 0 0;
       width: 100%;
       height: 100px;
     }
@@ -104,7 +105,7 @@
           border: none;
           border-radius: 5px;
           background: var(--action-color);
-          color: #fff;
+          color: var(--button-char-color);
 
           &:hover {
             background: var(--button-bg-hover);

@@ -11,7 +11,7 @@
   margin: 0 auto;
   max-height: 100%;
   display: flex;
-  .app-content {
+  .import-pricing{
       padding: 16px;
       height: 100%;
       display: flex;
@@ -20,86 +20,7 @@
       background: var(--background-dashboard);
 
       .content-body {
-          margin-top: 100px;
           width: 100%;
-
-          .content-header {
-              width: 100%;
-              display: flex;
-              justify-content: flex-start;
-              align-items: center;
-
-              .box-element {
-                  width: 30%;
-                  background-color: var(--sidebar);
-                  height: 250px;
-                  margin: auto;
-                  box-shadow: 2px 2px 5px 0 #4d4b4b;
-                  border-radius: 10px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  flex-direction: column;
-
-                  .icon-sta {
-                      svg {
-                          fill: var(--app-content-main-color);
-                      }
-                  }
-
-                  .item-name {
-                      font-size: 20px;
-                      font-weight: 600;
-                      color: var(--app-content-main-color);
-                  }
-
-                  .item-number {
-                      font-size: 40px;
-                      color: var(--app-content-main-color);
-                      padding: 20px;
-                  }
-
-                  .item-growth {
-                      font-size: 18px;
-                      color: var(--app-content-main-color);
-                  }
-              }
-
-              .orders {
-                  .icon-sta {
-                      svg {
-                          fill: rgba(250, 97, 39, 0.91);
-                      }
-                  }
-
-                  .item-name {
-
-                      color: rgba(250, 97, 39, 0.91);
-                  }
-              }
-
-              .revenue {
-                  .item-name {
-                      select {
-                          color: var(--app-content-main-color);
-                          outline: none;
-                          background-color: var(--sidebar);
-                          margin-left: 10px;
-                          font-size: 16px;
-                          border-radius: 25px;
-                          text-align: center;
-                          height: 35px;
-                      }
-                  }
-
-                  .item-number {
-                      display: flex;
-                      justify-content: center;
-                      align-items: center;
-                      color: #fd3434;
-}
-              }
-          }
 
           .content-element {
               background-color: var(--sidebar);
@@ -237,7 +158,7 @@ top: 0.5em;
 
                   .person-info {
                       padding: 20px 40px;
-                      width: 60%;
+                      width: 50%;
 
                       tr {
                           th, td {
@@ -260,7 +181,7 @@ top: 0.5em;
                   .form-operation {
                       height: auto;
                       padding: 20px;
-                      width: 40%;
+                      width: 50%;
 
                       .form-element {
                           margin: 20px 0;
@@ -275,12 +196,12 @@ top: 0.5em;
                           }
 
                           input, select, textarea {
-                              width: 70%;
+                              width: 80%;
                               height: 50px;
                               margin: auto;
                               border-radius: 10px;
                               outline: none;
-border: 1px solid #c4bdbd;
+                              border: 1px solid #c4bdbd;
                               padding-left: 20px;
                               font-size: 16px;
                           }
@@ -367,7 +288,7 @@ border: 1px solid #c4bdbd;
 
                       tbody {
                           tr:hover {
-box-shadow: var(--filter-shadow);
+                              box-shadow: var(--filter-shadow);
                               background-color: var(--app-content-secondary-color);
 
                           }
@@ -398,95 +319,9 @@ box-shadow: var(--filter-shadow);
           }
       }
 
-      @media screen and (max-width: 1200px) {
-          .content-body {
-
-              .content-header {
-                  margin-top: 2%;
-              }
-          }
-      }
-
-      @media screen and (max-width: 1024px) {
-          .content-body {
-
-              .content-header {
-                  margin-top: 2%;
-              }
-          }
-      }
-
       @media screen and (max-width: 768px) {
           .content-body {
               font-size: 14px;
-              .content-header {
-                  margin-top: 5%;
-                  .box-element {
-                      width: 30%;
-                      background-color: var(--sidebar);
-                      height: 200px;
-
-                      .icon-sta {
-                          svg {
-                              fill: var(--app-content-main-color);
-                              width: 22px;
-                              height: 22px;
-                          }
-                      }
-
-                      .item-name {
-                          text-align: center;
-                          font-size: 16px;
-                          font-weight: 600;
-                          color: var(--app-content-main-color);
-                      }
-
-                      .item-number {
-                          font-size: 22px;
-                          color: var(--app-content-main-color);
-                          padding: 20px;
-                      }
-
-                      .item-growth {
-                          font-size: 12px;
-                          color: var(--app-content-main-color);
-                      }
-                  }
-
-                  .orders {
-                      .icon-sta {
-                          svg {
-                              fill: rgba(250, 97, 39, 0.91);
-                          }
-                      }
-
-                      .item-name {
-                          color: rgba(250, 97, 39, 0.91);
-                      }
-                  }
-.revenue {
-                      .item-name {
-                          select {
-                              margin-top: 10px;
-                              color: var(--app-content-main-color);
-                              outline: none;
-                              background-color: var(--sidebar);
-                              margin-left: 10px;
-                              font-size: 16px;
-                              border-radius: 25px;
-                              text-align: center;
-                              height: 35px;
-                          }
-                      }
-
-                      .item-number {
-                          display: flex;
-                          justify-content: center;
-                          align-items: center;
-                          color: #fd3434;
-                      }
-                  }
-              }
               .content-element {
                   margin-top: 5%;
                   .box-content {
@@ -500,75 +335,6 @@ box-shadow: var(--filter-shadow);
 
       @media screen and (max-width: 480px) {
           .content-body {
-              .content-header {
-                  margin-top: 12%;
-                  .box-element {
-                      width: 30%;
-                      background-color: var(--sidebar);
-                      height: 200px;
-
-                      .icon-sta {
-                          svg {
-                              fill: var(--app-content-main-color);
-                              width: 20px;
-                              height: 20px;
-                          }
-                      }
-
-                      .item-name {
-                          text-align: center;
-                          font-size: 14px;
-                          font-weight: 600;
-                          color: var(--app-content-main-color);
-                      }
-
-                      .item-number {
-                          font-size: 20px;
-                          color: var(--app-content-main-color);
-                          padding: 20px;
-                      }
-
-                      .item-growth {
-                          font-size: 12px;
-                          color: var(--app-content-main-color);
-                      }
-                  }
-
-                  .orders {
-                      .icon-sta {
-                          svg {
-                              fill: rgba(250, 97, 39, 0.91);
-                          }
-                      }
-
-                      .item-name {
-                          color: rgba(250, 97, 39, 0.91);
-                      }
-                  }
-
-                  .revenue {
-                      .item-name {
-                          select {
-margin-top: 10px;
-                              color: var(--app-content-main-color);
-                              outline: none;
-                              background-color: var(--sidebar);
-                              margin-left: 10px;
-                              font-size: 13px;
-                              border-radius: 25px;
-                              text-align: center;
-                              height: 35px;
-                          }
-                      }
-
-                      .item-number {
-                          display: flex;
-                          justify-content: center;
-                          align-items: center;
-                          color: #fd3434;
-                      }
-                  }
-              }
               .content-element {
                   margin-top: 10%;
                   .box-content {

@@ -4,7 +4,7 @@ import {useState} from "react";
 import "./DashboardMain.scss";
 import ListOfNotification from "../Notification/list/ListOfNotification";
 
-export function DashboardMain({content}) {
+export function DashboardMain({content, path}) {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [showNotificationList, setShowNotificationList] = useState(false);
 
@@ -43,7 +43,7 @@ export function DashboardMain({content}) {
                 </div>
             )}
             <div id="content-wrapper">
-                <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
+                <SidebarDashboard showSidebar={isShowSidebar} path = {path}></SidebarDashboard>
                 <div className="app-content">
                     {content}
                 </div>

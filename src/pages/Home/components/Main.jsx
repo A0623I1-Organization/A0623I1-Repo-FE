@@ -3,23 +3,47 @@ import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
 import ZaloChat from '../../../ui/ZaloChat';
 import { useState, useEffect } from 'react';
-import * as ProductService from '../../../services/products/PricingService'
+import * as ProductService from '../../../services/products/ProductService'
 import { fCurrency } from '../../../utils/format-number';
 import Loading from '../../../ui/Loading';
+import { Link, useLocation } from 'react-router-dom';
+import { categories } from '../../../data';
 
 function Main(props) {
 
+    const location = useLocation();
     const [products, setProducts] = useState([]);
+    const [productsKeyWord, setProductsKeyWord] = useState([]);
+    const [productsNew, setProductsNew] = useState([]);
     const [page, setPage] = useState(0);
+    const [pageKeyWord, setPageKeyWord] = useState(0);
+    const [pageNew, setPageNew] = useState(0);
+    const [hasMoreKeyWord, setHasMoreKeyWord] = useState(true);
     const [hasMore, setHasMore] = useState(true);
+    const [hasMoreNew, setHasMoreNew] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [initialLoad, setInitialLoad] = useState(true); // Trạng thái để kiểm tra lần tải đầu tiên
+    const [initialLoad, setInitialLoad] = useState(true);
+    const [initialLoadKeyWord, setInitialLoadKeyWord] = useState(true);
+    const [initialLoadNew, setInitialLoadNew] = useState(true);
+
+    const urlParams = new URLSearchParams(location.search);
+    const keyword = urlParams.get('keyword');
 
     useEffect(() => {
         if (initialLoad) {
             loadInitialProducts();
         }
     }, [initialLoad]);
+
+    useEffect(() => {
+        if (initialLoadNew) {
+            loadInitialProductsNew();
+        }
+    }, [initialLoadNew]);
+
+    useEffect(() => {
+        getProductsbyKeyword()
+    }, [initialLoadKeyWord, keyword]);
 
     const loadInitialProducts = async () => {
         setLoading(true);
@@ -37,6 +61,24 @@ function Main(props) {
 
         setLoading(false);
         setInitialLoad(false);
+    };
+
+    const loadInitialProductsNew = async () => {
+        setLoading(true);
+
+        const response = await ProductService.getAllNew(0);
+        if (!response || !response.content) {
+            setHasMoreNew(false);
+        } else {
+            setProductsNew(response.content);
+            setPageNew(1);
+            if (response.last) {
+                setHasMoreNew(false);
+            }
+        }
+
+        setLoading(false);
+        setInitialLoadNew(false);
     };
 
     const loadMoreProducts = async () => {
@@ -58,278 +100,202 @@ function Main(props) {
         setLoading(false);
     };
 
+    const loadMoreProductsKeyWord = async () => {
+        if (loading || !hasMore) return;
+
+        setLoading(true);
+        const response = await ProductService.searchProduct(keyword, pageKeyWord)
+        if (!response || !response.content) {
+            setHasMoreKeyWord(false);
+        } else {
+            setProductsKeyWord(prevProducts => [...prevProducts, ...response.content]);
+            setPageKeyWord(prevPage => prevPage + 1);
+            if (response.last) {
+                setHasMoreKeyWord(false);
+            }
+        }
+
+        setLoading(false);
+    };
+
+    const loadMoreProductsNew = async () => {
+        if (loading || !hasMoreNew) return;
+
+        setLoading(true);
+
+        const response = await ProductService.getAllNew(pageNew);
+        if (!response || !response.content) {
+            setHasMoreNew(false);
+        } else {
+            setProductsNew(prevProducts => [...prevProducts, ...response.content]);
+            setPageNew(prevPage => prevPage + 1);
+            if (response.last) {
+                setHasMoreNew(false);
+            }
+        }
+
+        setLoading(false);
+    };
+
+    const getProductsbyKeyword = async () => {
+        if (keyword === '') {
+            return;
+        }
+        try {
+            const response = await ProductService.searchProduct(keyword, 0)
+            if (response.length == 0) {
+                setProductsKeyWord([])
+                setHasMoreKeyWord(false);
+                return;
+            }
+            if (!response || !response.content) {
+                setHasMoreKeyWord(false);
+            } else {
+                setProductsKeyWord(response.content);
+                setPageKeyWord(1);
+                if (response.last) {
+                    setHasMoreKeyWord(false);
+                }
+            }
+
+            setLoading(false);
+            setInitialLoadKeyWord(false);
+        } catch (e) {
+            console.log("Không có dữ liệu");
+        }
+    }
+
     return (
         <main id={styles.main}>
             <section><Slick /></section>
             <section className={styles.sectionCategory}>
                 <ul>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/8339c19d-1fe8-43fc-8a0d-474c9de17ca7.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/9d7afcef-aa32-4dc3-9c43-5f61cec4e502.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/bd5d9f39-2571-4ddc-9d57-5bbbafcc34c9.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/72c29cbe-5cdb-4853-9d38-e1079a86e35e.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/d083eb5e-0b3f-4138-8676-007768eae0ea.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/909fa1d0-6b99-4747-857e-d5e18c3270ad.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/f6c00282-fd0f-47c0-a376-4a1fa9896152.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/342843e8-9b96-486c-a45b-55884d0fcd92.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/3bbb07ba-875a-4e73-978d-b1ad0df666c9.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/c2838748-5038-4b3f-95f3-7e262a2e7b36.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/75c4fe5f-e6ea-4a12-91a2-f26afaea6ef8.png"
-                            alt=""
-                        />
-                    </li>
-                    <li>
-                        <img
-                            src="https://media-fmplus.cdn.vccloud.vn/uploads/categories/e87112ef-d67c-4fe3-9c28-f40b95a57e62.png"
-                            alt=""
-                        />
-                    </li>
+                    {categories?.map((category, index) => (
+                        <li key={index}>
+                            <Link to={category.link}>
+                                <img src={category.src} alt={`Category ${index + 1}`} />
+                            </Link>
+                        </li>
+                    ))}
                 </ul>
             </section>
+            {/* --------Sản phẩm theo keyword-------- */}
+            {
+                keyword &&
+                <section className={styles.sectionList}>
+                    <h3>Sản phẩm {keyword}</h3>
+                    <div className={styles.list}>
+                        {productsKeyWord?.map(product => (
+                            product.pricingList?.length > 0 &&
+                            <div className={styles.item} key={product.productId}>
+                                <Link to={`/product/${product?.productId}`}>
+                                    <figure>
+                                        <img
+                                            src={product.productImages[0]?.imageUrl}
+                                            alt={product.productName}
+                                            width="100%"
+                                        />
+                                    </figure>
+                                    <figcaption>
+                                        <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
+                                        <p>{product.productName}</p>
+                                    </figcaption>
+                                </Link>
+                            </div>
+                        ))}
+                    </div>
+                    {loading && <Loading />}
+                    {hasMoreKeyWord && !loading &&
+                        (<button className={styles.button}>
+                            <a onClick={loadMoreProductsKeyWord}>Xem thêm</a>
+                        </button>)
+                    }
+                    {
+                        productsKeyWord?.length == 0 && !loading &&
+                        (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
+                    }
+                </section>
+            }
+
+
+            {/* ----------------------------- */}
+
+            {/* Sản phẩm thời trang nam nữ */}
             <section className={styles.sectionList}>
-                <h3>Sản phẩm mới</h3>
+                <h3>Thời trang nam nữ</h3>
                 <div className={styles.list}>
-                    {products.map(product => (
-                        <div className={styles.item} key={product.id}>
-                            <a href="#!">
+                    {products?.map(product => (
+                        product.pricingList?.length > 0 &&
+                        <div className={styles.item} key={product.productId}>
+                            <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
-                                        src={product.pricingImgUrl}
-                                        alt={product.pricingName}
+                                        src={product.productImages[0]?.imageUrl}
+                                        alt={product.productName}
                                         width="100%"
                                     />
                                 </figure>
                                 <figcaption>
-                                    <p>{fCurrency(product.price)} VND</p>
-                                    <p>{product.pricingName}</p>
+                                    <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
+                                    <p>{product.productName}</p>
                                 </figcaption>
-                            </a>
+                            </Link>
                         </div>
                     ))}
                 </div>
                 {loading && <Loading />}
                 {hasMore && !loading &&
                     (<button className={styles.button}>
-                        <a href="#!" onClick={loadMoreProducts}>Xem thêm</a>
+                        <a onClick={loadMoreProducts}>Xem thêm</a>
                     </button>)
                 }
+                {
+                    products?.length == 0 && !loading &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
+                }
             </section>
+            {/* ----------------------------- */}
             <section className={styles.sectionBanner1}>
                 <img
                     src="https://media-fmplus.cdn.vccloud.vn/uploads/sliders/48773c7d-80e2-4207-8ccc-ad79b804397a.png"
                     alt=""
                 />
             </section>
-            {console.log(products)}
-            {/* <section className={styles.sectionList}>
-                <h3>Sản phẩm áo</h3>
+            {/* Sản phẩm mới */}
+            <section className={styles.sectionList}>
+                <h3>Sản phẩm mới</h3>
                 <div className={styles.list}>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-thun-yoguu-retro-yody-gut7058-bee-sjn3052-xnh-11.jpg?v=1709608715057"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/gut7050-tra-qsm6037-tan-5.jpg?v=1710487363020"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-thun-nu-yoguu-co-cao-yodygut7028-nau-sjn6004-xah-3.jpg?v=1708998641850"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/gut7056-den-3.jpg?v=1709691727563"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam đi chơi</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/sam6045-nav-3.jpg?v=1715055609597"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/cvn5096-den-apn5046-ddo-1.jpg?v=1690163788930"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nữ</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-polo-nam-cafe-yody-apm7187-nau-qsm6029-tit-5.jpg?v=1711444822920"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/apm5083-vag-6.jpg?v=1702607264500"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/ao-polo-nam-yody-apm7053-ghd-qkm6013-vag-3.jpg?v=1705630093473"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo thun nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://bizweb.dktcdn.net/thumb/large/100/438/408/products/smm3010-gsa-qam3002-xad-8.jpg?v=1692606393950"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <p>235.000 VND</p>
-                                <p>Áo sơ mi nam</p>
-                            </figcaption>
-                        </a>
-                    </div>
+                    {productsNew?.map(product => (
+                        product.pricingList?.length > 0 &&
+                        <div className={styles.item} key={product.productId}>
+                            <Link to={`/product/${product?.productId}`}>
+                                <figure>
+                                    <img
+                                        src={product.productImages[0]?.imageUrl}
+                                        alt={product.productName}
+                                        width="100%"
+                                    />
+                                </figure>
+                                <figcaption>
+                                    <p>{fCurrency(product.pricingList[0]?.price)} VND</p>
+                                    <p>{product.productName}</p>
+                                </figcaption>
+                            </Link>
+                        </div>
+                    ))}
                 </div>
-                <button className={styles.button}>
-                    <a href="#!">Xem thêm</a>
-                </button>
-            </section> */}
+                {loading && <Loading />}
+                {hasMoreNew && !loading && pageNew !== 2 &&
+                    (<button className={styles.button}>
+                        <a onClick={loadMoreProductsNew}>Xem thêm</a>
+                    </button>)
+                }
+                {
+                    productsNew?.length == 0 && !loading &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy sản phẩm nào !</p>)
+                }
+            </section>
+            {/* -------------------------------- */}
             <section className={styles.sectionBanner2}>
                 <img
                     className={styles.item1}

@@ -1,8 +1,8 @@
-import axios from "axios";
+import axiosInstance from '../../utils/axiosInstance';
 
 export const getAllProductTypeByCategory =async (categoryName)=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/productType?categoryName=${categoryName}`)
+        let temp = await axiosInstance.get(`/productType?categoryName=${categoryName}`)
         return temp.data;
     }catch (e)
     {
@@ -11,7 +11,7 @@ export const getAllProductTypeByCategory =async (categoryName)=>{
 }
 export const getAllProductType =async ()=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/productType`)
+        let temp = await axiosInstance.get(`/productType`)
         return temp.data;
     }catch (e)
     {
