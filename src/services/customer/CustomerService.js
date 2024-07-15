@@ -48,3 +48,12 @@ export const deleteCustomer = async (id)=>{
     }
 }
 
+export const getAllCustomers = async (id)=>{
+    try {
+        const temp = await axiosInstance.findAll(`/customer/list`);
+        return temp.data;
+    } catch (e) {
+        console.log(e)
+        return null;
+    }
+}
