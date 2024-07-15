@@ -11,6 +11,7 @@ export function DashboardMain({content, path}) {
     const callbackFunction = (childData) => {
         setIsShowSidebar(childData);
     };
+
     const displayNotification = (event) => {
         event.stopPropagation(); // Ngăn sự kiện click lan đến phần tử cha
         setShowNotificationList(prevState => !prevState);

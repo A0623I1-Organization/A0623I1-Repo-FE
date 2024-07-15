@@ -38,7 +38,10 @@ export const EmployeeDetailModal = ({isOpen, onClose, id}) => {
                         <div className={styles.info}>
                             <div className={styles.status}>
                                 <label className={styles.title}>Trạng thái: </label>
-                                <span>Kích hoạt</span>
+                                {employee.enabled === true ?
+                                    <span>Kích hoạt</span>
+                                    : <span style={{color: "red"}}>Bất hoạt</span>
+                                }
                             </div>
                             <div className={styles.empCode}>
                                 <label className={styles.title}>Mã nhân viên: </label>
