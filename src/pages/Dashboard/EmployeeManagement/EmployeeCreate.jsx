@@ -52,10 +52,12 @@ export function EmployeeCreate() {
             setValue("email", temp.email);
             setValue("address", temp.address);
             setValue("role", JSON.stringify(temp.role));
-            setValue("accountNonExpired", temp.accountNonExpired);
-            setValue("accountNonLocked", temp.accountNonLocked);
-            setValue("credentialsNonExpired", temp.credentialsNonExpired);
-            setValue("enabled", temp.enabled);
+            if (id !== undefined) {
+                setValue("accountNonExpired", temp.accountNonExpired);
+                setValue("accountNonLocked", temp.accountNonLocked);
+                setValue("credentialsNonExpired", temp.credentialsNonExpired);
+                setValue("enabled", temp.enabled);
+            }
             setRoles(temp.roles);
         }
     }
@@ -70,7 +72,9 @@ export function EmployeeCreate() {
             const now = Date.now();
             data.role = JSON.parse(data.role);
             data.gender = Number.parseInt(data.gender);
-            data.enabled = JSON.parse(data.enabled)
+            if (id !== undefined) {
+                data.enabled = JSON.parse(data.enabled);
+            }
             let response;
             console.log(data)
             if (id) {
