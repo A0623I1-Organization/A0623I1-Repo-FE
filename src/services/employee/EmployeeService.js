@@ -44,3 +44,13 @@ export const updateEmployee = async (id, employee) => {
         throw e.response.data.errors;
     }
 }
+
+export const deleteEmployee = async (employeeId) => {
+    try {
+        const temp = await axiosInstance.delete(`/users/${employeeId}`);
+        console.log(temp.data);
+        return temp.data;
+    } catch (e) {
+        throw e.response.data.errors;
+    }
+}
