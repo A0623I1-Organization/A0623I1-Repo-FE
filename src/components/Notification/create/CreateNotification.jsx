@@ -66,7 +66,6 @@ export default function CreateNotification(props) {
     }
     const onSubmit = async data => {
         data.listRole = filterRole(data.listRole);
-
         const socket=new SockJS("http://localhost:8080/ws");
         const stompClient= over(socket);
         stompClient.connect({},()=>{
