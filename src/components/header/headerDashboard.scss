@@ -121,10 +121,6 @@
             align-items: center;
             cursor: pointer;
 
-            img {
-                width: 20px;
-            }
-
             .moon {
                 fill: var(--app-content-main-color);
             }
@@ -186,6 +182,7 @@
                 display: none;
                 justify-content: flex-start;
                 align-items: center;
+                color: var(--sidebar-main-color);
 
                 .avatar {
                     width: 25px;
