@@ -18,10 +18,6 @@ export function EmployeeCreate() {
         criteriaMode: "all"
     });
 
-    const callbackFunction = (childData) => {
-        setIsShowSidebar(childData)
-    }
-
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
@@ -85,7 +81,10 @@ export function EmployeeCreate() {
                 toast.error(response.message);
             }
         } catch (e) {
-            setValidateError(e);
+            setValidateError(e.errors);
+            if (e.statusCode === 400) {
+                toast.error(e.message);
+            }
         }
     }
 

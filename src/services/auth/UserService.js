@@ -1,7 +1,5 @@
-import axios from "axios";
 import {jwtDecode} from "jwt-decode";
-
-const baseURL = "http://localhost:8080";
+import axiosInstance from "../../utils/axiosInstance";
 
 export const updateAvatarAndBackgroundImage = async (username, avatar, backgroundImage) => {
     try {
@@ -10,11 +8,7 @@ export const updateAvatarAndBackgroundImage = async (username, avatar, backgroun
             avatar: avatar,
             backgroundImage: backgroundImage
         }
-        const token = localStorage.getItem("token");
-        const response = await axios.patch(`${baseURL}/api/auth/update-image`, userData,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const response = await axiosInstance.patch(`/update-image`, userData)
         return response.data;
     } catch (error) {
         error.message = "Cập nhật hình ảnh thất bại!"
