@@ -133,7 +133,7 @@ export function EmployeeList() {
                             <form onSubmit={handleSubmit(onSubmit)} className="form-search">
                                 <input type="text" {...register("searchContent")} className="search-bar"
                                        placeholder="Nhập nội dung tìm kiếm"/>
-                                <button className="btn btn-search">Search</button>
+                                <button className="btn btn-search">Tìm kiếm</button>
                             </form>
                             <Link to={"/dashboard/storeManager/employee-create"} className="link-move">Thêm mới nhân
                                 viên</Link>
