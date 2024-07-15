@@ -3,8 +3,6 @@ import avatar from "./avatar.jpg";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import * as authenticationService from "../../services/auth/AuthenticationService";
-import {jwtDecode} from "jwt-decode";
-import {FaCloudMoon} from "react-icons/fa";
 import {getAllByStatusRead} from "../../services/notification/NotificationService";
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
