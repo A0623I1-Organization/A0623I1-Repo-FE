@@ -36,9 +36,13 @@ export function DashboardMain({content, path}) {
                             marginList={"-10px -20px"}
                             paddingList={"10px"}
                             heightList={"550px"}
-                            fontSizeHeader={"15px"}
+                            fontSizeHeader={"12px"}
                             heightMain={"400px"}
                             seeAllBackgroundColor={"white"}
+                            fontSizeMain={"11px"}
+                            paddingCard={"0.6rem 0.125rem"}
+                            widthImg={"45px"}
+                            heightImg={"40px"}
                         />
                     </div>
                 </div>

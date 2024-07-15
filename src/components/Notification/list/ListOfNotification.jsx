@@ -9,7 +9,7 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import {over} from "stompjs";
 
-export default function ListOfNotification({ widthList, backgroundColorList, marginTopList, marginList, paddingList, maxHeightList, heightList, fontSizeHeader, heightMain, seeAllBackgroundColor }) {
+export default function ListOfNotification(props) {
     const [overflow, setOverflow] = useState("hidden");
     const [listByRead, setListByRead] = useState([]);
     const [listByUnRead, setListByUnRead] = useState([]);
@@ -80,8 +80,8 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
 
     return (
         <>
-            <div className="container-listNotification-nhi" style={{ width: widthList, backgroundColor: backgroundColorList, marginTop: marginTopList, margin: marginList, padding: paddingList, maxHeight: maxHeightList, height: heightList }}>
-                <header className="header-notification-nhi" style={{ fontSize: fontSizeHeader }}>
+            <div className="container-listNotification-nhi" style={{ width:props.widthList, backgroundColor: props.backgroundColorList, marginTop: props.marginTopList, margin: props.marginList, padding: props.paddingList, maxHeight: props.heightList, height: props.heightList }}>
+                <header className="header-notification-nhi" style={{ fontSize:props.fontSizeHeader }}>
                     <div className="notif_box">
                         <h2 className="title">
                             Thông báo
@@ -93,16 +93,17 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
                         Đánh dấu tất cả đã đọc
                     </p>
                 </header>
-                <main className="main-notification-nhi" style={{ overflowY: overflow, height: heightMain }}>
+                <main className="main-notification-nhi" style={{ overflowY: overflow, height: props.heightMain,fontSize:props.fontSizeMain}}>
                     {
                         listByUnRead.map((item) => (
-                            <div key={item.notifId} onClick={() => getItem(item)} className="notif_card unread">
+                            <div key={item.notifId} onClick={() => getItem(item)} className="notif_card unread" style={{padding:props.paddingCard}}>
                                 <img
                                     className="img-tag-notification-nhi"
                                     alt="manager--v2"
                                     height="52"
                                     src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
                                     width="18"
+                                    style={{width:props.widthImg,height:props.heightImg}}
                                 />
                                 <div className="description">
                                     <p className="user_activity tag-p-notification">
@@ -123,13 +124,14 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
                         ))
                     }
                     {listByRead.map((item) => (
-                        <div key={item.notifId} onClick={() => getItem(item)} className="notif_card">
+                        <div key={item.notifId} onClick={() => getItem(item)} className="notif_card" style={{padding:props.paddingCard}}>
                             <img
                                 className="img-tag-notification-nhi"
                                 alt="manager--v2"
                                 height="52"
                                 src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
                                 width="18"
+                                style={{width:props.widthImg,height:props.heightImg}}
                             />
                             <div className="description">
                                 <p className="user_activity tag-p-notification">
@@ -159,7 +161,7 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
                         <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal} />
                     )}
                 </main>
-                <div className="see-all-button" style={{ backgroundColor: seeAllBackgroundColor }}>
+                <div className="see-all-button" style={{ backgroundColor:props.seeAllBackgroundColor }}>
                     <button onClick={handleSeeAllNotification}>
                         Xem tất cả
                     </button>
