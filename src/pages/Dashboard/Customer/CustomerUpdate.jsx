@@ -6,17 +6,17 @@ import { toast } from "react-toastify";
 import * as CustomerService from '../../../services/customer/CustomerService'
 import * as CustomerTypeService from '../../../services/customer/CustomerTypeService'
 import ModalDelete from '../../../ui/ModalDelete';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function CustomerUpdate() {
     const {role} = useParams();
     const [isModalOpen, setModalOpen] = useState(false);
     const [customer, setCustomer] = useState(null);
     const [customerType, setCustomerType] = useState(null);
-    // const [customerTypes, setCustomerTypes] = useState([]);
     const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm();
     const { id } = useParams()
     const [validateError, setValidateError] = useState([])
+    const navigate = useNavigate();
 
     useEffect(() => {
         getCustomer()
@@ -58,8 +58,16 @@ function CustomerUpdate() {
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
 
-    const handleSubmitDelete = () => {
-        closeModal();
+    const handleSubmitDelete = async () => {
+        try{
+            await CustomerService.deleteCustomer(customer?.customerId)
+            toast.success("Xóa khách hàng thành công")
+            navigate("/dashboard/customers")
+            closeModal();
+        }catch(error){
+            closeModal();
+            toast.error("Xóa khách hàng thất bại")
+        }
     };
 
     const handleChangeSelect = (event) => {
@@ -68,10 +76,11 @@ function CustomerUpdate() {
 
     const onSubmit = async (data) => {
         try {
+            data.customerCode = customer?.customerCode;
             data.customerType = JSON.parse(data.customerType)
-            console.log(data);
             await CustomerService.updateCustomer(id, data);
             setValidateError([])
+            navigate("/dashboard/customers")
             toast.success("Sửa khách hàng thành công")
         } catch (error) {
             setValidateError(error);
@@ -94,15 +103,17 @@ function CustomerUpdate() {
             content={
                 <main id="main-customer">
                     <h2>Sửa khách hàng</h2>
-                    <div className="create">
+                    {
+                        customer  &&
+                        <div className="create">
                         <form className="form" onSubmit={handleSubmit(onSubmit)}>
                             <div className="item1">
                                 <label htmlFor="">
                                     <span>Mã khách hàng*</span>
-                                    <input type="text" placeholder=""  {...register("customerCode", {
+                                    <input type="text" placeholder="" value={customer?.customerCode} {...register("customerCode", {
                                         required: 'Mã khách hàng không được để trống !', pattern: {
-                                            value: /^KH-\d{3,}$/,
-                                            message: 'Mã khách hàng phải có định dạng KH-XXX',
+                                            value: /^KH-\d{4,}$/,
+                                            message: 'Mã khách hàng phải có định dạng KH-XXXX',
                                         },
                                         disabled: true
                                     })} />
@@ -130,7 +141,6 @@ function CustomerUpdate() {
                                     <span>Số điện thoại*</span>
                                     <input type="text" {...register("phoneNumber", {
                                         required: 'Số điện thoại không được để trống !', pattern: {
-                                            // value: /^+84|0\d{9}/,
                                             value: /^(\+84|0\d{9})$/,
                                             message: 'Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!',
                                         },
@@ -186,7 +196,8 @@ function CustomerUpdate() {
                             </div>
                         </form>
                     </div>
-                    <ModalDelete isOpen={isModalOpen} onClose={closeModal} title={"Xóa khách hàng"} content={"Xác nhận xóa khách hàng A"} submit={handleSubmitDelete} />
+                    }
+                    <ModalDelete isOpen={isModalOpen} onClose={closeModal} title={"Xóa khách hàng"} content={`Xác nhận xóa khách hàng tên: ${customer?.customerName} có mã: ${customer?.customerCode}`} submit={handleSubmitDelete} />
                 </main>
 
             }

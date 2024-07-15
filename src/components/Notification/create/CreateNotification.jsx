@@ -4,12 +4,17 @@ import {format} from "date-fns";
 import {useForm} from "react-hook-form";
 import * as notificationService from "../../../services/notification/NotificationService";
 import {toast} from "react-toastify";
+import {over} from 'stompjs';
+import SockJS from 'sockjs-client';
 export default function CreateNotification(props) {
     let ROLE_SALESMAN = "ROLE_SALESMAN";
     let ROLE_WAREHOUSE = "ROLE_WAREHOUSE";
     const [currentDateTime, setCurrentDateTime] = useState("");
     const [roles, setRoles] = useState([]);
     const {register, handleSubmit, formState: {errors}, reset} = useForm();
+    const [message,setMessage]=useState([]);
+
+
 
     useEffect(() => {
         const updateDateTime = () => {
@@ -61,13 +66,21 @@ export default function CreateNotification(props) {
     }
     const onSubmit = async data => {
         data.listRole = filterRole(data.listRole);
-        const token = localStorage.getItem("token");
-        const result = await notificationService.addNewNotification(token, data);
+
+        const socket=new SockJS("http://localhost:8080/ws");
+        const stompClient= over(socket);
+        stompClient.connect({},()=>{
+            stompClient.send("/app/sendNotification",{},JSON.stringify(data));
+        })
+
+        const result = await notificationService.addNewNotification(data);
+        console.log('result la : ', result);
         if (result) {
             toast.success("Đăng thông báo thành công")
         } else {
             toast.error("Đăng thông báo thất bại")
         }
+        handleCancel();
     }
     return (
         <div
@@ -144,7 +157,7 @@ export default function CreateNotification(props) {
                                 <span className="gender">Người bán hàng</span>
                             </label>
                         </div>
-                        {errors.recipient &&
+                        {errors.listRole &&
                             <span className="error-create-notification">* Bắt buộc chọn đối tượng gửi</span>}
                     </div>
                 </div>

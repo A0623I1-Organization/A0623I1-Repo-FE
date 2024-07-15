@@ -1,0 +1,20 @@
+.overlay-nhi {
+  position: fixed;
+  top: 31px;
+  left: 57%;
+  right: 19%;
+  width: 27%;
+  height: 100%;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+}
+
+.notification-content-header-nhi {
+  padding: 20px;
+  border-radius: 8px;
+  width: fit-content;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}

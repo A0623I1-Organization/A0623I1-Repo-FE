@@ -17,6 +17,7 @@ import {NotificationList} from "../pages/Dashboard/Notification/NotificationList
 import Loading from '../ui/Loading';
 import ProductDetail from '../pages/Home/ProductDetail';
 import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCreate";
+import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
 
@@ -27,7 +28,11 @@ const routes = [
         exact: true,
     },
     {
-        path: '/product/:id',
+        path: '/lich-su-mua-hang',
+        element: <LookOrder/>,
+    },
+    {
+        path: '/product/:productId',
         element: <ProductDetail/>,
     },
     {
@@ -51,6 +56,11 @@ const routes = [
     },
     {
         path: '/dashboard/:role/create-pricing',
+        element: <CreatePricing/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/create-pricing/:pricingId',
         element: <CreatePricing/>,
         private: true,
     },

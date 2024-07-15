@@ -58,12 +58,12 @@ export const UploadMultipleImage = ({ onImageUrlChange }) => {
 
     return (
         <div>
-            <input type="file" multiple onChange={handleChange} />
+            <input type="file" multiple onChange={handleChange}  accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"/>
         </div>
     );
 };
 
-export const UploadOneImage = ({ onImageUrlChange,getDisabled }) => {
+export const UploadOneImage = ({ onImageUrlChange,getDisabled , className}) => {
     const [image, setImage] = useState(null);
     const [disabled,setDisabled]= useState(true);
 
@@ -113,7 +113,7 @@ export const UploadOneImage = ({ onImageUrlChange,getDisabled }) => {
 
     return (
         <div>
-            <input type="file" onChange={handleChange} />
+            <input type="file" className={className} onChange={handleChange}  accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"/>
         </div>
     );
 };

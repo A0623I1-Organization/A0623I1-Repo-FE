@@ -22,17 +22,15 @@ export const getAllPricingByProductId = async (productId,keyword, sortBy, ascend
         let temp = await axiosInstance.get(url);
         return temp.data;
     } catch (e) {
-        console.log(e);
-        throw e;
+        throw e.response.data.message;
     }
 };
 export const getAllPricinByProductId =async (productId,page)=>{
     try {
         let temp = await axiosInstance.get(`/pricing/byProductId/${productId}?page=${page}`)
         return temp.data;
-    }catch (e)
-    {
-        console.log(e)
+    }catch (e) {
+        throw e.response.data.message;
     }
 }
 export const getPricingByPricingCode = async (pricingCode) => {
@@ -43,8 +41,7 @@ export const getPricingByPricingCode = async (pricingCode) => {
             }
         });
         return temp.data;
-    }catch (e)
-    {
-        console.log(e)
+    }catch (e) {
+        throw e.response.data.message;
     }
 }

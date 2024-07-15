@@ -19,6 +19,7 @@ const schema = yup.object().shape({
     productName: yup.string().required('Product Name is required'),
     description: yup.string().required('Description is required'),
     productType: yup.string().required('Product Type is required'),
+    // category: yup.string().required('Category is required'),
     pricingList: yup.array().of(
         yup.object().shape({
             pricingName: yup.string().required('Pricing Name is required'),
@@ -31,6 +32,7 @@ const schema = yup.object().shape({
             pricingImgUrl: yup.string().url('Must be a valid URL').required('Pricing Image  is required'),
         })
     ),
+    // productImages: yup.mixed().required('Images are required'), // Define images field in your schema
     productImages: yup.array().of(
         yup.object().shape({
             imageUrl: yup.string().url('Must be a valid URL').required('Image URL is required'),
@@ -40,7 +42,6 @@ const schema = yup.object().shape({
 
 const CreatePricing = () => {
     const {role} = useParams();
-    const {id} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [colors, setColors] = useState([])
@@ -48,9 +49,10 @@ const CreatePricing = () => {
     const [productTypes, setProductTypes] = useState([])
     const [productTypesByCategory, setProductTypesByCategory] = useState([])
     const [selectedCategory, setSelectedCategory] = useState('Nữ')
+    // Khai báo biến productImages ở đây
     const [productImages, setProductImages] = useState([]);
     const [productCode, setProductCode] = useState('');
-    const [product, setProduct] = useState('');
+    const [pricingCode, setPricingCode] = useState('');
     const [disabled,setDisabled] = useState(true)
     const [validateError, setValidateError] = useState([]);
     const {control, handleSubmit, formState: {errors}, setValue} = useForm({
@@ -175,6 +177,7 @@ const CreatePricing = () => {
             console.log(updatedData);
             productService.createProduct(updatedData)
                 .then(() => {
+                    setValidateError([]);
                     toast.success('Create Success');
                     navigate(`/dashboard/${role}/warehouse`);
                 })
@@ -183,7 +186,7 @@ const CreatePricing = () => {
                     console.error('Error creating product:', err);
                 });
         } catch (error) {
-            console.error('Error submitting form:', error);
+            setValidateError(error);
             toast.error('Submission Failed');
         }
     };
@@ -209,7 +212,7 @@ const CreatePricing = () => {
             <div className="content-body">
                 <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.formGroup}>
-                        <label>Mã sản phẩm:</label>
+                        <label>Product Code:</label>
                         <Controller
                             name="productCode"
                             control={control}
@@ -219,7 +222,7 @@ const CreatePricing = () => {
                         <small>{validateError?.productCode}</small>
                     </div>
                     <div className={styles.formGroup}>
-                        <label>Tên sản phẩm:</label>
+                        <label>Product Name:</label>
                         <Controller
                             name="productName"
                             control={control}
@@ -229,7 +232,7 @@ const CreatePricing = () => {
                         <small>{validateError?.productName}</small>
                     </div>
                     <div className={styles.formGroup}>
-                        <label>Mô tả:</label>
+                        <label>Description:</label>
                         <Controller
                             name="description"
                             control={control}
@@ -240,7 +243,7 @@ const CreatePricing = () => {
 
                     </div>
                     <div className={styles.formGroup}>
-                        <label>Ảnh sản phẩm:</label>
+                        <label>Images:</label>
                         <Controller
                             name="productImages"
                             control={control}
@@ -251,27 +254,36 @@ const CreatePricing = () => {
                         {errors.productImages && <p>{errors.productImages.message}</p>}
                         <small>{validateError?.productImages}</small>
                     </div>
+
                     <div className={styles.formGroup}>
-                        <label>Danh mục sản phẩm:</label>
+                        {/*<label>Category:</label>*/}
+                        {/*<Controller*/}
+                        {/*    name="category"*/}
+                        {/*    control={control}*/}
+                        {/*    render={({field}) =>*/}
+                        {/*        (*/}
                         <select onChange={event => setSelectedCategory(event.target.value)}>
-                            <option value=''>--Danh mục sản phẩm--</option>
+                            <option value=''>--choose Category --</option>
                             {
                                 categories?.map((item, index) => (
                                     <option value={item.categoryName} key={item.categoryId}>{item.categoryName}</option>
                                 ))
                             }
                         </select>
+                        {/*        )}*/}
+                        {/*/>*/}
+                        {/*{errors.category && <p>{errors.category.message}</p>}*/}
                     </div>
 
                     <div className={styles.formGroup}>
-                        <label>Loại sản phẩm:</label>
+                        <label>Product Type:</label>
                         <Controller
                             name="productType"
                             control={control}
                             render={({field}) =>
                                 (
                                     <select {...field} >
-                                        <option value=''>--Loại sản phẩm--</option>
+                                        <option value=''>--choose Product type --</option>
                                         {
                                             productTypesByCategory?.map((item, index) => (
                                                 <option value={JSON.stringify(item)}
@@ -290,7 +302,7 @@ const CreatePricing = () => {
                         {fields.map((item, index) => (
                             <div key={item.id} className={styles.pricingRow}>
                                 <div className={styles.formGroup}>
-                                    <label>Mã sản phẩm chi tiết:</label>
+                                    <label>Pricing Code:</label>
                                     <Controller
                                         name={`pricingList[${index}].pricingCode`}
                                         control={control}
@@ -301,7 +313,7 @@ const CreatePricing = () => {
                                     <small>{validateError?.pricingList?.[index]?.pricingCode}</small>
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Tên sản phẩm chi tiết:</label>
+                                    <label>Pricing Name:</label>
                                     <Controller
                                         name={`pricingList[${index}].pricingName`}
                                         control={control}
@@ -314,7 +326,7 @@ const CreatePricing = () => {
                                 </div>
 
                                 <div className={styles.formGroup}>
-                                    <label>Đơn giá:</label>
+                                    <label>Price:</label>
                                     <Controller
                                         name={`pricingList[${index}].price`}
                                         control={control}
@@ -327,7 +339,7 @@ const CreatePricing = () => {
 
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Kích cỡ:</label>
+                                    <label>Size:</label>
                                     <Controller
                                         name={`pricingList[${index}].size`}
                                         control={control}
@@ -340,7 +352,7 @@ const CreatePricing = () => {
 
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Màu sắc:</label>
+                                    <label>Color:</label>
                                     <Controller
                                         name={`pricingList[${index}].color`}
                                         control={control}
@@ -348,7 +360,7 @@ const CreatePricing = () => {
                                         render={({field}) =>
                                             (
                                                 <select {...field}>
-                                                    <option value=''>--Màu sắc--</option>
+                                                    <option value=''>--choose Color --</option>
                                                     {
                                                         colors?.map((item, index) => (
                                                             <option value={JSON.stringify(item)}
@@ -363,7 +375,7 @@ const CreatePricing = () => {
                                     <small>{validateError?.pricingList?.[index]?.color}</small>
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Ảnh sản phẩm chi tiết:</label>
+                                    <label>Pricing Image URL:</label>
                                     <Controller
                                         name={`pricingList[${index}].pricingImgUrl`}
                                         control={control}
@@ -387,7 +399,7 @@ const CreatePricing = () => {
                     </div>
                     <div className={styles.buttonWrapper}>
                         <button type="submit" className={styles.submitButton} disabled={disabled}>
-                            {product ? "Sửa đổi" : "Thêm mới"}
+                            Xác nhận
                         </button>
                         <button type="button" onClick={handleAddPricingRow} className={
                             styles.addButton}>

@@ -129,7 +129,7 @@
 
         .box-content {
           padding: 10px;
-          width: 100%;
+          //width: 100%;
           height: 100%;
 
           p {
@@ -138,14 +138,14 @@
           }
 
           .table {
-            width: 95%;
+            //width: 95%;
             margin: 10px 25px;
             border-collapse: collapse;
 
             th, td {
               height: 40px;
               text-align: left;
-              padding: 0 20px;
+              //padding: 0 20px;
               border-bottom: 1px solid var(--table-border);
               color: var(--app-content-main-color);
             }
@@ -172,6 +172,11 @@
                 background-color: var(--app-content-secondary-color);
               }
             }
+          }
+
+          .list-error {
+            font-size: 1.2rem;
+            color: var(--app-content-main-color);
           }
         }
 
@@ -293,7 +298,7 @@
               }
 
               input, select, textarea {
-                width: 70%;
+                width: 80%;
                 height: 50px;
                 margin: auto;
                 border-radius: 10px;
