@@ -46,5 +46,5 @@ export const deleteCustomer = async (id)=>{
         console.log(e)
         return null;
     }
- 
 }
+

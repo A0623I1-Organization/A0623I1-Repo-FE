@@ -20,6 +20,7 @@ import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCr
 import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
+import CustomerList from "../pages/Dashboard/Customer/CustomerList";
 
 const routes = [
     {
@@ -84,6 +85,13 @@ const routes = [
         element: <PersonInfo/>,
         private: true,
     },
+
+    {
+        path: '/dashboard/:role/list',
+        element: <CustomerList/>,
+        private: true,
+    },
+
     {
         path: '/dashboard/:role/employee-list',
         element: <EmployeeList/>,
