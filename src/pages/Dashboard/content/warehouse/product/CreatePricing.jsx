@@ -3,17 +3,17 @@ import styles from './createPricing.module.scss';
 import {useForm, Controller, useFieldArray} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import {UploadMultipleImage, UploadOneImage} from '../../../../../firebase/UploadImage';
 import * as productService from '../../../../../services/products/product-service'
 import * as colorService from '../../../../../services/products/color-service'
 import * as categoryService from '../../../../../services/products/category-service'
 import * as productTypeService from '../../../../../services/products/productType-service'
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {color} from "framer-motion";
 import {generateAndUploadQRCode} from "../../../../../firebase/generateAndUploadQRCode";
 import {DashboardMain} from "../../../../../components/Dashboard/DashboardMain";
 import {generateUniqueCode} from "../../../../../services/bill/random_mhd";
+import {UploadMultipleImage,UploadOneImage} from "../../../../../firebase/UploadImage";
 
 const schema = yup.object().shape({
     productCode: yup.string().required('Product Code is required'),
@@ -42,6 +42,7 @@ const schema = yup.object().shape({
 });
 
 const CreatePricing = () => {
+    const {role} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [colors, setColors] = useState([])
@@ -99,12 +100,12 @@ const CreatePricing = () => {
 
 
     const fetchUniqueProductCode = () => {
-        generateUniqueCode(`http://localhost:8080/api/products/generateAndCheckProductCode`).then(res=>{
+        generateUniqueCode(`/products/generateAndCheckProductCode`).then(res=>{
             setValue('productCode', res);
         }).catch(err=>console.log(err));
     };
     const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode(`http://localhost:8080/api/pricing/generateAndCheckPricingCode`)
+        return generateUniqueCode(`/pricing/generateAndCheckPricingCode`)
             .then(res => {
                 setValue(`pricingList[${index}].pricingCode`, res);
                 return res;
@@ -123,7 +124,8 @@ const CreatePricing = () => {
     useEffect(() => {
         // Filter product types when selectedCategory changes
         setProductTypesByCategory(
-            productTypes?.filter(item => item.category.categoryName === selectedCategory)
+            productTypes?.filter(item => item.category?.categoryName === selectedCategory)
+
         );
     }, [selectedCategory, productTypes]);
 
@@ -172,11 +174,11 @@ const CreatePricing = () => {
                 })),
                 productType: JSON.parse(data.productType)
             };
-
+            console.log(updatedData);
             productService.createProduct(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate('/dashboard/warehouse');
+                    navigate(`/dashboard/${role}/warehouse`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');
@@ -205,7 +207,7 @@ const CreatePricing = () => {
 
 
     return (
-        <DashboardMain content={
+        <DashboardMain path={role} content={
             <div className="content-body">
                 <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.formGroup}>

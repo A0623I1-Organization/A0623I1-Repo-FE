@@ -15,7 +15,7 @@ export const login = async (data) => {
 
 export const register = async (userData) => {
     try{
-        const response = await axios.post(`${baseURL}/auth/register`, userData)
+        const response = await axios.post(`${baseURL}/api/auth/register`, userData)
         return response.data;
     }catch(err){
         throw err;
@@ -37,7 +37,7 @@ export const getAllUsers = async (token) =>{
 
 export const getYourProfile = async (token) => {
     try{
-        const response = await axios.get(`${baseURL}/auth/get-profile`,
+        const response = await axios.get(`${baseURL}/api/auth/get-profile`,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
@@ -51,7 +51,7 @@ export const getYourProfile = async (token) => {
 
 export const getUserById = async (userId, token) =>{
     try{
-        const response = await axios.get(`${baseURL}api/users/${userId}`,
+        const response = await axios.get(`${baseURL}/api/users/${userId}`,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })
@@ -90,8 +90,7 @@ export const updateUser = async (userData, token) => {
 
 export const updatePasswordUser = async (userData, token) => {
     try{
-        const userId = userData.userId;
-        const response = await axios.put(`${baseURL}/auth/update-password/${userId}`, userData,
+        const response = await axios.put(`${baseURL}/auth/update-password`, userData,
             {
                 headers: {Authorization: `Bearer ${token}`}
             })

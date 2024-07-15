@@ -32,6 +32,7 @@ function LoginPage(props) {
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
                 localStorage.setItem('fullName', userData.fullName);
+                localStorage.setItem('avatar', userData.avatar);
                 const decodedToken = jwtDecode(userData.token);
                 navigate("/dashboard");
                 toast.success("Login successfully!");

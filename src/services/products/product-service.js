@@ -1,7 +1,7 @@
-import axios from "axios";
+import axiosInstance from '../../utils/axiosInstance';
 export const getAllProduct = async (keyword, sortBy, ascending, page) => {
     try {
-        let url = `http://localhost:8080/api/products?page=${page}`;
+        let url = `/products?page=${page}`;
 
         // Add keyword if provided
         if (keyword) {
@@ -12,9 +12,9 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
         if (sortBy) {
             url += `&sortBy=${sortBy}&ascending=${ascending}`;
         }
-        
 
-        let temp = await axios.get(url);
+
+        let temp = await axiosInstance.get(url);
         return temp.data;
     } catch (e) {
         console.log(e);
@@ -24,7 +24,7 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
 
 export const createProduct =async (product)=>{
     try {
-        await axios.post(`http://localhost:8080/api/products`,product)
+        await axiosInstance.post(`/products`,product)
     }catch (e)
     {
         console.log(e)

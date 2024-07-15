@@ -3,6 +3,7 @@ import { useState } from 'react';
 import  styles from './HeaderHome.module.scss'
 import SideBar from '../../pages/Home/components/SideBar';
 import { Link } from 'react-router-dom';
+import InputSearch from '../InputSearch/InputSearch';
 
 function HeaderHome(props) {
     const [isOpenSideBar, setIsOpenSideBar] = useState(false);
@@ -197,21 +198,21 @@ function HeaderHome(props) {
             <nav className={styles.navMain}>
                 <ul>
                     <li>
-                        <a href="#!">FM</a>
+                        <Link to="/">FM</Link>
                     </li>
                 </ul>
                 <ul>
                     <li>
-                        <a href="#!">Nam</a>
+                        <Link to={`/?keyword=Nam`}>Nam</Link>
                     </li>
                     <li>
-                        <a href="#!">Nữ</a>
+                        <Link to={`/?keyword=Nữ`}>Nữ</Link>
                     </li>
                     <li>
-                        <a href="#!">Đồ đôi</a>
+                        <Link to={`/?keyword=Đồ đôi`}>Đồ đôi</Link>
                     </li>
                     <li>
-                        <a href="#!">Trẻ em</a>
+                        <Link to={`/?keyword=Trẻ em`}>Trẻ em</Link>
                     </li>
                     <li>
                         <a href="#!">Sale</a>
@@ -220,47 +221,20 @@ function HeaderHome(props) {
                         <a href="#!">Bộ sưu tập</a>
                     </li>
                     <li>
-                        <a href="#!">Tin tức</a>
+                        <Link to="/news">Tin tức</Link>
                     </li>
                 </ul>
                 <ul>
                     <li>
-                        <svg
-                            fontSize={23}
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="1em"
-                            height="1em"
-                            viewBox="0 0 19.809 18.809"
-                        >
-                            <g transform="translate(0.75 0.75)">
-                                <ellipse
-                                    cx="7.297"
-                                    cy="7.235"
-                                    rx="7.297"
-                                    ry="7.235"
-                                    fill="none"
-                                    stroke="#333333"
-                                    strokeWidth="1.5"
-                                />
-                                <path
-                                    d="M5.98,5.211.66.49"
-                                    transform="translate(12.02 11.789)"
-                                    fill="none"
-                                    stroke="#333333"
-                                    strokeWidth="1.5"
-                                />
-                            </g>
-                        </svg>
-                        <input type="text" placeholder="Tìm kiếm ..." />
+                        <InputSearch/>
                     </li>
                 </ul>
                 <ul>
                     <li>
-                        <a href='#!' className={styles.btn}>
-                            Đơn hàng
-                        </a>
+                        <Link to="/lich-su-mua-hang" className={styles.btn}>
+                            Lịch sử mua
+                        </Link>
                     </li>
-                    {/* <li>Đăng ký</li> */}
                 </ul>
                 <ul>
                     <li onClick={handleOpenSideBar} style={{ cursor: "pointer" }}>

@@ -1,13 +1,12 @@
-import { HeaderDashboard } from "../../../../components/Header/HeaderDashboard";
-import { SidebarDashboard } from "../../../../components/Sidebar/SidebarDashboard";
 import { useEffect, useState } from "react";
 import './warehouse.scss';
 import * as productService from '../../../../services/products/product-service';
-import { NavLink, useNavigate } from "react-router-dom";
+import {NavLink, useNavigate, useParams} from "react-router-dom";
 import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
 
 export const WareHouse = () => {
+    const {role} = useParams();
     const navigate = useNavigate()
     const [products, setProducts] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -24,10 +23,10 @@ export const WareHouse = () => {
 
     // Function to fetch products based on page number, keyword, sortBy, and ascending
     useEffect(() => {
-        getAllProduct(page, keyword, sortBy, ascending);
-    }, [page, keyword, sortBy, ascending]);
+        getAllProduct(keyword,sortBy, ascending,page);
+    }, [page,sortBy, ascending]);
 
-    const getAllProduct = (pageNumber, keyword, sortBy, ascending) => {
+    const getAllProduct = ( keyword, sortBy, ascending, pageNumber) => {
         productService.getAllProduct(keyword, sortBy, ascending, pageNumber)
             .then(res => {
                 setProducts(res.content);
@@ -98,20 +97,24 @@ export const WareHouse = () => {
         }
         return null;
     };
-    const handleSearch = (keyword)=>{
-
-    }
+    const handleSearch = (e) => {
+        e.preventDefault();
+        // setPage(0);
+        getAllProduct( keyword, sortBy, ascending,page);
+    };
 
     return (
-        <DashboardMain content={
+        <DashboardMain path={role} content={
             <div className="content-body">
                 <div className="nav-link-container">
-                    <NavLink className="nav-link" to='/dashboard/create-pricing'>Thêm Hàng Hóa</NavLink>
+                    <NavLink className="nav-link" to='/dashboard/salesMan/create-pricing'>Thêm Hàng Hóa</NavLink>
                 </div>
                 <div className="header-search">
                     {/* Header search content */}
-                    <input type="text" placeholder="Search..." onChange={(e)=>setKeyword(e.target.value)} />
-                    <button onClick={handleSearch}>Search</button>
+                    <form onSubmit={handleSearch}>
+                        <input type="text" placeholder="Search..."  value={keyword} onChange={(e)=>setKeyword(e.target.value)} />
+                        <button onClick={handleSearch}>Search</button>
+                    </form>
                 </div>
                 <div className="data-table">
                     {/* Data table content */}

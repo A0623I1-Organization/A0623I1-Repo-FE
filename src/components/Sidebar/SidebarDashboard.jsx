@@ -13,6 +13,7 @@ import { TiArrowSortedDown } from "react-icons/ti";
 
 export function SidebarDashboard(props) {
     const [sidebarActive, setSidebarActive] = useState(props.showSidebar);
+    const [functionCall, setFunctionCall] = useState(props.path);
     const [showDropdown, setShowDropdown] = useState("");
     const isAdmin = authenticationService.isAdmin();
     const isSalesMan = authenticationService.isSalesMan();
@@ -21,7 +22,8 @@ export function SidebarDashboard(props) {
 
     useEffect(() => {
         setSidebarActive(props.showSidebar);
-    }, [props.showSidebar]);
+        setFunctionCall(props.path);
+    }, [props.showSidebar, props.path]);
 
     const handleToggleDropdown = (sidebarName) => {
         setShowDropdown(showDropdown === sidebarName ? "" : sidebarName);
@@ -30,14 +32,16 @@ export function SidebarDashboard(props) {
     return (
         <aside className={sidebarActive? "sidebar appear" : "sidebar"}>
             <ul className="sidebar-list">
-                <li className="sidebar-list-item">
+                <li className={functionCall === "dashboard" ? "sidebar-list-item active" : "sidebar-list-item"}>
                     <Link className="show-dropdown" to={"/dashboard"}>
                         <MdDashboard/>
                         <span>Trang quản lý</span>
                     </Link>
                 </li>
-                {(isSalesMan || isAdmin) && <li className="sidebar-list-item paste-button active">
-                    <a className="show-dropdown" onClick={() => handleToggleDropdown("salesMan")}>
+                {(isSalesMan || isAdmin) &&
+                    <li className={`sidebar-list-item paste-button`}>
+                    <a className={functionCall === "salesMan" ? `show-dropdown active`: `show-dropdown`}
+                        onClick={() => handleToggleDropdown("salesMan")}>
                         <MdPointOfSale/>
                         <span>
                           Người bán hàng
@@ -46,15 +50,17 @@ export function SidebarDashboard(props) {
                     </a>
 
                     <div className={showDropdown === "salesMan" ? "dropdown-content" : "dropdown-content show"}>
-                        <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
-                        <Link to={"/dashboard/warehouse"}>Nhà kho</Link>
-                        <Link to={"/dashboard/payment"}>Thanh toán</Link>
-                        <a href="#">Thống kê</a>
+                        <Link to={"/dashboard/salesMan/infor"}>Thông tin cá nhân</Link>
+                        <Link to={"/dashboard/salesMan/warehouse"}>Nhà kho</Link>
+                        <Link to={"/dashboard/salesMan/payment"}>Thanh toán</Link>
+                        <Link to={"/dashboard/statistic"}>Thống kê</Link>
                         <Link to={"/dashboard/salesman/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
-                {(isWarehouse || isAdmin) && <li className="sidebar-list-item paste-button">
-                    <a className="show-dropdown" onClick={() => handleToggleDropdown("warehouse")}>
+                {(isWarehouse || isAdmin) &&
+                    <li className={`sidebar-list-item paste-button`}>
+                    <a className={functionCall === "warehouse" ? `show-dropdown active`: `show-dropdown`}
+                        onClick={() => handleToggleDropdown("warehouse")}>
                         <FaWarehouse/>
                         <span>
                           Quản lý kho
@@ -62,15 +68,17 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "warehouse" ? "dropdown-content" : "dropdown-content show"}>
-                        <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
-                        <Link to={"/dashboard/warehouse"}>Nhà kho</Link>
-                        <a href="#">Nhập liệu</a>
-                        <a href="#">Thống kê</a>
+                        <Link to={"/dashboard/warehouse/infor"}>Thông tin cá nhân</Link>
+                        <Link to={"/dashboard/warehouse/warehouse"}>Nhà kho</Link>
+                        <Link to={"/dashboard/import-pricing"}>Nhập liệu</Link>
+                        <Link to={"/dashboard/statistic"}>Thống kê</Link>
                         <Link to={"/dashboard/warehouse/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
-                {(isStoreManager || isAdmin) && <li className="sidebar-list-item paste-button">
-                    <a className="show-dropdown" onClick={() => handleToggleDropdown("storeManager")}>
+                {(isStoreManager || isAdmin) &&
+                    <li className={`sidebar-list-item paste-button`}>
+                    <a className={functionCall === "storeManager" ? `show-dropdown active`: `show-dropdown`}
+                       onClick={() => handleToggleDropdown("storeManager")}>
                         <GrUserManager/>
                         <span>
                           Quản lý cửa hàng
@@ -78,11 +86,11 @@ export function SidebarDashboard(props) {
                         </span>
                     </a>
                     <div className={showDropdown === "storeManager" ? "dropdown-content " : "dropdown-content show"}>
-                        <Link to={"/dashboard/infor"}>Thông tin cá nhân</Link>
-                        <a href="#">Nhà kho</a>
+                        <Link to={"/dashboard/storeManager/infor"}>Thông tin cá nhân</Link>
+                        <Link to={"/dashboard/storeManager/warehouse"}>Nhà kho</Link>
                         <a href="#">Xem báo cáo</a>
                         <a href="#">Quản lý khách hàng</a>
-                        <Link to={"/dashboard/employee-list"}>Quản lý nhân viên</Link>
+                        <Link to={"/dashboard/storeManager/employee-list"}>Quản lý nhân viên</Link>
                         <a href="/dashboard/storeManager/notification">Đăng thông báo</a>
                         <a href="#">Sao lưu/Khôi phục</a>
                     </div>

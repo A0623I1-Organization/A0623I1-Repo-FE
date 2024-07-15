@@ -1,7 +1,7 @@
 import React from 'react';
 import './InvoiceModal.scss';
 
-const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClose}) => {
+const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClose,finalTotal}) => {
     const handlePrint = () => {
 
         // Lấy nội dung của invoice để in

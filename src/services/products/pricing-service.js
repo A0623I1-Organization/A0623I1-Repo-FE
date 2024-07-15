@@ -1,17 +1,34 @@
-import axios from "axios";
+import axiosInstance from '../../utils/axiosInstance';
 
-export const getAllPricing =async (page)=>{
+export const getAllPricingByProductId = async (productId,keyword, sortBy, ascending, page) => {
     try {
-        let temp = await axios.get(`http://localhost:8080/api/pricing/all?page=${page}`)
+        if(page === undefined)
+        {
+            page = 0;
+        }
+        let url = `/pricing/all/${productId}?page=${page}`;
+
+        // Add keyword if provided
+        if (keyword) {
+            url += `&keyword=${keyword}`;
+        }
+
+        // Add sortBy and ascending if provided
+        if (sortBy) {
+            url += `&sortBy=${sortBy}&ascending=${ascending}`;
+        }
+
+
+        let temp = await axiosInstance.get(url);
         return temp.data;
-    }catch (e)
-    {
-        console.log(e)
+    } catch (e) {
+        console.log(e);
+        throw e;
     }
-}
-export const getAllPricingByProductId = async (productId,page)=>{
+};
+export const getAllPricinByProductId =async (productId,page)=>{
     try {
-        let temp = await axios.get(`http://localhost:8080/api/pricing/byProductId/${productId}?page=${page}`)
+        let temp = await axiosInstance.get(`/pricing/byProductId/${productId}?page=${page}`)
         return temp.data;
     }catch (e)
     {
@@ -20,7 +37,7 @@ export const getAllPricingByProductId = async (productId,page)=>{
 }
 export const getPricingByPricingCode = async (pricingCode) => {
     try {
-        const temp = await axios.get(`http://localhost:8080/api/pricing/byCode`, {
+        const temp = await axiosInstance.get(`/pricing/byCode`, {
             params: {
                 pricingCode: pricingCode
             }
