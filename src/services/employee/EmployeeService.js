@@ -31,7 +31,7 @@ export const saveEmployee = async (employee) => {
         return temp.data;
     }catch (e) {
         console.log(e)
-        throw e.response.data.errors;
+        throw e.response.data;
     }
 }
 
@@ -41,7 +41,7 @@ export const updateEmployee = async (id, employee) => {
         console.log(temp.data);
         return temp.data;
     } catch (e) {
-        throw e.response.data.errors;
+        throw e.response.data;
     }
 }
 
