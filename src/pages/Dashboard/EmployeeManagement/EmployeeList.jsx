@@ -102,7 +102,8 @@ export function EmployeeList() {
                 default:
                     break;
             }
-            const temp = await employeeService.getAllEmployees('', data.searchContent);
+            const temp = await employeeService.getAllEmployees('', data.searchContent, codeSort.field, codeSort.direction,
+                nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
             setSearchContent(data.searchContent);
             setEmployeeList(temp.content);
             setTotalPages(temp.totalPages);
