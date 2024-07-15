@@ -5,7 +5,7 @@ const baseURL = "http://localhost:8080";
 
 export const login = async (data) => {
     try {
-        const response = await axios.post(`${baseURL}/auth/authenticate`, data)
+        const response = await axios.post(`${baseURL}/api/auth/authenticate`, data)
         console.log(response.data);
         return response.data;
     } catch (e) {
