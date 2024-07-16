@@ -51,13 +51,16 @@ function MainProductDetail(props) {
             <section className={styles.sectionOne}>
                 <div className={styles.item}>
                     <div className={styles.container}>
-                    <Slider {...settings}>
-                        {product?.productImages?.map((image, index) => (
-                            <div key={index}>
-                                <img src={image.imageUrl} alt={`Product Image ${index + 1}`} />
+                        <Slider {...settings}>
+                            <div>
+                                <img src={currentPricing?.pricingImgUrl} alt={`Product Image ${currentPricing?.pricingName}`} />
                             </div>
-                        ))}
-                    </Slider>
+                            {product?.productImages?.map((image, index) => (
+                                <div key={index}>
+                                    <img src={image.imageUrl} alt={`Product Image ${index + 1}`} />
+                                </div>
+                            ))}
+                        </Slider>
                     </div>
                 </div>
 

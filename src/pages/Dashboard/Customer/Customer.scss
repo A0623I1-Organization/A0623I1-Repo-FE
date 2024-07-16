@@ -96,7 +96,11 @@
                 background-color: rgb(255, 68, 0,0.8);
             }
 
-            &.cancel {}
+            &.cancel {
+                background-color: #dcdcdc;
+                color: #000;
+                margin-left: 8px;
+            }
         }
 
     }
