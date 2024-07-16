@@ -191,7 +191,7 @@ function Main(props) {
                                 <Link to={`/product/${product?.productId}`}>
                                     <figure>
                                         <img
-                                            src={product.productImages[0]?.imageUrl}
+                                            src={product?.pricingList[0]?.pricingImgUrl}
                                             alt={product.productName}
                                             width="100%"
                                         />
@@ -230,7 +230,7 @@ function Main(props) {
                             <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
-                                        src={product.productImages[0]?.imageUrl}
+                                        src={product?.pricingList[0]?.pricingImgUrl}
                                         alt={product.productName}
                                         width="100%"
                                     />
@@ -271,7 +271,7 @@ function Main(props) {
                             <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
-                                        src={product.productImages[0]?.imageUrl}
+                                        src={product?.pricingList[0]?.pricingImgUrl}
                                         alt={product.productName}
                                         width="100%"
                                     />
