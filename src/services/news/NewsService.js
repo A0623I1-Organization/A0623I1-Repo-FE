@@ -11,12 +11,31 @@ export const createNews = async (item) => {
     }
 }
 
-export const getAllNews = async (page) => {
+export const getAllNews = async (page = 0) => {
     try {
         const temp = await axios.get(`${apiUrl}/api/public/news?page=${page}`);
         return temp.data;
     } catch (e) {
         console.log(e)
         return [];
+    }
+}
+
+export const getNewsById = async (id) => {
+    try {
+        const temp = await axios.get(`${apiUrl}/api/public/news/${id}`);
+        return temp.data;
+    } catch (e) {
+        return null;
+    }
+}
+
+export const deleteNews = async (id) => {
+    try {
+        const temp = await axiosInstance.delete(`/news/${id}`);
+        return temp.data;
+    } catch (e) {
+        console.log(e)
+        throw new Error("Không thể xóa tin tức")
     }
 }

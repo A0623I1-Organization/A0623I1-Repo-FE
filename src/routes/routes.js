@@ -23,6 +23,7 @@ import StatisticByChart from "../components/Statistic/StatisticByChart";
 import CustomerList from '../pages/Dashboard/Customer/CustomerList';
 import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
+import NewsDetailPage from '../pages/News/NewsDetailPage';
 
 const routes = [
     {
@@ -120,6 +121,10 @@ const routes = [
     {
         path: '/news',
         element: <NewsPage/>,
+    },
+    {
+        path: '/news/:newsId',
+        element: <NewsDetailPage/>,
     },
     {
         path: '/dashboard/salesman/notification',

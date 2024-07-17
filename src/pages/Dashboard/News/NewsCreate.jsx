@@ -15,6 +15,7 @@ function NewsCreate(props) {
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
     const [disabled,setDisabled] = useState(false);
     const [validateError, setValidateError] = useState([])
+    const navigate = useNavigate()
 
     const onSubmit = async (data) => {
 
@@ -30,7 +31,7 @@ function NewsCreate(props) {
             setValue("newsImgUrl", null);
             setContent('');
             setValidateError([])
-            // navigate(`/dashboard/${role}/customers`)
+            navigate(`/dashboard/${role}/news`)
             toast.success("Thêm mới tin tức thành công")
         } catch (error) {
             console.log(error);
@@ -82,7 +83,7 @@ function NewsCreate(props) {
                         </div>
                         <div className="item2">
                             <input type="submit" className="btn add" value="Thêm" disabled={disabled}  />
-                            <Link to={`/dashboard/${role}/customers`} className="btn cancel">Hủy</Link>
+                            <Link to={`/dashboard/${role}/news`} className="btn cancel">Hủy</Link>
                         </div>
                     </form>
                 </div>

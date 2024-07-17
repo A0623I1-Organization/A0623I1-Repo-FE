@@ -3,6 +3,7 @@ import {useState, useEffect } from 'react';
 import Loading from '../../ui/Loading';
 import * as NewsService from '../../services/news/NewsService'
 import Moment from 'moment';
+import { Link} from 'react-router-dom';
 
 
 function MainNews(props) {
@@ -66,7 +67,7 @@ function MainNews(props) {
                 <div className={styles.list}>
                     {newsList?.map((news) => (
                         <div className={styles.item} key={news.newsId}>
-                            <a href="#!">
+                            <Link to={`/news/${news?.newsId}`}>
                                 <figure>
                                     <img
                                         src={news.newsImgUrl}
@@ -82,7 +83,7 @@ function MainNews(props) {
                                         <span>{Moment(news.dateCreate).format('DD/MM/YYYY')}</span>
                                     </p>
                                 </figcaption>
-                            </a>
+                            </Link>
                         </div>
                     ))}
                 </div>
