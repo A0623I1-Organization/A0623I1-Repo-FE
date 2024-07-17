@@ -24,7 +24,6 @@ import CustomerList from '../pages/Dashboard/Customer/CustomerList';
 import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
 import NewsDetailPage from '../pages/News/NewsDetailPage';
-import CustomerList from "../pages/Dashboard/Customer/CustomerList";
 
 const routes = [
     {
@@ -89,13 +88,6 @@ const routes = [
         element: <PersonInfo/>,
         private: true,
     },
-
-    {
-        path: '/dashboard/:role/list',
-        element: <CustomerList/>,
-        private: true,
-    },
-
     {
         path: '/dashboard/:role/employee-list',
         element: <EmployeeList/>,
