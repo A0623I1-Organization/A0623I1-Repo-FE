@@ -50,7 +50,7 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/pricingView',
+        path: '/dashboard/:role/pricingView',
         element: <PricingView/>,
         private: true,
     },
@@ -60,17 +60,17 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/import-pricing',
+        path: '/dashboard/:role/import-pricing',
         element: <ImportPricing/>,
         private: true
     },
     {
-        path: '/dashboard/statistic',
+        path: '/dashboard/:role/statistic',
         element: <Statistic/>,
         private: true
     },
     {
-        path: '/dashboard/statistic-by-chart',
+        path: '/dashboard/:role/statistic-by-chart',
         element: <StatisticByChart/>,
         private: true
     },
@@ -114,12 +114,12 @@ const routes = [
         element: <NewsPage/>,
     },
     {
-        path: '/dashboard/salesman/notification',
+        path: '/dashboard/:role/notification',
         element: <NotificationList />,
         private: true,
     },
     {
-        path: '/dashboard/warehouse/notification',
+        path: '/dashboard/:role/notification',
         element: <NotificationList />,
         private: true,
     },

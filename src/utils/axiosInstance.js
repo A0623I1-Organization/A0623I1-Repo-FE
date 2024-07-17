@@ -29,6 +29,7 @@ axiosInstance.interceptors.response.use(
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         localStorage.removeItem('fullName');
+        localStorage.removeItem('avatar');
       toast.warning("Đã hết phiên đăng nhập");
       setTimeout(() => {
         window.location.href = '/login';

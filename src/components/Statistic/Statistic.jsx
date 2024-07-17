@@ -7,9 +7,11 @@ import {
   getMonthlySalesRevenue,
   getMonthlySoldPricings
 } from "../../services/bill/bill-service";
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import {DashboardMain} from "../Dashboard/DashboardMain";
 
 const Statistic = () => {
+  const {role} = useParams();
   const [isShowSidebar, setIsShowSidebar] = useState(false);
   const [inputType, setInputType] = useState("date");
   const [soldPricings, setSoldPricings] = useState([]);
@@ -63,11 +65,7 @@ const Statistic = () => {
   };
 
   return (
-      <div className="app-container">
-        <HeaderDashboard parentCallback={setIsShowSidebar} />
-        <div id="content-wrapper">
-          <SidebarDashboard showSidebar={isShowSidebar} />
-          <div className="app-content">
+      <DashboardMain path={role} content={
             <div className="content-body">
               <div className="content-element">
                 <div className="box-content bg-white p-6 rounded-lg shadow-md">
@@ -157,7 +155,7 @@ const Statistic = () => {
                           type="button"
                           className="btn-submit px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                       >
-                        <Link to={'/dashboard/statistic-by-chart'} style={{color:"white"}}>
+                        <Link to={`/dashboard/${role}/statistic-by-chart`} style={{color:"white"}}>
                           Hiển thị biểu đồ
                         </Link>
                       </button>
@@ -166,9 +164,7 @@ const Statistic = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+      }/>
   );
 };
 

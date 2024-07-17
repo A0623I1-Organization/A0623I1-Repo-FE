@@ -88,6 +88,7 @@ export function PersonInfo() {
             setUserInfo(response);
         } catch (error) {
             setValidateError(error);
+            toast.error(error.message);
         }
     }
 
