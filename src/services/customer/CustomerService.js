@@ -46,8 +46,7 @@ export const deleteCustomer = async (id)=>{
         console.log(e)
         throw e;
     }
-<<<<<<< HEAD
- 
+
 }
 
 export const getCustomers = async (keyWord, pages = 0) => {
@@ -59,16 +58,3 @@ export const getCustomers = async (keyWord, pages = 0) => {
         return [];
     }
 }
-=======
-}
-
-export const getAllCustomers = async (id)=>{
-    try {
-        const temp = await axiosInstance.findAll(`/customer/list`);
-        return temp.data;
-    } catch (e) {
-        console.log(e)
-        return null;
-    }
-}
->>>>>>> 95916011a60869e8f9c25138efd8c3948576e2b5

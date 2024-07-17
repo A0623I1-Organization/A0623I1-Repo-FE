@@ -20,14 +20,11 @@ import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCr
 import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
-<<<<<<< HEAD
 import CustomerList from '../pages/Dashboard/Customer/CustomerList';
 import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
 import NewsDetailPage from '../pages/News/NewsDetailPage';
-=======
 import CustomerList from "../pages/Dashboard/Customer/CustomerList";
->>>>>>> 95916011a60869e8f9c25138efd8c3948576e2b5
 
 const routes = [
     {
