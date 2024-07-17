@@ -60,7 +60,7 @@ function NewsCreate(props) {
                             </label>
                             <label htmlFor="">
                                 <span>Ảnh *</span>
-                                <input type="file" style={{display: "none"}} {...register("newsImgUrl", {})} />
+                                <input type="file" accept="image/*"  style={{display: "none"}} {...register("newsImgUrl", {})} />
                                 <UploadOneImage
                                     className={"input-img"}
                                     getDisabled={(e)=>setDisabled(e)}

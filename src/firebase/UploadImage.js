@@ -113,7 +113,7 @@ export const UploadOneImage = ({ onImageUrlChange,getDisabled , className}) => {
 
     return (
         <>
-            <input type="file" className={className} onChange={handleChange} />
+            <input type="file" accept="image/*"  className={className} onChange={handleChange} />
         </>
     );
 };
