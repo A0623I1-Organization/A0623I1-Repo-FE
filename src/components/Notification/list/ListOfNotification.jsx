@@ -26,8 +26,14 @@ export default function ListOfNotification(props) {
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-            stompClient.subscribe('/topic/notification', (message) => {
+            stompClient.subscribe('/topic/createNotification', (message) => {
                 getAllByStatusRead(0);
+                toast("Bạn vừa có thông báo mới!")
+            });
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/notification', (message) => {
+                    toast(message.body);
+                });
             });
         });
         setStompClient(stompClient);
@@ -68,7 +74,7 @@ export default function ListOfNotification(props) {
         await notificationService.seeViewDetail(item.notifId);
         await fetchData();
         if (stompClient && stompClient.connected) {
-            stompClient.send("/app/sendNotification", {}, JSON.stringify(item));
+            stompClient.send("/app/detailNotification", {},`Bạn vừa đọc thông báo \`${item.notifId}\``);
         } else {
             console.error("Stomp client is not connected");
         }

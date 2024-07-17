@@ -29,7 +29,23 @@ export function HeaderDashboard(props) {
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-            stompClient.subscribe('/topic/notification', (message) => {
+            stompClient.subscribe("/topic/createNotification", (message) => {
+                    getQuantityNotificationUnread();
+                }
+            )
+        });
+        setStompClient(stompClient);
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect();
+            }
+        }
+    }, []);
+    useEffect(() => {
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            stompClient.subscribe("/topic/notification", (message) => {
                     getQuantityNotificationUnread();
                 }
             )
