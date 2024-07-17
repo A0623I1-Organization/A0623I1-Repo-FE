@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import * as CustomerService from '../../../services/customer/CustomerService'
 import { useState, useEffect } from 'react';
-import {useParams, useNavigate} from "react-router-dom";
+import {useParams, useNavigate, Link} from "react-router-dom";
 function CustomerCreate() {
     const {role} = useParams();
     const [codeAutoCustomer, setCodeAutoCustomer] = useState(null)
@@ -33,7 +33,7 @@ function CustomerCreate() {
             reset();
             setValidateError([])
             setCodeAutoCustomer(null)
-            navigate("/dashboard/customers")
+            navigate(`/dashboard/${role}/customers`)
             toast.success("Thêm mới khách hàng thành công")
         } catch (error) {
             console.log(error);
@@ -119,7 +119,7 @@ function CustomerCreate() {
                             </div>
                             <div className="item2">
                                 <input type="submit" className="btn add" value="Thêm" />
-                                <input type="button" className="btn cancel" defaultValue="Hủy" />
+                                <Link to={`/dashboard/${role}/customers`} className="btn cancel">Hủy</Link>
                             </div>
                         </form>
                     </div>

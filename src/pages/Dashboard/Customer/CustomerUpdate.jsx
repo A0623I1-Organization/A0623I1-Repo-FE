@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import * as CustomerService from '../../../services/customer/CustomerService'
 import * as CustomerTypeService from '../../../services/customer/CustomerTypeService'
 import ModalDelete from '../../../ui/ModalDelete';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 function CustomerUpdate() {
     const {role} = useParams();
@@ -62,7 +62,7 @@ function CustomerUpdate() {
         try{
             await CustomerService.deleteCustomer(customer?.customerId)
             toast.success("Xóa khách hàng thành công")
-            navigate("/dashboard/customers")
+            navigate(`/dashboard/${role}/customers`)
             closeModal();
         }catch(error){
             closeModal();
@@ -80,7 +80,7 @@ function CustomerUpdate() {
             data.customerType = JSON.parse(data.customerType)
             await CustomerService.updateCustomer(id, data);
             setValidateError([])
-            navigate("/dashboard/customers")
+            navigate(`/dashboard/${role}/customers`)
             toast.success("Sửa khách hàng thành công")
         } catch (error) {
             setValidateError(error);
@@ -192,7 +192,7 @@ function CustomerUpdate() {
                                     className="btn delete"
                                     defaultValue="Xóa"
                                 />
-                                <input type="button" className="btn cancel" defaultValue="Hủy" />
+                                <Link to={`/dashboard/${role}/customers`} className="btn cancel">Hủy</Link>
                             </div>
                         </form>
                     </div>
