@@ -26,6 +26,11 @@
                 box-shadow: 2px 2px 4px #ccc;
                 a {
                     color: #3b95da;
+                    display: block;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+
                 }
 
                 figure {
@@ -54,15 +59,32 @@
                 figcaption {
                     background-color: white;
                     padding: 8px;
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1;
                     p{
                         padding: 4px 0;
                     }
                     p:nth-child(1) {
                         color: #3b95da ;
+                        font-size: 1.12rem;
+                        font-weight: 500;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        -webkit-line-clamp: 2;
+                        max-height: calc(2 * 1.28em); 
+                        text-overflow: ellipsis; 
                     }
 
                     p:nth-child(2) {
                         color: black;
+                        display: -webkit-box;
+                        -webkit-box-orient: vertical;
+                        overflow: hidden;
+                        -webkit-line-clamp: 2;
+                        max-height: calc(2 * 1.26em); 
+                        text-overflow: ellipsis; 
                     }
                     p:nth-child(3){
                         display: flex;
@@ -83,6 +105,9 @@
                             }
                         }
                         
+                    }
+                    > *:last-child{
+                        margin-top: auto;
                     }
                 }
                 &:hover{
