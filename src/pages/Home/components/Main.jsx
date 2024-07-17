@@ -356,6 +356,10 @@ function Main(props) {
                     ))}
                 </div>
                 {loading && <Loading />}
+                {
+                    newsData?.length == 0 && !loading &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy bài viết nào !</p>)
+                }
             </section>
             <ZaloChat />
         </main>
