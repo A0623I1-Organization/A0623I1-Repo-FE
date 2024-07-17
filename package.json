@@ -30,8 +30,12 @@
     "react-hook-form": "^7.51.5",
     "react-icons": "^5.2.1",
     "react-qr-scanner": "^1.0.0-alpha.11",
+<<<<<<< HEAD
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.1",
+=======
+    "react-router-dom": "^6.24.1",
+>>>>>>> 95916011a60869e8f9c25138efd8c3948576e2b5
     "react-scripts": "^5.0.1",
     "react-scroll": "^1.9.0",
     "react-slick": "^0.30.2",

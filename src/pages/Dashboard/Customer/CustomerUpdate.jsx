@@ -87,8 +87,6 @@ function CustomerUpdate() {
         }
     };
 
-
-
     const validateDateOfBirth = (value) => {
         const selectedDate = new Date(value);
         const currentDate = new Date();

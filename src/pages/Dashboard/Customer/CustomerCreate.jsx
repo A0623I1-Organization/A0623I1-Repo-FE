@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { DashboardMain } from '../../../components/Dashboard/DashboardMain';
 import './Customer.scss'
 import { useForm } from 'react-hook-form';
@@ -9,20 +10,25 @@ function CustomerCreate() {
     const {role} = useParams();
     const [codeAutoCustomer, setCodeAutoCustomer] = useState(null)
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
+=======
+import React, { useEffect, useState } from 'react';
+import * as CustomerService from '../../../services/customer/CustomerService';
+>>>>>>> 95916011a60869e8f9c25138efd8c3948576e2b5
 
-    const [validateError, setValidateError] = useState([])
-    const navigate = useNavigate()
+const ListCustomer = () => {
+    const [customers, setCustomers] = useState([]);
 
     useEffect(() => {
-        getCodeAutoCustomer()
+        getAllCustomers();
     }, []);
 
-    const getCodeAutoCustomer = async () => {
-        try {
-            const response = await CustomerService.codeAuto();
-            setCodeAutoCustomer(response);
-        } catch (error) {
+    const getAllCustomers = () => {
+        CustomerService.getAllCustomers().then((response) => {
+            setCustomers(response.data);
+            console.log(response.data);
+        }).catch(error => {
             console.log(error);
+<<<<<<< HEAD
         }
     }
 
@@ -39,18 +45,23 @@ function CustomerCreate() {
             console.log(error);
             setValidateError(error);
         }
+=======
+        });
+>>>>>>> 95916011a60869e8f9c25138efd8c3948576e2b5
     };
 
-    const validateDateOfBirth = (value) => {
-        const selectedDate = new Date(value);
-        const currentDate = new Date();
-        if (selectedDate >= currentDate) {
-            return 'Ngày sinh phải là ngày quá khứ !';
-        }
-        return true;
+    const deleteCustomer = (customerId) => {
+        console.log(customerId);
+        CustomerService.deleteCustomer(customerId).then((response) => {
+            getAllCustomers();
+            console.log(response);
+        }).catch(error => {
+            console.log(error);
+        });
     };
 
     return (
+<<<<<<< HEAD
         <DashboardMain path={role}
             content={
                 <main id="main-customer">
@@ -127,7 +138,42 @@ function CustomerCreate() {
             }
         />
 
+=======
+        <div className="container">
+            <h2>Customer Manager</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Customer Code</th>
+                    <th>Customer Name</th>
+                    <th>Phone Number</th>
+                    <th>Point</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {
+                    customers.map((customer, index) =>
+                        <tr key={customer.customerCode}>
+                            <td>{index + 1}</td>
+                            <td>{customer.customerCode}</td>
+                            <td>{customer.customerName}</td>
+                            <td>{customer.phoneNumber}</td>
+                            <td>{customer.accumulatedPoints}</td>
+                            <td>{customer.customerType.typeName}</td>
+                            <td>
+                                <button onClick={() => deleteCustomer(customer.customerId)}>Delete</button>
+                            </td>
+                        </tr>
+                    )
+                }
+                </tbody>
+            </table>
+        </div>
+>>>>>>> 95916011a60869e8f9c25138efd8c3948576e2b5
     );
-}
+};
 
-export default CustomerCreate;
+export default ListCustomer;
