@@ -11,7 +11,7 @@
 
         .list {
             margin: 2rem 0;
-            --columns: 3;
+            --columns: 4;
             --space: 16px;
             display: flex;
             flex-wrap: wrap;
@@ -23,7 +23,7 @@
                 border: 1px solid #ccc;
                 cursor: pointer;
                 overflow: hidden;
-
+                box-shadow: 2px 2px 4px #ccc;
                 a {
                     color: #3b95da;
                 }
@@ -35,12 +35,14 @@
 
                     img {
                         width: 100%;
-                        transition: transform 0.3s;
                         position: absolute;
                         z-index: -1;
                         overflow: hidden;
                         transition: transform 0.3s ease;
                         background-color: #ccc;
+                        aspect-ratio: 2/1;
+                        object-fit: cover;
+                        
                     }
 
                     &:hover img {
@@ -52,19 +54,68 @@
                 figcaption {
                     background-color: white;
                     padding: 8px;
-
-                    p:first-child {
-                        color: red;
+                    p{
+                        padding: 4px 0;
+                    }
+                    p:nth-child(1) {
+                        color: #3b95da ;
                     }
 
-                    p:last-child {
+                    p:nth-child(2) {
                         color: black;
+                    }
+                    p:nth-child(3){
+                        display: flex;
+                        justify-content: space-between;
+                        span{
+                            color: #333;
+                            font-size: 0.9rem;
+                        }
+                        span:nth-child(1){
+                            &::before{
+                                content: "🧑🏻‍💻";
+                            }
+                            color: #db9500;
+                        }
+                        span:nth-child(2){
+                            &::before{
+                                content: "🕰️";
+                            }
+                        }
+                        
                     }
                 }
                 &:hover{
                     box-shadow: 0 1.4px 0px #feb71c ;
                 }
             }
+        }
+    }
+    .button {
+        display: block;
+        margin: auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid orangered;
+        border-radius: 4px;
+        background-color: white;
+        cursor: pointer;
+        a {
+            color: orangered;
+            padding: 8px 10px;
+            display: block;
+
+            &::after {
+                content: "›";
+                padding-left: 6px;
+            }
+
+            &:hover {
+                background-color: orangered;
+                color: white;
+                transition: 0.5s;
+            }
+
         }
     }
 }
@@ -78,14 +129,22 @@
     #main {
         .section {
             .list {
-                --columns: 2;
+                --columns: 3;
             }
         }
     }
 }
 
 /* Màn hình Tablet */
-@media screen and (max-width: 768px) {}
+@media screen and (max-width: 768px) {
+    #main {
+        .section {
+            .list {
+                --columns: 2;
+            }
+        }
+    }
+}
 
 /* Màn hình Mobile */
 @media screen and (max-width : 534px) {
