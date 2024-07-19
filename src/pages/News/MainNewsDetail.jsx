@@ -22,6 +22,7 @@ function MainNewsDetail(props) {
         <main id={styles.main}>
             <div className={styles.nav}>
                 <Link to='/'>Trang chủ</Link>
+                <Link to={`/news`}>Tin tức</Link>
                 <Link to={`/news/${news?.newsId}`}>{news?.title}</Link>
                 <br />
                 <hr />
