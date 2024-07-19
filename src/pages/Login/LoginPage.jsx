@@ -35,7 +35,7 @@ function LoginPage(props) {
                 localStorage.setItem('avatar', userData.avatar);
                 const decodedToken = jwtDecode(userData.token);
                 navigate("/dashboard");
-                toast.success("Login successfully!");
+                toast.success("Đăng nhập thành công!");
             } else {
                 setLoginError(userData.message);
                 setShowPopupElement(true);
