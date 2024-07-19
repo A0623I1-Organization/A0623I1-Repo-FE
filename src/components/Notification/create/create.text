@@ -13,7 +13,6 @@ export default function CreateNotification(props) {
     const [currentDateTime, setCurrentDateTime] = useState("");
     const [roles, setRoles] = useState([]);
     const {register, handleSubmit, formState: {errors}, reset, setError} = useForm();
-    const [validateError, setValidateError] = useState([]);
     useEffect(() => {
         const updateDateTime = () => {
             const now = new Date();
@@ -31,7 +30,7 @@ export default function CreateNotification(props) {
             createDate: currentDateTime,
             topic: '',
             content: '',
-            listRole: ''
+            recipient: ''
         })
     }
     const getRole = async () => {
@@ -63,24 +62,20 @@ export default function CreateNotification(props) {
         return arrayRole;
     }
     const onSubmit = async data => {
-        try {
-            data.listRole = filterRole(data.listRole);
-            await notificationService.addNewNotification(data);
-            console.log("response");
-            setValidateError([]);
-            const socket = new SockJS("http://localhost:8080/ws");
-            const stompClient = over(socket);
-            stompClient.connect({}, () => {
-                stompClient.send("/app/sendNotification", {}, JSON.stringify(data));
-            });
-            toast.success("Đăng thông báo thành công", {autoClose: 700})
-            handleCancel();
-        } catch (error) {
-            console.log('tang component nay', error)
-            setValidateError(error);
-            toast.error("Đăng thông báo thất bại.", {autoClose: 700})
+        data.listRole = filterRole(data.listRole);
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = over(socket);
+        stompClient.connect({}, () => {
+            stompClient.send("/app/sendNotification", {}, JSON.stringify(data));
+        })
+        const result = await notificationService.addNewNotification(data);
+        console.log('result la : ', result);
+        if (result) {
+            toast.success("Đăng thông báo thành công");
+        } else {
+            toast.error("Đăng thông báo thất bại");
         }
-
+        handleCancel();
     }
     return (
         <div
@@ -100,10 +95,11 @@ export default function CreateNotification(props) {
                                readOnly={currentDateTime}
                                {...register(
                                    "createDate",
-                                   {required: "* Bắt buộc nhập trường này"}
+                                   // {required: "* Bắt buộc nhập trường này"}
                                )
                                }
                         />
+
                     </div>
                     <div className="input-box">
                         <span className="details">
@@ -112,21 +108,21 @@ export default function CreateNotification(props) {
                         <input className="user-details-input-nhi"
                                placeholder="Nhập chủ đề thông báo"
                                type="text" {...register("topic", {
-                            required: "* Bắt buộc nhập trường này",
-                            maxLength: {value: 255, message: "* Độ dài tối đa 255 ký tự"}
+                            // required: "* Bắt buộc nhập trường này",
+                            // maxLength: {value: 255, message: "* Độ dài tối đa 255 ký tự"}
                         })} />
-                        {errors.topic && <span className="error-create-notification">{errors.topic.message}</span>}
-                        <span className="error-create-notification">{validateError?.topic}</span>
-
+                        {errors.topic && <span className="error-create-notification">{errors.topic.message}</span>}<br/>
                     </div>
                     <div className="input-box">
                         <span className="details">
                             <b>Nội dung</b>
                         </span>
-                        <textarea {...register("content", {required: "* Bắt buộc nhập trường này",})} />
-                        {errors.content &&
-                            <span className="error-create-notification">{errors.content.message}</span>}
-                        <span className="error-create-notification"> {validateError?.content}</span>
+                        <textarea {...register("content",
+                            {
+                                // required: "* Bắt buộc nhập trường này",
+                            })} />
+                        {/*{errors.content &&*/}
+                        {/*    <span className="error-create-notification">{errors.content.message}</span>}<br/>*/}
                     </div>
                     <div className="object-receive">
                         <span className="details"><b>Người nhận</b></span>
@@ -136,7 +132,7 @@ export default function CreateNotification(props) {
                                 type="radio"
                                 value={'all'}
                                 {...register("listRole", {
-                                    required: "* Bắt buộc nhập trường này"
+                                    // required: "* Bắt buộc nhập trường này"
                                 })}
                             />
                             <label htmlFor="dot-1">
@@ -148,7 +144,7 @@ export default function CreateNotification(props) {
                                 type="radio"
                                 value={[ROLE_WAREHOUSE]}
                                 {...register("listRole", {
-                                    required: "* Bắt buộc nhập trường này"
+                                    // required: "* Bắt buộc nhập trường này"
                                 })}
                             />
                             <label htmlFor="dot-2">
@@ -160,7 +156,7 @@ export default function CreateNotification(props) {
                                 type="radio"
                                 value={[ROLE_SALESMAN]}
                                 {...register("listRole", {
-                                    required: "* Bắt buộc nhập trường này"
+                                    // required: "* Bắt buộc nhập trường này"
                                 })}
                             />
                             <label htmlFor="dot-3">
@@ -168,9 +164,8 @@ export default function CreateNotification(props) {
                                 <span className="gender">Người bán hàng</span>
                             </label>
                         </div>
-                        {errors.listRole &&
-                            <span className="error-create-notification">{errors.listRole.message}</span>}
-                        <span className="error-create-notification">{validateError?.listRole}</span>
+                        {/*{errors.listRole &&*/}
+                        {/*    <span className="error-create-notification">{errors.listRole.message}</span>}*/}
                     </div>
                 </div>
                 <div className="button-post-notification">
