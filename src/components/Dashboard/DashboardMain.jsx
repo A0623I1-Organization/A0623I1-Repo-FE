@@ -25,7 +25,7 @@ export function DashboardMain({content, path}) {
 
     return (
         <div className="app-container" onClick={turnOffNotification}>
-            <HeaderDashboard parentCallback={callbackFunction} onClick={displayNotification}></HeaderDashboard>
+            <HeaderDashboard parentCallback={callbackFunction} path = {path} onClick={displayNotification}></HeaderDashboard>
             {showNotificationList && (
                 <div className="overlay-nhi" onClick={(event) => event.stopPropagation()}>
                     <div className="notification-content-header-nhi">
