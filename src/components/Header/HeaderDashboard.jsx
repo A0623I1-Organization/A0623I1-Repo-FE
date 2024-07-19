@@ -15,6 +15,7 @@ import {TopicModal} from "./TopicModal/TopicModal";
 import { GiLargePaintBrush } from "react-icons/gi";
 
 export function HeaderDashboard(props) {
+    const role = props.path;
     const [fullName, setFullName] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
@@ -156,7 +157,7 @@ export function HeaderDashboard(props) {
                             </div>
                             {fullName}
                         </div>
-                        <Link to={`/dashboard/infor`}>
+                        <Link to={`/dashboard/${role}/infor`}>
                             <FaRegUserCircle/>
                             Thông tin cá nhân
                         </Link>
