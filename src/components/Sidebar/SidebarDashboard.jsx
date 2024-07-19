@@ -89,18 +89,20 @@ export function SidebarDashboard(props) {
                         <Link to={"/dashboard/storeManager/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/storeManager/warehouse"}>Nhà kho</Link>
                         <a href="#">Xem báo cáo</a>
-                        <a href="#">Quản lý khách hàng</a>
+                        <Link to={"/dashboard/storeManager/customers"}>Quản lý khách hàng</Link>
                         <Link to={"/dashboard/storeManager/employee-list"}>Quản lý nhân viên</Link>
                         <Link to={"/dashboard/storeManager/notification"}>Đăng thông báo</Link>
                         <a href="#">Sao lưu/Khôi phục</a>
                     </div>
                 </li>}
+                {isStoreManager &&
                 <li className="sidebar-list-item">
-                    <Link className="show-dropdown" to={"/news"}>
+                    <Link className="show-dropdown" to={"/dashboard/storeManager/news"}>
                         <PiNewspaperClippingBold/>
                         <span>Tin tức</span>
                     </Link>
                 </li>
+                }
                 <li className="sidebar-list-item">
                     <Link className="show-dropdown" to="/">
                         <FaHome />
