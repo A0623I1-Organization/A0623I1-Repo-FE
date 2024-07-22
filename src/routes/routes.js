@@ -127,12 +127,7 @@ const routes = [
         element: <NewsDetailPage/>,
     },
     {
-        path: '/dashboard/salesman/notification',
-        element: <NotificationList />,
-        private: true,
-    },
-    {
-        path: '/dashboard/warehouse/notification',
+        path: '/dashboard/:role/notification',
         element: <NotificationList />,
         private: true,
     },
