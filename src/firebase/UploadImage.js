@@ -148,8 +148,5 @@ export const UploadOneImage = ({onImageUrlChange,className,existingImageUrl}) =>
                 {url && <img src={url} width="200px" alt={`Selected file preview`} />}
             </div>
         </div>
-        // <>
-        //     <input type="file" accept="image/*"  className={className} onChange={handleChange} />
-        // </>
     );
 };

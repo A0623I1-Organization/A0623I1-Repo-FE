@@ -26,6 +26,7 @@ import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
 import NewsDetailPage from '../pages/News/NewsDetailPage';
 
+
 const routes = [
     {
         path: '/',
@@ -76,16 +77,17 @@ const routes = [
     },
     {
         path: '/dashboard/import-pricing',
+
         element: <ImportPricing/>,
         private: true
     },
     {
-        path: '/dashboard/statistic',
+        path: '/dashboard/warehouse/statistic',
         element: <Statistic/>,
         private: true
     },
     {
-        path: '/dashboard/statistic-by-chart',
+        path: '/dashboard/:role/statistic-by-chart',
         element: <StatisticByChart/>,
         private: true
     },
@@ -138,12 +140,7 @@ const routes = [
         element: <NewsDetailPage/>,
     },
     {
-        path: '/dashboard/salesman/notification',
-        element: <NotificationList />,
-        private: true,
-    },
-    {
-        path: '/dashboard/warehouse/notification',
+        path: '/dashboard/:role/notification',
         element: <NotificationList />,
         private: true,
     },

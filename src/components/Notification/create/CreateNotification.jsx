@@ -1,5 +1,5 @@
 import "./CreateNotification.scss";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {format} from "date-fns";
 import {useForm} from "react-hook-form";
 import * as notificationService from "../../../services/notification/NotificationService";
@@ -14,6 +14,7 @@ export default function CreateNotification(props) {
     const [roles, setRoles] = useState([]);
     const {register, handleSubmit, formState: {errors}, reset, setError} = useForm();
     const [validateError, setValidateError] = useState([]);
+    const urlSocketRef = useRef('');
     useEffect(() => {
         const updateDateTime = () => {
             const now = new Date();
@@ -35,8 +36,7 @@ export default function CreateNotification(props) {
         })
     }
     const getRole = async () => {
-        const token = localStorage.getItem("token");
-        const role = await notificationService.getAllRole(token);
+        const role = await notificationService.getAllRole();
         setRoles(role);
         console.log(roles);
     };
@@ -52,12 +52,15 @@ export default function CreateNotification(props) {
         if (data === 'all') {
             arrayRole.push(mapRole.get(ROLE_SALESMAN));
             arrayRole.push(mapRole.get(ROLE_WAREHOUSE));
+            urlSocketRef.current = "/app/sendNotification";
         }
         if (data === ROLE_SALESMAN) {
-            arrayRole.push(mapRole.get(ROLE_SALESMAN))
+            arrayRole.push(mapRole.get(ROLE_SALESMAN));
+            urlSocketRef.current = "/app/salesman/sendNotification";
         }
         if (data === ROLE_WAREHOUSE) {
-            arrayRole.push(mapRole.get(ROLE_WAREHOUSE))
+            arrayRole.push(mapRole.get(ROLE_WAREHOUSE));
+            urlSocketRef.current = "/app/warehouse/sendNotification";
         }
         console.log(arrayRole)
         return arrayRole;
@@ -65,13 +68,14 @@ export default function CreateNotification(props) {
     const onSubmit = async data => {
         try {
             data.listRole = filterRole(data.listRole);
+            console.log(data);
             await notificationService.addNewNotification(data);
-            console.log("response");
             setValidateError([]);
             const socket = new SockJS("http://localhost:8080/ws");
             const stompClient = over(socket);
             stompClient.connect({}, () => {
-                stompClient.send("/app/sendNotification", {}, JSON.stringify(data));
+                stompClient.send(urlSocketRef.current, {}, JSON.stringify(data));
+                console.log("urlSocket ở create: ", urlSocketRef.current)
             });
             toast.success("Đăng thông báo thành công", {autoClose: 700})
             handleCancel();
@@ -80,7 +84,6 @@ export default function CreateNotification(props) {
             setValidateError(error);
             toast.error("Đăng thông báo thất bại.", {autoClose: 700})
         }
-
     }
     return (
         <div
@@ -89,6 +92,9 @@ export default function CreateNotification(props) {
             <div className="title-createNotification-nhi">
                 <b className="b-tag-create-notification">ĐĂNG THÔNG BÁO</b>
             </div>
+            {
+                console.log("urlSocket ở create: ", urlSocketRef.current)
+            }
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="user-details">
                     <div className="input-box">
