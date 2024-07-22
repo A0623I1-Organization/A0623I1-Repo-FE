@@ -14,7 +14,8 @@ function NewsList(props) {
     const [newsList, setNewsList] = useState([]);
     const [newsDelete, setNewsDelete] = useState(null);
     const [isModalOpen, setModalOpen] = useState(false);
-
+    const [page, setPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
     useEffect(() => {
         getNewsList()
 
@@ -23,6 +24,7 @@ function NewsList(props) {
         try {
             const response = await NewsService.getAllNews()
             setNewsList(response.content)
+            setTotalPages(response.totalPages);
         } catch (error) {
             console.log(error)
         }
@@ -47,6 +49,12 @@ function NewsList(props) {
     const closeModal = () => {
         setNewsDelete(null);
         setModalOpen(false);
+    };
+
+    const goToPage = async (pageNumber) => {
+        setPage(pageNumber);
+        const response = await NewsService.getAllNews(pageNumber);
+        setNewsList(response.content);
     };
 
     return (
@@ -82,7 +90,7 @@ function NewsList(props) {
                                     {newsList?.map((item, index) => (
                                         <tr key={item.id}>
                                             <td>{index + 1}</td>
-                                            <td> <img src={item?.newsImgUrl} alt={item.title} width={"120x"} style={{padding: "4px 0"}} /> <div style={{padding: "4px 0"}}>{item.title}</div> </td>
+                                            <td> <img src={item?.newsImgUrl} alt={item.title} width={"120x"} style={{padding: "4px 0", aspectRatio: "4/3",objectFit:"cover"}} /> <div style={{padding: "4px 0"}}>{item.title}</div> </td>
                                             <td>{item.newsDescription}</td>
                                             <td>{item.fullName}</td>
                                             <td>{Moment(item.dateCreate).format('DD/MM/YYYY')}</td>
@@ -94,6 +102,15 @@ function NewsList(props) {
                                 </tbody>
                             </table>
                             <ModalDelete isOpen={isModalOpen} onClose={closeModal} title={"Xóa tin tức"} content={`Xác nhận xóa tin tức có tiêu đề: ${newsDelete?.title}`} submit={handleSubmitDelete} />
+                        </div>
+                        <div className="pagination">
+                            {page > 0 && (
+                                <button onClick={() => goToPage(page - 1)}>Trang trước</button>
+                            )}
+                            <span>Trang {page + 1} / {totalPages}</span>
+                            {page + 1 < totalPages && (
+                                <button onClick={() => goToPage(page + 1)}>Trang sau</button>
+                            )}
                         </div>
                     </div>
                 </div>
