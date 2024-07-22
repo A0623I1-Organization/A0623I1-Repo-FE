@@ -21,6 +21,10 @@ import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
 import UpdatePricing from "../pages/Dashboard/content/warehouse/product/UpdatePricing";
+import CustomerList from '../pages/Dashboard/Customer/CustomerList';
+import NewsList from '../pages/Dashboard/News/NewsList';
+import NewsCreate from '../pages/Dashboard/News/NewsCreate';
+import NewsDetailPage from '../pages/News/NewsDetailPage';
 
 const routes = [
     {
@@ -111,6 +115,11 @@ const routes = [
         private: true,
     },
     {
+        path: '/dashboard/:role/customers',
+        element: <CustomerList/>,
+        private: true,
+    },
+    {
         path: '/dashboard/:role/customer/create',
         element: <CustomerCreate/>,
         private: true,
@@ -123,6 +132,10 @@ const routes = [
     {
         path: '/news',
         element: <NewsPage/>,
+    },
+    {
+        path: '/news/:newsId',
+        element: <NewsDetailPage/>,
     },
     {
         path: '/dashboard/salesman/notification',
@@ -140,8 +153,14 @@ const routes = [
         private: true,
     },
     {
-        path: '/test',  // Ai muốn test thử gì thì dùng đường dẫn này
-        element: <Loading/>,
+        path: '/dashboard/:role/news',
+        element: <NewsList/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/news/create',
+        element: <NewsCreate/>,
+        private: true,
     },
     {
         path: '*',

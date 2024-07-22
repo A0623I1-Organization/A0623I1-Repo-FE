@@ -1,8 +1,8 @@
-import {useState} from "react";
-import { MdCancel } from "react-icons/md";
-import { format, formatDistanceToNow } from 'date-fns';
-import { vi } from 'date-fns/locale';
-export default function DetailModal({notification, showModal,setShowModal}) {
+import "./DetailModal.scss";
+import {MdCancel} from "react-icons/md";
+import {format} from 'date-fns';
+
+export default function DetailModal({notification, showModal, setShowModal}) {
 
     return (
         <>
@@ -24,22 +24,26 @@ export default function DetailModal({notification, showModal,setShowModal}) {
                                         className="p-1 ml-auto bg-transparent border-0 opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none hover:cursor-pointer"
                                         onClick={() => setShowModal(false)}
                                     >
-                                        <MdCancel />
+                                        <MdCancel/>
                                     </button>
                                 </div>
                                 {/*body*/}
-                                <div className="text-black text-xl flex justify-center items-center h-full">
-                                    <b>{notification.topic}</b>
-                                </div>
-                                <div className="relative p-6 flex-auto">
-                                    <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                                        {notification.content}
-                                    </p>
-                                </div>
-                                <div className="text-blue-200 relative p-6 flex justify-center items-center">
-                                    <span>{format(new Date(notification.createDate),"dd-MM-yyyy HH:mm")}</span>
+                                <div className="p-10">
+                                    <div
+                                        className="text-black text-xl flex justify-center items-center h-full">
+                                        <b className="justify-text">{notification.topic}</b>
+                                    </div>
+                                    <div className="relative p-6 flex-auto">
+                                        <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+                                            {notification.content}
+                                        </p>
+                                    </div>
+                                    <div className="text-blue-200 relative p-6 flex justify-center items-center">
+                                        <span>{format(new Date(notification.createDate), "dd-MM-yyyy HH:mm")}</span>
 
+                                    </div>
                                 </div>
+
                                 {/*footer*/}
                                 <div className="flex items-center justify-end p-6">
                                     <button

@@ -1,9 +1,7 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import * as employeeService from "../../../services/employee/EmployeeService";
 import {useForm} from "react-hook-form";
-import {toast} from "react-toastify";
 import "./Employee.scss";
-import Moment from "moment";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {MdOutlineModeEdit} from "react-icons/md";
 import {BiSolidShow} from "react-icons/bi";
@@ -13,6 +11,7 @@ import {EmployeeDetailModal} from "./employDetailModal/EmployeeDetailModal";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowUnsorted } from "react-icons/ti";
+import {DeleteEmployeeModal} from "./deleteEmployeeModal/DeleteEmployeeModal";
 
 export function EmployeeList() {
     const {role} = useParams();
@@ -28,11 +27,21 @@ export function EmployeeList() {
         criteriaMode: "all"
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+    const [employeeDelete, setEmployeeDelete] = useState({
+        employeeId: null,
+        employeeCode: "",
+        employeeName: ""
+    });
+
+    const [isDelete, setIsDelete] = useState(false);
 
     const [codeSort, setCodeSort] = useState({
         field: "",
         direction: ""
     });
+
     const [nameSort, setNameSort] = useState({
         field: "",
         direction: ""
@@ -93,7 +102,8 @@ export function EmployeeList() {
                 default:
                     break;
             }
-            const temp = await employeeService.getAllEmployees('', data.searchContent);
+            const temp = await employeeService.getAllEmployees('', data.searchContent, codeSort.field, codeSort.direction,
+                nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
             setSearchContent(data.searchContent);
             setEmployeeList(temp.content);
             setTotalPages(temp.totalPages);
@@ -110,7 +120,17 @@ export function EmployeeList() {
         setUserId(id);
     }
 
+    const openDeleteModal = (employee) => {
+        setIsModalDeleteOpen(true);
+        setEmployeeDelete({
+            employeeId: employee.userId,
+            employeeCode: employee.userCode,
+            employeeName: employee.fullName
+        });
+    }
+
     const closeDetailModal = () => setIsModalOpen(false);
+    const closeDeleteModal = () => setIsModalDeleteOpen(false);
 
     const showPageNo = () => {
         let pageNoTags = [];
@@ -124,6 +144,13 @@ export function EmployeeList() {
         setPageNumber(pageNo);
     }
 
+    const handleDeleteEmployeeFlag = async () => {
+        setIsDelete(!isDelete);
+        setIsModalDeleteOpen(false);
+        await getEmployeeList(pageNumber, searchContent, codeSort.field, codeSort.direction,
+            nameSort.field, nameSort.direction, roleSort.field, roleSort.direction); // Gọi lại getEmployeeList sau khi xóa
+    }
+
     return (
         <DashboardMain path={role}
             content={
@@ -133,7 +160,7 @@ export function EmployeeList() {
                             <form onSubmit={handleSubmit(onSubmit)} className="form-search">
                                 <input type="text" {...register("searchContent")} className="search-bar"
                                        placeholder="Nhập nội dung tìm kiếm"/>
-                                <button className="btn btn-search">Search</button>
+                                <button className="btn btn-search">Tìm kiếm</button>
                             </form>
                             <Link to={"/dashboard/storeManager/employee-create"} className="link-move">Thêm mới nhân
                                 viên</Link>
@@ -221,6 +248,9 @@ export function EmployeeList() {
                                                 </button>
                                         }
                                     </th>
+                                    <th className={"status"}>
+                                        trạng thái
+                                    </th>
                                     <th className={"email"}>
                                         Email
                                     </th>
@@ -242,6 +272,12 @@ export function EmployeeList() {
                                                     : employee.role.roleId === 3? "Nhân viên bán hàng"
                                                         : "Quản lý kho"}
                                         </td>
+                                        <td className={"status"}>
+                                            {employee.enabled === true ?
+                                                <span style={{color: "green"}}>Kích hoạt</span>
+                                                : <span style={{color: "red"}}>Bất hoạt</span>
+                                            }
+                                        </td>
                                         <td className={"email"}>{employee.email}</td>
                                         <td className={"phoneNumber"}>{employee.phoneNumber}</td>
                                         <td className={"edit-emp"}>
@@ -251,7 +287,7 @@ export function EmployeeList() {
                                             <Link to={`/dashboard/storeManager/employee-create/${employee.userId}`}>
                                                 <MdOutlineModeEdit fill="#00a762"/>
                                             </Link>
-                                            <a>
+                                            <a onClick={() => openDeleteModal(employee)}>
                                                 <IoTrashSharp fill="red"/>
                                             </a>
                                         </td>
@@ -283,6 +319,14 @@ export function EmployeeList() {
                         id={userId}
                     >
                     </EmployeeDetailModal>
+                    <DeleteEmployeeModal
+                        isOpen={isModalDeleteOpen}
+                        onClose={closeDeleteModal}
+                        employeeDelete = {employeeDelete}
+                        onDeleteSuccess={handleDeleteEmployeeFlag}
+                    >
+
+                    </DeleteEmployeeModal>
                 </div>
             }>
         </DashboardMain>

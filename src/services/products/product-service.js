@@ -13,7 +13,6 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
             url += `&sortBy=${sortBy}&ascending=${ascending}`;
         }
 
-
         let temp = await axiosInstance.get(url);
         return temp.data;
     } catch (e) {

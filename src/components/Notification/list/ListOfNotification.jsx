@@ -1,15 +1,15 @@
 import "./ListOfNotification.scss";
-import { useEffect, useState, useCallback } from "react";
+import {useEffect, useState, useCallback} from "react";
 import * as notificationService from "../../../services/notification/NotificationService";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 import DetailModal from "../modal/DetailModal";
-import { formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
+import {formatDistanceToNow} from "date-fns";
+import {vi} from "date-fns/locale";
 import SockJS from "sockjs-client";
-import { Stomp } from "@stomp/stompjs";
+import {Stomp} from "@stomp/stompjs";
 import {over} from "stompjs";
 
-export default function ListOfNotification({ widthList, backgroundColorList, marginTopList, marginList, paddingList, maxHeightList, heightList, fontSizeHeader, heightMain, seeAllBackgroundColor }) {
+export default function ListOfNotification(props) {
     const [overflow, setOverflow] = useState("hidden");
     const [listByRead, setListByRead] = useState([]);
     const [listByUnRead, setListByUnRead] = useState([]);
@@ -26,8 +26,14 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-            stompClient.subscribe('/topic/notification', (message) => {
+            stompClient.subscribe('/topic/createNotification', (message) => {
                 getAllByStatusRead(0);
+                toast("Bạn vừa có thông báo mới!")
+            });
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/notification', (message) => {
+                    toast(message.body);
+                });
             });
         });
         setStompClient(stompClient);
@@ -68,7 +74,7 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
         await notificationService.seeViewDetail(item.notifId);
         await fetchData();
         if (stompClient && stompClient.connected) {
-            stompClient.send("/app/sendNotification", {}, JSON.stringify(item));
+            stompClient.send("/app/detailNotification", {}, `Bạn vừa đọc thông báo \`${item.notifId}\``);
         } else {
             console.error("Stomp client is not connected");
         }
@@ -80,12 +86,20 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
 
     return (
         <>
-            <div className="container-listNotification-nhi" style={{ width: widthList, backgroundColor: backgroundColorList, marginTop: marginTopList, margin: marginList, padding: paddingList, maxHeight: maxHeightList, height: heightList }}>
-                <header className="header-notification-nhi" style={{ fontSize: fontSizeHeader }}>
+            <div className="container-listNotification-nhi" style={{
+                width: props.widthList,
+                backgroundColor: props.backgroundColorList,
+                marginTop: props.marginTopList,
+                margin: props.marginList,
+                padding: props.paddingList,
+                maxHeight: props.heightList,
+                height: props.heightList
+            }}>
+                <header className="header-notification-nhi" style={{fontSize: props.fontSizeHeader}}>
                     <div className="notif_box">
                         <h2 className="title">
                             Thông báo
-                            <DetailModal />
+                            <DetailModal/>
                         </h2>
                         <span id="notifes">{listByUnRead.length}</span>
                     </div>
@@ -93,16 +107,19 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
                         Đánh dấu tất cả đã đọc
                     </p>
                 </header>
-                <main className="main-notification-nhi" style={{ overflowY: overflow, height: heightMain }}>
+                <main className="main-notification-nhi"
+                      style={{overflowY: overflow, height: props.heightMain, fontSize: props.fontSizeMain}}>
                     {
                         listByUnRead.map((item) => (
-                            <div key={item.notifId} onClick={() => getItem(item)} className="notif_card unread">
+                            <div key={item.notifId} onClick={() => getItem(item)} className="notif_card unread"
+                                 style={{padding: props.paddingCard}}>
                                 <img
                                     className="img-tag-notification-nhi"
                                     alt="manager--v2"
                                     height="52"
                                     src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
                                     width="18"
+                                    style={{width: props.widthImg, height: props.heightImg}}
                                 />
                                 <div className="description">
                                     <p className="user_activity tag-p-notification">
@@ -123,13 +140,15 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
                         ))
                     }
                     {listByRead.map((item) => (
-                        <div key={item.notifId} onClick={() => getItem(item)} className="notif_card">
+                        <div key={item.notifId} onClick={() => getItem(item)} className="notif_card"
+                             style={{padding: props.paddingCard}}>
                             <img
                                 className="img-tag-notification-nhi"
                                 alt="manager--v2"
                                 height="52"
                                 src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
                                 width="18"
+                                style={{width: props.widthImg, height: props.heightImg}}
                             />
                             <div className="description">
                                 <p className="user_activity tag-p-notification">
@@ -151,19 +170,22 @@ export default function ListOfNotification({ widthList, backgroundColorList, mar
                         </div>
                     ))}
                     {listByUnRead.length === 0 && listByRead.length === 0 && (
-                        <div className="p-tag-no-data-notification-nhi bg-gray-300 rounded-2xl h-full text-3xl text-gray-500 flex justify-center items-center">
+                        <div
+                            className="p-tag-no-data-notification-nhi bg-gray-300 rounded-2xl h-full text-3xl text-gray-500 flex justify-center items-center">
                             <p>Không có dữ liệu hiển thị</p>
                         </div>
                     )}
                     {showModal && (
-                        <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal} />
+                        <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal}/>
                     )}
                 </main>
-                <div className="see-all-button" style={{ backgroundColor: seeAllBackgroundColor }}>
-                    <button onClick={handleSeeAllNotification}>
-                        Xem tất cả
-                    </button>
-                </div>
+                {listByUnRead.length > 0 && listByRead.length > 0 && (
+                    <div className="see-all-button" style={{backgroundColor: props.seeAllBackgroundColor}}>
+                        <button onClick={handleSeeAllNotification}>
+                            Xem tất cả
+                        </button>
+                    </div>
+                )}
             </div>
         </>
     );

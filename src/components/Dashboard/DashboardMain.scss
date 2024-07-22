@@ -1,9 +1,8 @@
 .overlay-nhi {
   position: fixed;
   top: 31px;
-  left: 57%;
-  right: 19%;
-  width: 27%;
+  right: 16%;
+  max-width: 350px;
   height: 100%;
   z-index: 999;
   display: flex;
