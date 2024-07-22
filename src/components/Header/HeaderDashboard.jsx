@@ -7,12 +7,13 @@ import {getAllByStatusRead} from "../../services/notification/NotificationServic
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import {isSalesMan, isWarehouse} from "../../services/auth/AuthenticationService";
-import { TiArrowSortedDown } from "react-icons/ti";
-import { FaRegBell } from "react-icons/fa";
-import { FaRegUserCircle } from "react-icons/fa";
-import { IoIosLogOut } from "react-icons/io";
+import {TiArrowSortedDown} from "react-icons/ti";
+import {FaRegBell} from "react-icons/fa";
+import {FaRegUserCircle} from "react-icons/fa";
+import {IoIosLogOut} from "react-icons/io";
 import {TopicModal} from "./TopicModal/TopicModal";
-import { GiLargePaintBrush } from "react-icons/gi";
+import {GiLargePaintBrush} from "react-icons/gi";
+import {toast} from "react-toastify";
 
 export function HeaderDashboard(props) {
     const [fullName, setFullName] = useState("");
@@ -22,30 +23,46 @@ export function HeaderDashboard(props) {
     const [darkMode, setDarkMode] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
-    const [quantityUnread, setQuantityUnread] = useState([]);
+    const [quantityUnread, setQuantityUnread] = useState("");
     const [stompClient, setStompClient] = useState(null);
 
     useEffect(() => {
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-            stompClient.subscribe("/topic/createNotification", (message) => {
+
+            stompClient.subscribe('/topic/createNotification', (message) => {
+                getQuantityNotificationUnread();
+            });
+
+            if (isSalesMan()) {
+                stompClient.subscribe('/topic/salesman/createNotification', (message) => {
                     getQuantityNotificationUnread();
-                }
-            )
+                    toast("Bạn vừa có thông báo mới!", {autoClose: 500})
+                });
+            }
+
+            if (isWarehouse()) {
+                console.log(isWarehouse());
+                stompClient.subscribe('/topic/warehouse/createNotification', (message) => {
+                    getQuantityNotificationUnread();
+                    toast("Bạn vừa có thông báo mới!", {autoClose: 500})
+                });
+            }
         });
         setStompClient(stompClient);
         return () => {
             if (stompClient) {
                 stompClient.disconnect();
             }
-        }
+        };
     }, []);
     useEffect(() => {
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
             stompClient.subscribe("/topic/notification", (message) => {
+                    console.log("useEffect ở header đang hoaạt động")
                     getQuantityNotificationUnread();
                 }
             )
@@ -62,14 +79,18 @@ export function HeaderDashboard(props) {
         getUserName();
         getQuantityNotificationUnread();
         getAvatar()
-        }, [])
+    }, [])
 
     const getQuantityNotificationUnread = async () => {
         const temp = await getAllByStatusRead(0);
+        console.log(temp.length);
         if (temp.length > 99) {
+            console.log("đã vào temp.length")
             setQuantityUnread("99+")
+        } else {
+            setQuantityUnread(temp.length);
         }
-        setQuantityUnread(temp.length);
+
     };
 
     const getUserName = () => {
@@ -161,7 +182,7 @@ export function HeaderDashboard(props) {
                             Thông tin cá nhân
                         </Link>
                         <a className="mode-switch" title="Switch Theme" onClick={openModal}>
-                            <GiLargePaintBrush />
+                            <GiLargePaintBrush/>
                             Chủ đề giao diện
                         </a>
                         <a onClick={handleLogout}>
