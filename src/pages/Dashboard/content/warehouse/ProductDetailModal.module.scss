@@ -1,4 +1,5 @@
 /* ProductDetailModal.module.scss */
+
 .modal {
   display: none;
   position: fixed;
@@ -8,9 +9,11 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
+  align-content: center;
   align-items: center;
   z-index: 1000;
   transition: all 0.3s ease;
+
 
   &.open {
     display: flex;
@@ -26,96 +29,54 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    padding-left: 50px;
 
-    .backgroundImage {
-      width: 100%;
-      height: 200px;
-      background-size: cover;
-      background-position: center;
-    }
-
-    .boxInfo {
+    .info {
       padding: 16px;
       overflow-y: auto;
 
-      .image {
-        width: 150px;
-        height: 150px;
-        margin: 0 auto;
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          border-radius: 50%;
-        }
+      .title {
+        font-weight: bold;
+        margin-right: 8px;
+        font-size: 16px;
       }
 
-      .info {
-        margin-top: 16px;
-
-        .productCode,
-        .productName,
-        .description,
-        .productType,
-        .pricingList,
-        .productImages {
-          margin-bottom: 16px;
-
-          .title {
-            font-weight: bold;
-            margin-right: 8px;
-          }
-
-          span,
-          ul {
-            font-size: 16px;
-            color: #333;
-          }
-
-          ul {
-            list-style-type: none;
-            padding: 0;
-
-            li {
-              margin-bottom: 4px;
-            }
-          }
-        }
-
-        .productImages {
-          .images {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-
-            img {
-              width: 100px;
-              height: 100px;
-              object-fit: cover;
-              border-radius: 8px;
-            }
-          }
-        }
+      span {
+        font-size: 16px;
+        color: #333;
       }
 
-      .button {
+      .images {
         display: flex;
-        justify-content: center;
-        margin-top: 16px;
+        flex-wrap: wrap;
+        gap: 8px;
 
-        button {
-          background-color: #007bff;
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          font-size: 16px;
-          cursor: pointer;
-          border-radius: 4px;
-          transition: background-color 0.3s ease;
+        img {
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+      }
+    }
 
-          &:hover {
-            background-color: #0056b3;
-          }
+    .button {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: #0056b3;
         }
       }
     }
@@ -124,36 +85,20 @@
   @media (max-width: 768px) {
     .modalContent {
       max-width: 90%;
-      .boxInfo {
-        .image {
-          width: 120px;
-          height: 120px;
+
+      .info {
+        .title {
+          font-size: 14px;
         }
 
-        .info {
-          .productCode,
-          .productName,
-          .description,
-          .productType,
-          .pricingList,
-          .productImages {
-            .title {
-              font-size: 14px;
-            }
+        span {
+          font-size: 14px;
+        }
 
-            span,
-            ul {
-              font-size: 14px;
-            }
-          }
-
-          .productImages {
-            .images {
-              img {
-                width: 80px;
-                height: 80px;
-              }
-            }
+        .images {
+          img {
+            width: 80px;
+            height: 80px;
           }
         }
       }
@@ -169,37 +114,21 @@
 
   @media (max-width: 480px) {
     .modalContent {
-      .boxInfo {
+      .info {
         padding: 12px;
-        .image {
-          width: 100px;
-          height: 100px;
+
+        .title {
+          font-size: 12px;
         }
 
-        .info {
-          .productCode,
-          .productName,
-          .description,
-          .productType,
-          .pricingList,
-          .productImages {
-            .title {
-              font-size: 12px;
-            }
+        span {
+          font-size: 12px;
+        }
 
-            span,
-            ul {
-              font-size: 12px;
-            }
-          }
-
-          .productImages {
-            .images {
-              img {
-                width: 60px;
-                height: 60px;
-              }
-            }
+        .images {
+          img {
+            width: 60px;
+            height: 60px;
           }
         }
       }

@@ -45,3 +45,11 @@ export const getPricingByPricingCode = async (pricingCode) => {
         throw e.response.data.message;
     }
 }
+export const addPricing = async (productId,pricingList) =>{
+    try {
+        const temp = await axiosInstance.post(`/pricing/product/${productId}`,pricingList);
+        return temp.data;
+    }catch (e) {
+        throw e.response.data.message;
+    }
+}

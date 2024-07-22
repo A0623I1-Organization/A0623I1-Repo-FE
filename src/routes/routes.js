@@ -20,6 +20,7 @@ import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCr
 import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
+import UpdatePricing from "../pages/Dashboard/content/warehouse/product/UpdatePricing";
 
 const routes = [
     {
@@ -60,8 +61,13 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/:role/create-pricing/:pricingId',
+        path: '/dashboard/:role/create-pricing/:productId',
         element: <CreatePricing/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/update-pricing/:pricingId',
+        element: <UpdatePricing/>,
         private: true,
     },
     {

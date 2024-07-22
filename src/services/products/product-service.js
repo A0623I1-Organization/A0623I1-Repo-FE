@@ -29,13 +29,20 @@ export const createProduct =async (product)=>{
         console.log(e)
     }
 }
-export const deleteProduct = async (productId)=>{
+export const deleteProduct = async (productId,product)=>{
     try {
-        const temp = await axiosInstance.delete(`products/${productId}`);
+        const temp = await axiosInstance.put(`/products/delete/${productId}`,product);
         return temp.data;
-    } catch (e) {
-        console.log(e)
-        return null;
+    } catch (error) {
+        throw error.response.data.errors;
     }
 
+}
+export const updateProduct = async (productId,product)=>{
+    try {
+        const temp = await axiosInstance.put(`/products/update/${productId}`,product);
+        return temp.data;
+    } catch (error) {
+        throw error.response.data.errors;
+    }
 }

@@ -4,7 +4,6 @@ import {useForm, useFieldArray, Controller} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import * as productService from '../../../../../services/products/product-service';
-import * as pricingService from '../../../../../services/products/pricing-service';
 import * as colorService from '../../../../../services/products/color-service';
 import * as categoryService from '../../../../../services/products/category-service';
 import * as productTypeService from '../../../../../services/products/productType-service';
@@ -39,26 +38,26 @@ const schema = yup.object().shape({
             imageId: yup.string().default(''),
             imageUrl: yup.string().url('Phải là URL hợp lệ').required('URL ảnh là bắt buộc'),
         })
-    ),
+    ).required('Ảnh là bắt buộc'),
 });
 
 const CreatePricing = () => {
-    const {role,productId} = useParams();
+    const {role,pricingId} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [colors, setColors] = useState([]);
     const [categories, setCategories] = useState([]);
     const [productTypes, setProductTypes] = useState([]);
     const [productTypesByCategory, setProductTypesByCategory] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('Nữ');
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [productImages, setProductImages] = useState([]);
-    const [disabled, setDisabled] = useState(false);
-    const [images, setImages] = useState([]);
+    const [product,setProduct]= useState('');
+    const [images,setImages]= useState([])
     const {register, handleSubmit, formState: {errors}, setValue, control} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             pricingList: [],
-            productImages: [],
+            productImages: []
         }
     });
 
@@ -70,7 +69,6 @@ const CreatePricing = () => {
         control,
         name: 'productImages',
     });
-
     const callbackFunction = (childData) => {
         setIsShowSidebar(childData);
     };
@@ -80,26 +78,36 @@ const CreatePricing = () => {
             await getAllCategory();
             await getAllColor();
             await getAllProductType();
-            if(!productId){
-                await fetchUniqueProductCode();
-            }
         };
 
         fetchData().then().catch();
     }, []);
     useEffect(() => {
-        getProductById(productId)
-    }, [productId]);
-    const getProductById = (productId)=>{
-        productService1.getProductById(productId).then(res =>{
+        getProductById(pricingId)
+    }, [pricingId]);
+    const getProductById = (pricingId)=>{
+        productService1.getProductById(pricingId).then(res =>{
+            setProduct(res);
             setSelectedCategory(res.productType.category.categoryName)
-            setDisabled(true);
             console.log(res.productType.category.categoryName);
             setValue('productId', res.productId);
             setValue('productCode', res.productCode);
             setValue('productName', res.productName);
             setValue('description', res.description);
             setValue('productType', JSON.stringify(res.productType));
+            // Populate pricingList array
+            const pricingListValues = res.pricingList?.map(pricing => ({
+                pricingId : pricing.pricingId,
+                pricingName: pricing.pricingName,
+                pricingCode: pricing.pricingCode,
+                price: pricing.price,
+                size: pricing.size,
+                qrCode: '',
+                color: JSON.stringify(pricing.color),
+                pricingImgUrl: pricing.pricingImgUrl
+            }));
+            setValue('pricingList', pricingListValues);
+            // Populate productImages array (assuming productImages is an array)
             const productImagesValues = res.productImages?.map(image => ({
                 imageId: image.imageId,
                 imageUrl: image.imageUrl
@@ -110,31 +118,7 @@ const CreatePricing = () => {
             console.log(images)
         }).catch(err=>console.log(err))
     }
-
-    useEffect(() => {
-        const fetchCodes = async () => {
-            for (let i = 0; i < fields.length; i++) {
-                await fetchUniquePricingCode(i);
-            }
-        };
-        fetchCodes().catch(err => console.log(err));
-    }, [ fields, setValue]);
-
-    const fetchUniqueProductCode = () => {
-        generateUniqueCode(`/products/generateAndCheckProductCode`).then(res => {
-            setValue('productCode', res);
-        }).catch(err => console.log(err));
-    };
-
-    const fetchUniquePricingCode = async (index) => {
-        return generateUniqueCode(`/pricing/generateAndCheckPricingCode`)
-            .then(res => {
-                setValue(`pricingList[${index}].pricingCode`, res);
-                return res;
-            })
-            .catch(err => console.log(err));
-    };
-
+console.log(product)
     const getAllCategory = () => {
         categoryService.getAllCategory().then(res => setCategories(res)).catch(err => console.log(err));
     };
@@ -154,17 +138,8 @@ const CreatePricing = () => {
             .then(res => setProductTypes(res))
             .catch(err => console.log(err));
     };
-    console.log(productTypes);
-
-    const handleAddPricingRow = () => {
-        append({});
-    };
-
-    const handleRemovePricingRow = (index) => {
-        remove(index);
-    };
-
     const onSubmit = async (data) => {
+        console.log(data);
         try {
             const updatedPricingList = await Promise.all(data.pricingList.map(async (item) => {
                 try {
@@ -181,7 +156,6 @@ const CreatePricing = () => {
                     throw error;
                 }
             }));
-
             const updatedData = {
                 ...data,
                 pricingList: updatedPricingList.map(item => ({
@@ -190,25 +164,15 @@ const CreatePricing = () => {
                 })),
                 productType: JSON.parse(data.productType)
             };
-            console.log(updatedData.pricingList);
-            productId?
-                pricingService.addPricing(productId,updatedData.pricingList)
-                    .then(() => {
-                        toast.success('Tạo thành công');
-                        navigate(`/dashboard/${role}/warehouse`);
-                    })
-                    .catch(err => {
-                        toast.error('Tạo thất bại');
-                        console.error('Error creating product:', err);
-                    })
-            : productService.createProduct(updatedData)
+            console.log(updatedData);
+            productService.updateProduct(pricingId,updatedData)
                 .then(() => {
-                    toast.success('Tạo thành công');
+                    toast.success('Sửa thành công');
                     navigate(`/dashboard/${role}/warehouse`);
                 })
                 .catch(err => {
-                    toast.error('Tạo thất bại');
-                    console.error('Error creating product:', err);
+                    toast.error('Sửa thất bại');
+                    console.error('Error updating product:', err);
                 });
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -229,7 +193,6 @@ const CreatePricing = () => {
     const handleOneImageUrlChange = async (uploadedImageUrl, index) => {
         await setValue(`pricingList[${index}].pricingImgUrl`, uploadedImageUrl);
     };
-
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
@@ -241,29 +204,28 @@ const CreatePricing = () => {
                     </div>
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
-                        <input type="text" {...register('productName')} disabled={disabled}/>
+                        <input type="text" {...register('productName')} />
                         {errors.productName && <p>{errors.productName.message}</p>}
                     </div>
                     <div className={styles.formGroup}>
                         <label>Mô tả:</label>
-                        <input type="text" {...register('description')} disabled={disabled}/>
+                        <input type="text" {...register('description')} />
                         {errors.description && <p>{errors.description.message}</p>}
                     </div>
                     <div className={styles.formGroup}>
-                        <label>Images:</label>
+                        <label>Ảnh sản phẩm:</label>
                         <Controller
                             name="productImages"
                             control={control}
-                            disabled={disabled}
                             render={({field}) => (
-                                <UploadMultipleImage onImageUrlChange={handleImageUrlChange} existingImageUrls={images} />
+                                <UploadMultipleImage onImageUrlChange={handleImageUrlChange} existingImageUrls={images}/>
                             )}
                         />
                         {errors.productImages && <p>{errors.productImages.message}</p>}
                     </div>
                     <div className={styles.formGroup}>
                         <label>Danh mục:</label>
-                        <select  onChange={event => setSelectedCategory(event.target.value)} disabled={disabled}>
+                        <select onChange={event => setSelectedCategory(event.target.value)}>
                             <option value=''>--chọn danh mục--</option>
                             {
                                 categories?.map((item, index) => (
@@ -274,7 +236,7 @@ const CreatePricing = () => {
                     </div>
                     <div className={styles.formGroup}>
                         <label>Loại sản phẩm:</label>
-                        <select {...register('productType')} disabled={disabled} >
+                        <select {...register('productType')} >
                             <option value=''>--chọn loại sản phẩm--</option>
                             {
                                 productTypesByCategory?.map((item, index) => (
@@ -335,26 +297,20 @@ const CreatePricing = () => {
                                         render={({field}) => (
                                             <UploadOneImage
                                                 onImageUrlChange={(url) => handleOneImageUrlChange(url, index)}
+                                                existingImageUrl={product.pricingList[index].pricingImgUrl}
                                             />
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
                                         <p>{errors.pricingList[index].pricingImgUrl.message}</p>}
                                 </div>
-                                <button type="button" onClick={() => handleRemovePricingRow(index)}
-                                        className={styles.removeButton}>
-                                    -
-                                </button>
                             </div>
                         ))}
                     </div>
                     <div className={styles.buttonWrapper}>
                         <button type="submit" className={styles.submitButton}>
-                            Thêm mới
+                            Sửa đổi
                         </button>
-                        <button type="button" onClick={handleAddPricingRow} className={
-                            styles.addButton}>
-                            +
-                        </button>
+
                     </div>
                 </form>
             </div>
