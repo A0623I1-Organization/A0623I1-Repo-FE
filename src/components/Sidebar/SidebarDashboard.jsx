@@ -53,8 +53,8 @@ export function SidebarDashboard(props) {
                         <Link to={"/dashboard/salesMan/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/salesMan/warehouse"}>Nhà kho</Link>
                         <Link to={"/dashboard/salesMan/payment"}>Thanh toán</Link>
-                        <Link to={"/dashboard/statistic"}>Thống kê</Link>
-                        <Link to={"/dashboard/salesman/notification"}>Xem thông báo</Link>
+                        <Link to={"/dashboard/salesMan/statistic"}>Thống kê</Link>
+                        <Link to={"/dashboard/salesMan/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
                 {(isWarehouse || isAdmin) &&
@@ -70,8 +70,8 @@ export function SidebarDashboard(props) {
                     <div className={showDropdown === "warehouse" ? "dropdown-content" : "dropdown-content show"}>
                         <Link to={"/dashboard/warehouse/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/warehouse/warehouse"}>Nhà kho</Link>
-                        <Link to={"/dashboard/import-pricing"}>Nhập liệu</Link>
-                        <Link to={"/dashboard/statistic"}>Thống kê</Link>
+                        <Link to={"/dashboard/warehouse/import-pricing"}>Nhập liệu</Link>
+                        <Link to={"/dashboard/warehouse/statistic"}>Thống kê</Link>
                         <Link to={"/dashboard/warehouse/notification"}>Xem thông báo</Link>
                     </div>
                 </li>}
@@ -89,18 +89,20 @@ export function SidebarDashboard(props) {
                         <Link to={"/dashboard/storeManager/infor"}>Thông tin cá nhân</Link>
                         <Link to={"/dashboard/storeManager/warehouse"}>Nhà kho</Link>
                         <a href="#">Xem báo cáo</a>
-                        <a href="#">Quản lý khách hàng</a>
+                        <Link to={"/dashboard/storeManager/customers"}>Quản lý khách hàng</Link>
                         <Link to={"/dashboard/storeManager/employee-list"}>Quản lý nhân viên</Link>
-                        <a href="/dashboard/storeManager/notification">Đăng thông báo</a>
+                        <Link to={"/dashboard/storeManager/notification"}>Đăng thông báo</Link>
                         <a href="#">Sao lưu/Khôi phục</a>
                     </div>
                 </li>}
+                {isStoreManager &&
                 <li className="sidebar-list-item">
-                    <a className="show-dropdown">
+                    <Link className="show-dropdown" to={"/dashboard/storeManager/news"}>
                         <PiNewspaperClippingBold/>
                         <span>Tin tức</span>
-                    </a>
+                    </Link>
                 </li>
+                }
                 <li className="sidebar-list-item">
                     <Link className="show-dropdown" to="/">
                         <FaHome />

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
 import ZaloChat from '../../../ui/ZaloChat';
 import { useState, useEffect } from 'react';
 import * as ProductService from '../../../services/products/ProductService'
+import * as NewsService from '../../../services/news/NewsService';
 import { fCurrency } from '../../../utils/format-number';
 import Loading from '../../../ui/Loading';
 import { Link, useLocation } from 'react-router-dom';
@@ -12,6 +13,7 @@ import { categories } from '../../../data';
 function Main(props) {
 
     const location = useLocation();
+    const elementRef = useRef(null);
     const [products, setProducts] = useState([]);
     const [productsKeyWord, setProductsKeyWord] = useState([]);
     const [productsNew, setProductsNew] = useState([]);
@@ -26,6 +28,8 @@ function Main(props) {
     const [initialLoadKeyWord, setInitialLoadKeyWord] = useState(true);
     const [initialLoadNew, setInitialLoadNew] = useState(true);
 
+    const [newsData, setNewsData] = useState([]);
+    
     const urlParams = new URLSearchParams(location.search);
     const keyword = urlParams.get('keyword');
 
@@ -43,8 +47,19 @@ function Main(props) {
 
     useEffect(() => {
         getProductsbyKeyword()
-    }, [initialLoadKeyWord, keyword]);
+        if(!keyword){
+            window.scrollTo(0, 0);
+        }else{
+            window.scrollTo(0, measurePosition ());
+        }
 
+    }, [keyword]);
+
+    useEffect(() => {
+        getNewsData()
+    }, []);
+    
+    
     const loadInitialProducts = async () => {
         setLoading(true);
 
@@ -165,6 +180,29 @@ function Main(props) {
         }
     }
 
+    const getNewsData = async () => {
+        setLoading(true);
+        try {
+            const response = await NewsService.getAllNews();
+            if (!response || !response.content) {
+                return;
+            }
+            const firstFourItems = response.content.slice(0, 4);
+            setNewsData(firstFourItems);
+        } catch (e) {
+            console.log("Không có dữ liệu");
+        }
+        setLoading(false);
+    }
+
+    const measurePosition = () => {
+        const element = elementRef.current;
+        if (element) {
+            const offsetY = element.offsetTop;
+          console.log(offsetY);
+          return offsetY - 124;
+        }
+      };
     return (
         <main id={styles.main}>
             <section><Slick /></section>
@@ -180,6 +218,7 @@ function Main(props) {
                 </ul>
             </section>
             {/* --------Sản phẩm theo keyword-------- */}
+            <div ref={elementRef}></div>
             {
                 keyword &&
                 <section className={styles.sectionList}>
@@ -191,7 +230,7 @@ function Main(props) {
                                 <Link to={`/product/${product?.productId}`}>
                                     <figure>
                                         <img
-                                            src={product.productImages[0]?.imageUrl}
+                                            src={product?.pricingList[0]?.pricingImgUrl}
                                             alt={product.productName}
                                             width="100%"
                                         />
@@ -230,7 +269,7 @@ function Main(props) {
                             <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
-                                        src={product.productImages[0]?.imageUrl}
+                                        src={product?.pricingList[0]?.pricingImgUrl}
                                         alt={product.productName}
                                         width="100%"
                                     />
@@ -271,7 +310,7 @@ function Main(props) {
                             <Link to={`/product/${product?.productId}`}>
                                 <figure>
                                     <img
-                                        src={product.productImages[0]?.imageUrl}
+                                        src={product?.pricingList[0]?.pricingImgUrl}
                                         alt={product.productName}
                                         width="100%"
                                     />
@@ -311,73 +350,32 @@ function Main(props) {
             <section className={styles.sectionNews}>
                 <div className={styles.top}>
                     <h3>Tin tức thời trang</h3>
-                    <a href="#!">Xem thêm ›</a>
+                    <Link to={"/news"}>Xem thêm ›</Link>
                 </div>
                 <div className={styles.list}>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://media-fmplus.cdn.vccloud.vn/uploads/news/82c29cf3-62b5-4dad-ae3a-83c7f6354689.jpeg"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <b>Set đồ đi cưới cho nam</b>
-                                <p>Việc lựa chọn trang phục phù hợp khi tham dự đám cưới ...</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://media-fmplus.cdn.vccloud.vn/uploads/news/c505effc-e4e4-495a-9281-e9a09b906761.jpg"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <b>20+ Kiểu Tóc Ngắn Layer Nữ Đẹp</b>
-                                <p>Tóc ngắn layer nữ là kiểu tóc có khả năng biến hóa theo ...</p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://media-fmplus.cdn.vccloud.vn/uploads/news/dde7c15b-6576-4110-be0b-1ff3cf08c195.png"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <b>Thời trang nam phong cách trẻ</b>
-                                <p>
-                                    Thời trang nam là lĩnh vực khá đa dạng về phong cách và kiểu dáng
-                                    ...{" "}
-                                </p>
-                            </figcaption>
-                        </a>
-                    </div>
-                    <div className={styles.item}>
-                        <a href="#!">
-                            <figure>
-                                <img
-                                    src="https://media-fmplus.cdn.vccloud.vn/uploads/news/ed56c5fa-ed68-4440-b821-4ab4a3c578fb.jpg"
-                                    alt="post"
-                                    width="100%"
-                                />
-                            </figure>
-                            <figcaption>
-                                <b>15+ Cách Phối Màu Quần Áo Nam Như Stylist</b>
-                                <p>Những món đồ bình dân, giá rẻ cũng sẽ trở nên cao cấp ...</p>
-                            </figcaption>
-                        </a>
-                    </div>
+                    {newsData?.map((newsItem) => (
+                        <div className={styles.item} key={newsItem.newsId}>
+                            <Link to={`/news/${newsItem?.newsId}`}>
+                                <figure>
+                                    <img
+                                        src={newsItem?.newsImgUrl}
+                                        alt="post"
+                                        width="100%"
+                                    />
+                                </figure>
+                                <figcaption>
+                                    <p>{newsItem?.title}</p>
+                                    <p>{newsItem?.newsDescription}</p>
+                                </figcaption>
+                            </Link>
+                        </div>
+                    ))}
                 </div>
+                {loading && <Loading />}
+                {
+                    newsData?.length == 0 && !loading &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy bài viết nào !</p>)
+                }
             </section>
             <ZaloChat />
         </main>

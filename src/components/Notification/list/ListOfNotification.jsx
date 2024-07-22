@@ -1,66 +1,101 @@
 import "./ListOfNotification.scss";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback} from "react";
 import * as notificationService from "../../../services/notification/NotificationService";
 import {toast} from "react-toastify";
 import DetailModal from "../modal/DetailModal";
 import {formatDistanceToNow} from "date-fns";
 import {vi} from "date-fns/locale";
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
+import {over} from "stompjs";
 
 export default function ListOfNotification(props) {
     const [overflow, setOverflow] = useState("hidden");
-    const handleSeeAllNotification = () => {
-        setOverflow(overflow === "hidden" ? "auto" : "hidden");
-    }
     const [listByRead, setListByRead] = useState([]);
     const [listByUnRead, setListByUnRead] = useState([]);
     const [notification, setNotification] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [stompClient, setStompClient] = useState(null);
+
+    const fetchData = async () => {
+        await getAllByStatusRead(1);
+        await getAllByStatusRead(0);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            await getAllByStatusRead(1);
-            await getAllByStatusRead(0);
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            stompClient.subscribe('/topic/createNotification', (message) => {
+                getAllByStatusRead(0);
+                toast("Bạn vừa có thông báo mới!")
+            });
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/notification', (message) => {
+                    toast(message.body);
+                });
+            });
+        });
+        setStompClient(stompClient);
+
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect();
+            }
         };
+    }, []);
+
+    useEffect(() => {
         fetchData();
     }, []);
+
     const getAllByStatusRead = async (statusRead) => {
-        const token = localStorage.getItem("token");
-        const temp = await notificationService.getAllByStatusRead(token, statusRead);
+        const temp = await notificationService.getAllByStatusRead(statusRead);
         if (statusRead) {
             setListByRead(temp);
         } else {
             setListByUnRead(temp);
         }
-    }
-
+    };
 
     const markAll = async () => {
-        const token = localStorage.getItem("token");
-        const response = await notificationService.markAllRead(token);
-        await getAllByStatusRead(1);
-        await getAllByStatusRead(0);
+        const response = await notificationService.markAllRead();
+        await fetchData();
         if (response) {
-            toast.success("Đánh dấu đã đọc tất cả thành công ")
+            toast.success("Đánh dấu đã đọc tất cả thành công ");
         } else {
-            toast.error("Tất cả đã được đọc rồi nhé !")
+            toast.error("Tất cả đã được đọc rồi nhé !");
         }
+    };
 
-
-    }
-    const getItem = async (item) => {
-        const token = localStorage.getItem("token");
-        console.log("notifId:", item.notifId);
+    const getItem = useCallback(async (item) => {
         setNotification(item);
         setShowModal(true);
-        await notificationService.seeViewDetail(token, item.notifId);
-        await getAllByStatusRead(1);
-        await getAllByStatusRead(0);
-    }
+        await notificationService.seeViewDetail(item.notifId);
+        await fetchData();
+        if (stompClient && stompClient.connected) {
+            stompClient.send("/app/detailNotification", {}, `Bạn vừa đọc thông báo \`${item.notifId}\``);
+        } else {
+            console.error("Stomp client is not connected");
+        }
+    }, [stompClient]);
 
+    const handleSeeAllNotification = useCallback(() => {
+        setOverflow((prevOverflow) => (prevOverflow === "hidden" ? "auto" : "hidden"));
+    }, []);
 
     return (
         <>
-            <div className="container-listNotification-nhi">
-                <header className="header-notification-nhi">
+            <div className="container-listNotification-nhi" style={{
+                width: props.widthList,
+                backgroundColor: props.backgroundColorList,
+                marginTop: props.marginTopList,
+                margin: props.marginList,
+                padding: props.paddingList,
+                maxHeight: props.heightList,
+                height: props.heightList
+            }}>
+                <header className="header-notification-nhi" style={{fontSize: props.fontSizeHeader}}>
                     <div className="notif_box">
                         <h2 className="title">
                             Thông báo
@@ -72,84 +107,86 @@ export default function ListOfNotification(props) {
                         Đánh dấu tất cả đã đọc
                     </p>
                 </header>
-                <main className="main-notification-nhi" style={{overflowY: overflow}}>
+                <main className="main-notification-nhi"
+                      style={{overflowY: overflow, height: props.heightMain, fontSize: props.fontSizeMain}}>
                     {
-                        listByUnRead && listByUnRead.map((item, index) => (
-                            <div>
-                                <div key={item.notif_id} onClick={() => getItem(item)} className="notif_card unread">
-                                    <img className="img-tag-notification-nhi"
-                                         alt="manager--v2"
-                                         height="52"
-                                         src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
-                                         width="18"
-                                    />
-                                    <div className="description">
-                                        <p className="user_activity tag-p-notification">
-                                            <strong className="strong-tag-notification-nhi">
-                                                Quản lý cửa hàng
-                                            </strong>
-                                            {' '} có thông báo cho bạn về {' '}
-                                            <b>
-                                                {item.topic}{' '}
-                                            </b>
-                                        </p>
-                                        <p className="time tag-p-notification">
-                                            {formatDistanceToNow(new Date(item.createDate), {
-                                                addSuffix: true,
-                                                locale: vi
-                                            })}
-                                        </p>
-                                    </div>
+                        listByUnRead.map((item) => (
+                            <div key={item.notifId} onClick={() => getItem(item)} className="notif_card unread"
+                                 style={{padding: props.paddingCard}}>
+                                <img
+                                    className="img-tag-notification-nhi"
+                                    alt="manager--v2"
+                                    height="52"
+                                    src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
+                                    width="18"
+                                    style={{width: props.widthImg, height: props.heightImg}}
+                                />
+                                <div className="description">
+                                    <p className="user_activity tag-p-notification">
+                                        <strong className="strong-tag-notification-nhi">
+                                            Quản lý cửa hàng
+                                        </strong>
+                                        {' '} có thông báo cho bạn về {' '}
+                                        <b>{item.topic} </b>
+                                    </p>
+                                    <p className="time tag-p-notification">
+                                        {formatDistanceToNow(new Date(item.createDate), {
+                                            addSuffix: true,
+                                            locale: vi
+                                        })}
+                                    </p>
                                 </div>
                             </div>
-
                         ))
                     }
-                    {
-                        listByRead && listByRead.map((item, index) => (
-                            <div>
-                                <div key={item.notif_id} onClick={() => getItem(item)} className="notif_card">
-                                    <img className="img-tag-notification-nhi"
-                                         alt="manager--v2"
-                                         height="52"
-                                         src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
-                                         width="18"
-                                    />
-                                    <div className="description">
-                                        <p className="user_activity tag-p-notification">
-                                            <strong className="strong-tag-notification-nhi">
-                                                Quản lý cửa hàng
-                                            </strong>
-                                            {' '} có thông báo cho bạn về {' '}
-                                            <b>
-                                                {item.topic}{' '}
-                                            </b>
-                                        </p>
-                                        <p className="time tag-p-notification">
-                                            <span>
-                                                {formatDistanceToNow(new Date(item.createDate), {
-                                                    addSuffix: true,
-                                                    locale: vi
-                                                })}
-                                            </span>
-                                        </p>
-                                    </div>
-                                </div>
+                    {listByRead.map((item) => (
+                        <div key={item.notifId} onClick={() => getItem(item)} className="notif_card"
+                             style={{padding: props.paddingCard}}>
+                            <img
+                                className="img-tag-notification-nhi"
+                                alt="manager--v2"
+                                height="52"
+                                src="https://img.icons8.com/3d-fluency/94/manager--v2.png"
+                                width="18"
+                                style={{width: props.widthImg, height: props.heightImg}}
+                            />
+                            <div className="description">
+                                <p className="user_activity tag-p-notification">
+                                    <strong className="strong-tag-notification-nhi">
+                                        Quản lý cửa hàng
+                                    </strong>
+                                    {' '} có thông báo cho bạn về {' '}
+                                    <b>{item.topic} </b>
+                                </p>
+                                <p className="time tag-p-notification">
+                                    <span>
+                                        {formatDistanceToNow(new Date(item.createDate), {
+                                            addSuffix: true,
+                                            locale: vi
+                                        })}
+                                    </span>
+                                </p>
                             </div>
-
-                        ))
-                    }
-                    {
-                        showModal &&
+                        </div>
+                    ))}
+                    {listByUnRead.length === 0 && listByRead.length === 0 && (
+                        <div
+                            className="p-tag-no-data-notification-nhi bg-gray-300 rounded-2xl h-full text-3xl text-gray-500 flex justify-center items-center">
+                            <p>Không có dữ liệu hiển thị</p>
+                        </div>
+                    )}
+                    {showModal && (
                         <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal}/>
-                    }
+                    )}
                 </main>
-                <div className="see-all-button">
-                    <button onClick={handleSeeAllNotification}>
-                        Xem tất cả
-                    </button>
-                </div>
+                {listByUnRead.length > 0 && listByRead.length > 0 && (
+                    <div className="see-all-button" style={{backgroundColor: props.seeAllBackgroundColor}}>
+                        <button onClick={handleSeeAllNotification}>
+                            Xem tất cả
+                        </button>
+                    </div>
+                )}
             </div>
         </>
-    )
+    );
 }

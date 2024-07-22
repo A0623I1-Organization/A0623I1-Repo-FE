@@ -31,13 +31,23 @@ export const saveEmployee = async (employee) => {
         return temp.data;
     }catch (e) {
         console.log(e)
-        throw e.response.data.errors;
+        throw e.response.data;
     }
 }
 
 export const updateEmployee = async (id, employee) => {
     try {
         const temp = await axiosInstance.put(`users/${id}`, employee)
+        console.log(temp.data);
+        return temp.data;
+    } catch (e) {
+        throw e.response.data;
+    }
+}
+
+export const deleteEmployee = async (employeeId) => {
+    try {
+        const temp = await axiosInstance.delete(`/users/${employeeId}`);
         console.log(temp.data);
         return temp.data;
     } catch (e) {

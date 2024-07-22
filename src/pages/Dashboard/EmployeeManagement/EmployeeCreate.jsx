@@ -1,5 +1,3 @@
-import {HeaderDashboard} from "../../../components/Header/HeaderDashboard";
-import {SidebarDashboard} from "../../../components/Sidebar/SidebarDashboard";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
 import {toast} from "react-toastify";
@@ -8,7 +6,6 @@ import * as roleService from "../../../services/employee/RoleService";
 import * as employeeService from "../../../services/employee/EmployeeService";
 import {useParams} from "react-router-dom";
 import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
-import {boolean} from "yup";
 
 export function EmployeeCreate() {
     const {role} = useParams();
@@ -20,10 +17,6 @@ export function EmployeeCreate() {
     const {register, handleSubmit, setValue, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
-
-    const callbackFunction = (childData) => {
-        setIsShowSidebar(childData)
-    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -52,10 +45,12 @@ export function EmployeeCreate() {
             setValue("email", temp.email);
             setValue("address", temp.address);
             setValue("role", JSON.stringify(temp.role));
-            setValue("accountNonExpired", temp.accountNonExpired);
-            setValue("accountNonLocked", temp.accountNonLocked);
-            setValue("credentialsNonExpired", temp.credentialsNonExpired);
-            setValue("enabled", temp.enabled);
+            if (id !== undefined) {
+                setValue("accountNonExpired", temp.accountNonExpired);
+                setValue("accountNonLocked", temp.accountNonLocked);
+                setValue("credentialsNonExpired", temp.credentialsNonExpired);
+                setValue("enabled", temp.enabled);
+            }
             setRoles(temp.roles);
         }
     }
@@ -70,7 +65,9 @@ export function EmployeeCreate() {
             const now = Date.now();
             data.role = JSON.parse(data.role);
             data.gender = Number.parseInt(data.gender);
-            data.enabled = JSON.parse(data.enabled)
+            if (id !== undefined) {
+                data.enabled = JSON.parse(data.enabled);
+            }
             let response;
             console.log(data)
             if (id) {
@@ -84,7 +81,10 @@ export function EmployeeCreate() {
                 toast.error(response.message);
             }
         } catch (e) {
-            setValidateError(e);
+            setValidateError(e.errors);
+            if (e.statusCode === 400) {
+                toast.error(e.message);
+            }
         }
     }
 
@@ -111,7 +111,9 @@ export function EmployeeCreate() {
                         <div className="form-operation">
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Mã nhân viên: </span>
+                                    <span className={"element-title"}>Mã nhân viên:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <input type="text" disabled={id !== undefined} {...register("userCode", {
                                     required: "Mã nhân viên không được để trống!",
@@ -122,7 +124,9 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Tên nhân viên: </span>
+                                    <span className={"element-title"}>Tên nhân viên:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <input type="text" {...register("fullName", {
                                     required: "Tên nhân viên không được để trống!",
@@ -134,7 +138,7 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Ngày sinh: </span>
+                                    <span className={"element-title"}>Ngày sinh: <span style={{color: "red"}}>*</span></span>
                                 </label>
                                 <input type="date" {...register("dateOfBirth", {
                                     required: "Ngày sinh không được để trống!",
@@ -145,7 +149,9 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Giới tính: </span>
+                                    <span className={"element-title"}>Giới tính:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <div className="form-gender">
                                     {id && employee?.gender === 0 ?
@@ -175,7 +181,9 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Email: </span>
+                                    <span className={"element-title"}>Email:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <input type="email" {...register("email", {
                                     required : "Email không được để trống!"
@@ -185,7 +193,9 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Địa chỉ: </span>
+                                    <span className={"element-title"}>Địa chỉ:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <input type="text" {...register("address", {
                                     required : "Địa chỉ không được để trống!"
@@ -195,7 +205,9 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Số điện thoại: </span>
+                                    <span className={"element-title"}>Số điện thoại:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <input type="text" {...register("phoneNumber", {
                                     required : "Số điện thoại không được để trống!",
@@ -206,7 +218,9 @@ export function EmployeeCreate() {
                             </div>
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Chức vụ: </span>
+                                    <span className={"element-title"}>Chức vụ:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                 <select {...register("role", {
                                     required : "Chức vụ không được để trống!"
@@ -228,7 +242,7 @@ export function EmployeeCreate() {
                         </div>
                         <div className="form-operation">
                             <div className="form-element">
-                                <label>Tên tài khoản: </label>
+                                <label>Tên tài khoản: <span style={{color: "red"}}>*</span></label>
                                 <input type="text" {...register("username", {
                                     required: "Tên tài khoản không được để trống!",
                                     minLength: {value: 4, message: "Tên tài khoản phải chứa tối thiểu 4 ký ự!"},
@@ -238,7 +252,7 @@ export function EmployeeCreate() {
                                 {validateError && <p className="validate-error">{validateError.username}</p>}
                             </div>
                             <div className="new-password form-element">
-                                <label>Mật khẩu: </label>
+                                <label>Mật khẩu: <span style={{color: "red"}}>*</span></label>
                                 {id === undefined ?
                                     <input type="password" name="password" {...register("password", {
                                         required: "Mật khẩu không được để trống!"
@@ -253,7 +267,9 @@ export function EmployeeCreate() {
                             {id &&
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Khoá tài khoản: </span>
+                                    <span className={"element-title"}>Khoá tài khoản:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                     <div className="form-gender">
                                         {employee?.accountNonLocked === false ?
@@ -273,7 +289,9 @@ export function EmployeeCreate() {
                             {id &&
                             <div className="form-element">
                                 <label>
-                                    <span className={"element-title"}>Kích hoạt tài khoản: </span>
+                                    <span className={"element-title"}>Kích hoạt tài khoản:
+                                        <span style={{color: "red"}}> *</span>
+                                    </span>
                                 </label>
                                     <div className="form-gender">
                                         {employee?.enabled === false ?

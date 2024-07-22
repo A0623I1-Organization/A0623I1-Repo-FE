@@ -6,6 +6,7 @@
     "@headlessui/react": "^2.1.0",
     "@heroicons/react": "^2.1.4",
     "@hookform/resolvers": "^3.6.0",
+    "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -20,6 +21,7 @@
     "jsqr": "^1.4.0",
     "jwt-decode": "^4.0.0",
     "moment": "^2.30.1",
+    "net": "^1.0.2",
     "numeral": "^2.0.6",
     "qrcode": "^1.5.3",
     "react": "^18.3.1",
@@ -28,6 +30,7 @@
     "react-hook-form": "^7.51.5",
     "react-icons": "^5.2.1",
     "react-qr-scanner": "^1.0.0-alpha.11",
+    "react-quill": "^2.0.0",
     "react-router-dom": "^6.23.1",
     "react-scripts": "^5.0.1",
     "react-scroll": "^1.9.0",
@@ -37,6 +40,8 @@
     "redux-thunk": "^3.1.0",
     "sass": "^1.77.4",
     "slick-carousel": "^1.8.1",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4",
     "yup": "^1.4.0"
   },
@@ -44,7 +49,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "proxy": "http://localhost:3000"
   },
   "eslintConfig": {
     "extends": [

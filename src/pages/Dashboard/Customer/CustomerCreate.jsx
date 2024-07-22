@@ -3,21 +3,37 @@ import './Customer.scss'
 import { useForm } from 'react-hook-form';
 import { toast } from "react-toastify";
 import * as CustomerService from '../../../services/customer/CustomerService'
-import { useState } from 'react';
-import {useParams} from "react-router-dom";
+import { useState, useEffect } from 'react';
+import {useParams, useNavigate, Link} from "react-router-dom";
 function CustomerCreate() {
     const {role} = useParams();
-
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const [codeAutoCustomer, setCodeAutoCustomer] = useState(null)
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
 
     const [validateError, setValidateError] = useState([])
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        getCodeAutoCustomer()
+    }, []);
+
+    const getCodeAutoCustomer = async () => {
+        try {
+            const response = await CustomerService.codeAuto();
+            setCodeAutoCustomer(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const onSubmit = async (data) => {
         try {
+            data.customerCode = codeAutoCustomer;
             await CustomerService.createCustomer(data);
-            console.log(data);
             reset();
             setValidateError([])
+            setCodeAutoCustomer(null)
+            navigate(`/dashboard/${role}/customers`)
             toast.success("Thêm mới khách hàng thành công")
         } catch (error) {
             console.log(error);
@@ -44,11 +60,12 @@ function CustomerCreate() {
                             <div className="item1">
                                 <label htmlFor="">
                                     <span>Mã khách hàng*</span>
-                                    <input type="text" placeholder=""  {...register("customerCode", {
+                                    <input type="text" placeholder="" value={codeAutoCustomer} {...register("customerCode", {
                                         required: 'Mã khách hàng không được để trống !', pattern: {
-                                            value: /^KH-\d{3,}$/,
-                                            message: 'Mã khách hàng phải có định dạng KH-XXX',
+                                            value: /^KH-\d{4,}$/,
+                                            message: 'Mã khách hàng phải có định dạng KH-XXXX',
                                         },
+                                        disabled: true
                                     })} />
                                     {errors.customerCode && <small>{errors.customerCode.message}</small>}
                                     <small>{validateError?.customerCode}</small>
@@ -74,7 +91,6 @@ function CustomerCreate() {
                                     <span>Số điện thoại*</span>
                                     <input type="text" {...register("phoneNumber", {
                                         required: 'Số điện thoại không được để trống !', pattern: {
-                                            // value: /^+84|0\d{9}/,
                                             value: /^(\+84|0\d{9})$/,
                                             message: 'Số điện thoại phải bắt đầu bằng +84 hoặc 0 và kết thúc với 9 số!',
                                         },
@@ -103,7 +119,7 @@ function CustomerCreate() {
                             </div>
                             <div className="item2">
                                 <input type="submit" className="btn add" value="Thêm" />
-                                <input type="button" className="btn cancel" defaultValue="Hủy" />
+                                <Link to={`/dashboard/${role}/customers`} className="btn cancel">Hủy</Link>
                             </div>
                         </form>
                     </div>

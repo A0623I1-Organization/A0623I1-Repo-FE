@@ -24,6 +24,37 @@ export const findById = async (id) => {
         return temp.data;
     } catch (e) {
         console.log(e)
-        return {};
+        return null;
+    }
+}
+
+export const codeAuto = async () => {
+    try {
+        const temp = await axiosInstance.get(`/customer/code-auto`);
+        return temp.data;
+    } catch (e) {
+        console.log(e)
+        return null;
+    }
+}
+
+export const deleteCustomer = async (id)=>{
+    try {
+        const temp = await axiosInstance.delete(`/customer/${id}`);
+        return temp.data;
+    } catch (e) {
+        console.log(e)
+        throw e;
+    }
+ 
+}
+
+export const getCustomers = async (keyWord, pages = 0) => {
+    try {
+        const temp = await axiosInstance.get(`/customer?keyword=${keyWord}&page=${pages}`);
+        return temp.data;
+    } catch (e) {
+        console.log(e)
+        return [];
     }
 }

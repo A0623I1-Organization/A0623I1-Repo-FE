@@ -3,15 +3,17 @@ import Chart from "chart.js/auto";
 import { HeaderDashboard } from "../Header/HeaderDashboard";
 import { SidebarDashboard } from "../Sidebar/SidebarDashboard";
 import { getDailySalesRevenueForMonth } from "../../services/bill/bill-service";
-import "./StatisticByChart.css";
+import {DashboardMain} from "../Dashboard/DashboardMain";
+import {useParams} from "react-router-dom";
 
 const StatisticByChart = () => {
+  const {role} = useParams();
   const [isShowSidebar, setIsShowSidebar] = useState(false);
   const [revenueList, setRevenueList] = useState([]);
   const [time, setTime] = useState("");
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
-  const [noData, setNoData] = useState(false);
+  const [noData, setNoData] = useState(false); // State to track if there is no data
 
   useEffect(() => {
     if (time) {
@@ -23,15 +25,16 @@ const StatisticByChart = () => {
     try {
       const list = await getDailySalesRevenueForMonth(time);
 
+      // Check if list is empty or null
       if (!list || list.length === 0) {
         setRevenueList([]);
-        setNoData(true);
+        setNoData(true); // Set noData state to true
         return;
       }
 
       const filledData = fillMissingDays(list, time);
       setRevenueList(filledData);
-      setNoData(false);
+      setNoData(false); // Set noData state to false when there is data
       updateChart(filledData);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -55,13 +58,6 @@ const StatisticByChart = () => {
     });
 
     return completeData;
-  };
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(value) + ' VND';
   };
 
   const updateChart = (data) => {
@@ -100,9 +96,6 @@ const StatisticByChart = () => {
           },
           y: {
             beginAtZero: true,
-            ticks: {
-              callback: (value) => formatCurrency(value),
-            },
           },
         },
       },
@@ -110,34 +103,32 @@ const StatisticByChart = () => {
   };
 
   return (
-    <div className="app-container">
-      <HeaderDashboard parentCallback={setIsShowSidebar} />
-      <div id="content-wrapper">
-        <SidebarDashboard showSidebar={isShowSidebar} />
-        <div className="app-content">
-          <div className="content-body">
-            <div className="content-element box-content bg-white my-1 w-0.5 rounded-lg shadow-md">
-              <h2 className="text-center p-3">Thống kê bằng biểu đồ</h2>
-              <div className="flex justify-center mb-6 px-2">
-                <input
-                  type="month"
-                  className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
-                  onChange={handleTimeChange}
-                  required
-                />
-              </div>
-              <div className="chart-container flex justify-center">
-                {noData ? (
-                  <p className="text-center text-gray-500">Không có dữ liệu cho thời gian đã chọn</p>
-                ) : (
-                  <canvas id="myChart" ref={chartRef}></canvas>
-                )}
+      <DashboardMain path={role} content={
+            <div className="content-body">
+              <div className="content-element box-content bg-white my-1 w-0.5 rounded-lg shadow-md">
+                <h2 className="text-center p-3">Thống kê bằng biểu đồ</h2>
+                <div className="flex justify-center mb-6 px-2">
+                  <input
+                      type="month"
+                      className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+                      onChange={handleTimeChange}
+                      required
+                  />
+                </div>
+                <div
+                    className="chart-container flex justify-center"
+                    style={{position: "relative", height: "70vh", width: "70vw", paddingLeft: "50px"}}
+                >
+                  {noData ? (
+                      <p className="text-center text-gray-500">Không có dữ liệu cho thời gian đã chọn</p>
+                  ) : (
+                      <canvas id="myChart" ref={chartRef} style={{height: "100%", width: "100%"}}></canvas>
+                  )}
+                </div>
+
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      }/>
   );
 };
 
