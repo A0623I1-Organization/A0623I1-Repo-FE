@@ -14,8 +14,10 @@ import {IoIosLogOut} from "react-icons/io";
 import {TopicModal} from "./TopicModal/TopicModal";
 import {GiLargePaintBrush} from "react-icons/gi";
 import {toast} from "react-toastify";
+import {jwtDecode} from "jwt-decode";
 
 export function HeaderDashboard(props) {
+    const [roleName, setRoleName] = useState("");
     const [fullName, setFullName] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
@@ -27,6 +29,9 @@ export function HeaderDashboard(props) {
     const [stompClient, setStompClient] = useState(null);
 
     useEffect(() => {
+        const token = localStorage.getItem('token')
+        const decodedToken = jwtDecode(token);
+
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
@@ -57,7 +62,9 @@ export function HeaderDashboard(props) {
             }
         };
     }, []);
+
     useEffect(() => {
+        getRoleName();
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
@@ -80,6 +87,24 @@ export function HeaderDashboard(props) {
         getQuantityNotificationUnread();
         getAvatar()
     }, [])
+
+    const getRoleName = () => {
+        const token = localStorage.getItem('token')
+        const decodedToken = jwtDecode(token);
+        const role = decodedToken.roles;
+        if (role === 'ROLE_ADMIN') {
+            setRoleName("admin");
+        }
+        if (role === 'ROLE_WAREHOUSE') {
+            setRoleName("warehouse");
+        }
+        if (role === 'ROLE_SALESMAN') {
+            setRoleName("salesman");
+        }
+        if (role === 'ROLE_MANAGER') {
+            setRoleName("storeManager");
+        }
+    }
 
     const getQuantityNotificationUnread = async () => {
         const temp = await getAllByStatusRead(0);
@@ -177,7 +202,7 @@ export function HeaderDashboard(props) {
                             </div>
                             {fullName}
                         </div>
-                        <Link to={`/dashboard/infor`}>
+                        <Link to={`/dashboard/${roleName}/infor`}>
                             <FaRegUserCircle/>
                             Thông tin cá nhân
                         </Link>

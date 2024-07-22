@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Slick from '../../../components/Slick/Slick';
 import styles from './Main.module.scss';
 import ZaloChat from '../../../ui/ZaloChat';
@@ -13,6 +13,7 @@ import { categories } from '../../../data';
 function Main(props) {
 
     const location = useLocation();
+    const elementRef = useRef(null);
     const [products, setProducts] = useState([]);
     const [productsKeyWord, setProductsKeyWord] = useState([]);
     const [productsNew, setProductsNew] = useState([]);
@@ -46,7 +47,13 @@ function Main(props) {
 
     useEffect(() => {
         getProductsbyKeyword()
-    }, [initialLoadKeyWord, keyword]);
+        if(!keyword){
+            window.scrollTo(0, 0);
+        }else{
+            window.scrollTo(0, measurePosition ());
+        }
+
+    }, [keyword]);
 
     useEffect(() => {
         getNewsData()
@@ -187,7 +194,15 @@ function Main(props) {
         }
         setLoading(false);
     }
-    
+
+    const measurePosition = () => {
+        const element = elementRef.current;
+        if (element) {
+            const offsetY = element.offsetTop;
+          console.log(offsetY);
+          return offsetY - 124;
+        }
+      };
     return (
         <main id={styles.main}>
             <section><Slick /></section>
@@ -203,6 +218,7 @@ function Main(props) {
                 </ul>
             </section>
             {/* --------Sản phẩm theo keyword-------- */}
+            <div ref={elementRef}></div>
             {
                 keyword &&
                 <section className={styles.sectionList}>
@@ -356,6 +372,10 @@ function Main(props) {
                     ))}
                 </div>
                 {loading && <Loading />}
+                {
+                    newsData?.length == 0 && !loading &&
+                    (<p style={{ display: "block", textAlign: "center" }}>Không tìm thấy bài viết nào !</p>)
+                }
             </section>
             <ZaloChat />
         </main>

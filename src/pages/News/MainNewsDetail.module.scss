@@ -50,6 +50,10 @@
                 margin-left: 8px;
             }
         }
+        img{
+            max-width: 600px;
+            width: 100%;
+        }
     }
     .item:nth-child(1){
         display: flex;
@@ -66,6 +70,15 @@
 
 /* ------------------------------------------Responsive -------------------------------------------*/
 
+@media screen and (min-width: 2160px){
+    .sectionOne{
+        .item{
+            img{
+                max-width: 900px;
+            }
+        }
+    }
+}
 /* Màn hình Tablet */
 @media screen and (max-width: 768px) {
     .sectionOne{

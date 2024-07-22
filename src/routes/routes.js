@@ -54,7 +54,7 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/:role/pricingView',
+        path: '/dashboard/pricingView',
         element: <PricingView/>,
         private: true,
     },
@@ -64,17 +64,17 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/:role/import-pricing',
+        path: '/dashboard/import-pricing',
         element: <ImportPricing/>,
         private: true
     },
     {
-        path: '/dashboard/:role/statistic',
+        path: '/dashboard/statistic',
         element: <Statistic/>,
         private: true
     },
     {
-        path: '/dashboard/:role/statistic-by-chart',
+        path: '/dashboard/statistic-by-chart',
         element: <StatisticByChart/>,
         private: true
     },
