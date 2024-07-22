@@ -3,8 +3,11 @@ import Chart from "chart.js/auto";
 import { HeaderDashboard } from "../Header/HeaderDashboard";
 import { SidebarDashboard } from "../Sidebar/SidebarDashboard";
 import { getDailySalesRevenueForMonth } from "../../services/bill/bill-service";
+import {DashboardMain} from "../Dashboard/DashboardMain";
+import {useParams} from "react-router-dom";
 
 const StatisticByChart = () => {
+  const {role} = useParams();
   const [isShowSidebar, setIsShowSidebar] = useState(false);
   const [revenueList, setRevenueList] = useState([]);
   const [time, setTime] = useState("");
@@ -100,11 +103,7 @@ const StatisticByChart = () => {
   };
 
   return (
-      <div className="app-container">
-        <HeaderDashboard parentCallback={setIsShowSidebar} />
-        <div id="content-wrapper">
-          <SidebarDashboard showSidebar={isShowSidebar} />
-          <div className="app-content">
+      <DashboardMain path={role} content={
             <div className="content-body">
               <div className="content-element box-content bg-white my-1 w-0.5 rounded-lg shadow-md">
                 <h2 className="text-center p-3">Thống kê bằng biểu đồ</h2>
@@ -129,9 +128,7 @@ const StatisticByChart = () => {
 
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+      }/>
   );
 };
 

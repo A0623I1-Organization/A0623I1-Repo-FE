@@ -21,6 +21,11 @@ import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
 import UpdatePricing from "../pages/Dashboard/content/warehouse/product/UpdatePricing";
+import CustomerList from '../pages/Dashboard/Customer/CustomerList';
+import NewsList from '../pages/Dashboard/News/NewsList';
+import NewsCreate from '../pages/Dashboard/News/NewsCreate';
+import NewsDetailPage from '../pages/News/NewsDetailPage';
+
 
 const routes = [
     {
@@ -72,16 +77,17 @@ const routes = [
     },
     {
         path: '/dashboard/import-pricing',
+
         element: <ImportPricing/>,
         private: true
     },
     {
-        path: '/dashboard/statistic',
+        path: '/dashboard/warehouse/statistic',
         element: <Statistic/>,
         private: true
     },
     {
-        path: '/dashboard/statistic-by-chart',
+        path: '/dashboard/:role/statistic-by-chart',
         element: <StatisticByChart/>,
         private: true
     },
@@ -111,6 +117,11 @@ const routes = [
         private: true,
     },
     {
+        path: '/dashboard/:role/customers',
+        element: <CustomerList/>,
+        private: true,
+    },
+    {
         path: '/dashboard/:role/customer/create',
         element: <CustomerCreate/>,
         private: true,
@@ -125,12 +136,11 @@ const routes = [
         element: <NewsPage/>,
     },
     {
-        path: '/dashboard/salesman/notification',
-        element: <NotificationList />,
-        private: true,
+        path: '/news/:newsId',
+        element: <NewsDetailPage/>,
     },
     {
-        path: '/dashboard/warehouse/notification',
+        path: '/dashboard/:role/notification',
         element: <NotificationList />,
         private: true,
     },
@@ -140,8 +150,14 @@ const routes = [
         private: true,
     },
     {
-        path: '/test',  // Ai muốn test thử gì thì dùng đường dẫn này
-        element: <Loading/>,
+        path: '/dashboard/:role/news',
+        element: <NewsList/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/news/create',
+        element: <NewsCreate/>,
+        private: true,
     },
     {
         path: '*',

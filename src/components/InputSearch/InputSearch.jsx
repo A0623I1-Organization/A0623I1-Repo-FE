@@ -118,10 +118,10 @@ function InputSearch() {
                 <div className={styles.productListSearch}>
                     {result?.map((item, index) => (
                         <Link to={`/product/${item?.productId}`} key={index} className={styles.item}>
-                            <img src={item.productImages[0]?.imageUrl} alt="" />
+                            <img src={item?.pricingList[0]?.pricingImgUrl} alt="" />
                             <p>{item.productName}
                                 <br />
-                                Giá: <span>{fCurrency(item.pricingList[0]?.price)}</span> VND
+                                Giá: <span>{fCurrency(item?.pricingList[0]?.price)}</span> VND
                             </p>
                         </Link>
                     ))}

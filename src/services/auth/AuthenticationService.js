@@ -1,5 +1,6 @@
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
+import axiosInstance from "../../utils/axiosInstance";
 
 const baseURL = "http://localhost:8080";
 
@@ -22,78 +23,19 @@ export const register = async (userData) => {
     }
 }
 
-export const getAllUsers = async (token) =>{
-    try{
-        const response = await axios.get(`${baseURL}/api/users`,
-            {
-            headers: {Authorization: `Bearer ${token}`}
-        })
-        return response.data;
-    }catch(err){
-        throw err;
-    }
-}
-
-
 export const getYourProfile = async (token) => {
     try{
-        const response = await axios.get(`${baseURL}/api/auth/get-profile`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const response = await axiosInstance.get(`get-profile`);
         console.log(response.data)
         return response.data;
     }catch(err){
-        console.log(err)
-        throw err;
-    }
-}
-
-export const getUserById = async (userId, token) =>{
-    try{
-        const response = await axios.get(`${baseURL}/api/users/${userId}`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-        return response.data;
-    }catch(err){
-        throw err;
-    }
-}
-
-export const deleteUser = async (userId, token) =>{
-    try{
-        const response = await axios.delete(`${baseURL}/api/users/${userId}`,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-        return response.data;
-    }catch(err){
-        throw err;
-    }
-}
-
-
-export const updateUser = async (userData, token) => {
-    try{
-        const userId = userData.userId;
-        const response = await axios.put(`${baseURL}/admin/update/${userId}`, userData,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
-        console.log(response.data)
-        return response.data;
-    }catch(err){
-        throw err;
+        console.log(err);
     }
 }
 
 export const updatePasswordUser = async (userData, token) => {
     try{
-        const response = await axios.put(`${baseURL}/auth/update-password`, userData,
-            {
-                headers: {Authorization: `Bearer ${token}`}
-            })
+        const response = await axiosInstance.put(`update-password`, userData);
         console.log(response)
         return response.data;
     }catch(err){

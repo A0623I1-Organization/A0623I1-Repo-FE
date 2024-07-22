@@ -1,5 +1,5 @@
 /* -----------------------------CSS cho phần Main (phần thân trang web) -----------------------------------*/
-#main-customer {
+#main-news {
     width: 100%;
     height: auto;
     background-color: var(--sidebar);
@@ -22,24 +22,18 @@
         .form {
             width: 80%;
             height: 80%;
-            //   border: 1px solid #4ade80;
-            //   background-color: white;
             border-radius: 4px;
             padding: 8px;
-
             .item1 {
                 display: flex;
                 flex-wrap: wrap;
-                //   width: calc(100% - 20px);
                 label {
-                    width: calc(50% - 16px);
+                    width: 100%;
                     margin-left: 16px;
                     padding: 6px;
                     min-height: 84px;
                     display: flex;
-                    //   align-items: center;
                     flex-wrap: wrap;
-
                     span {
                         width: 25%;
                         min-width: 120px;
@@ -48,12 +42,12 @@
                     small {
                         width: 100%;
                         color: orangered;
-                        padding-left: 120px;
+                        padding-left: 25%;
                         margin-top: 6px;
                     }
 
                     input,
-                    select {
+                    select,textarea {
                         padding: 10px;
                         border: 1px solid #000;
                         border-radius: 4px;
@@ -61,10 +55,14 @@
                         min-height: 44px;
                         flex: 1;
                         outline: none;
+                        width: 100%;
 
                         &:focus {
                             border-color: rgb(110, 177, 9);
                         }
+                    }
+                    textarea{
+                        max-height: none;
                     }
                 }
             }
@@ -104,55 +102,27 @@
         }
 
     }
-}
-
-/* ------------------------------------------Responsive -------------------------------------------*/
-
-/* Màn hình Desktop */
-@media screen and (max-width: 1200px) {
-    #main-customer {
-        .create {
-            padding: 8px;
-
-            .form {
-                width: 100%;
-            }
-        }
-    }
-
-}
-
-/* Màn hình Tablet lớn */
-@media screen and (max-width: 992px) {
-    #main-customer {
-        .create {
-            padding: 24px;
-
-            .form {
-                .item1 {
-                    label {
-                        width: 100%;
-
-                        small {
-                            padding-left: 25%;
-                        }
-                    }
-                }
-            }
-        }
+    .custom-editor{
+        // border-radius: 4px;
+        // max-height: 44px;
+        // min-height: 44px;
+        // outline: none;
+        flex: 1;
+        max-width: 100%;
     }
 }
+
 
 /* Màn hình Tablet */
 @media screen and (max-width: 768px) {
-    #main-customer {
+    #main-news {
         .create {
             .form {
+                width: 90%;
                 .item1 {
                     label {
-                        width: 100%;
+                        margin: 0;
                         flex-direction: column;
-
                         span,
                         input,
                         select {
@@ -172,4 +142,16 @@
             }
         }
     }
+}
+/* Màn hình Mobile */
+@media screen and (max-width : 534px){
+    #main-news {
+        .create {
+            padding: 20px;
+            .form{
+                width: 100%;
+            }
+        }
+    }
+
 }

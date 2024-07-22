@@ -2,8 +2,12 @@ import {DashboardMain} from "../../components/Dashboard/DashboardMain";
 import "./Dashboard.scss";
 import {useEffect, useState} from "react";
 import * as dashboardService from "../../services/dashboard/DashboardService";
-import { fCurrency } from '../../utils/format-number';
+import {fCurrency} from '../../utils/format-number';
 import Moment from "moment";
+import SockJS from "sockjs-client";
+import {Stomp} from "@stomp/stompjs";
+import {toast} from "react-toastify";
+import {getAllByStatusRead} from "../../services/notification/NotificationService";
 
 export function Dashboard() {
     const [totalCustomers, setTotalCustomers] = useState(null);
@@ -11,7 +15,31 @@ export function Dashboard() {
     const [revenues, setRevenues] = useState(null);
     const [bestSalesPersons, setBestSalesPersons] = useState([]);
     const [newBills, setNewBills] = useState([]);
+    const [stompClient, setStompClient] = useState(null);
 
+    useEffect(() => {
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            stompClient.subscribe('/topic/createNotification', (message) => {
+                getAllByStatusRead(0);
+                console.log("da gui data roi ");
+                toast("Bạn vừa có thông báo mới nhé !")
+            });
+            stompClient.connect({}, () => {
+                stompClient.subscribe('/topic/notification', (message) => {
+                    toast(message.body);
+                });
+            });
+        });
+        setStompClient(stompClient);
+
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect();
+            }
+        };
+    }, []);
     useEffect(() => {
         const fetchData = async () => {
             await getTotalCustomers();

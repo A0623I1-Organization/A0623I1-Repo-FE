@@ -3,20 +3,21 @@ import avatar from "./avatar.jpg";
 import {useEffect, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import * as authenticationService from "../../services/auth/AuthenticationService";
-import {jwtDecode} from "jwt-decode";
-import {FaCloudMoon} from "react-icons/fa";
 import {getAllByStatusRead} from "../../services/notification/NotificationService";
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import {isSalesMan, isWarehouse} from "../../services/auth/AuthenticationService";
-import { TiArrowSortedDown } from "react-icons/ti";
-import { FaRegBell } from "react-icons/fa";
-import { FaRegUserCircle } from "react-icons/fa";
-import { IoIosLogOut } from "react-icons/io";
+import {TiArrowSortedDown} from "react-icons/ti";
+import {FaRegBell} from "react-icons/fa";
+import {FaRegUserCircle} from "react-icons/fa";
+import {IoIosLogOut} from "react-icons/io";
 import {TopicModal} from "./TopicModal/TopicModal";
-import { GiLargePaintBrush } from "react-icons/gi";
+import {GiLargePaintBrush} from "react-icons/gi";
+import {toast} from "react-toastify";
+import {jwtDecode} from "jwt-decode";
 
 export function HeaderDashboard(props) {
+    const [roleName, setRoleName] = useState("");
     const [fullName, setFullName] = useState("");
     const [avatarUrl, setAvatarUrl] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
@@ -24,14 +25,51 @@ export function HeaderDashboard(props) {
     const [darkMode, setDarkMode] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
-    const [quantityUnread, setQuantityUnread] = useState([]);
+    const [quantityUnread, setQuantityUnread] = useState("");
     const [stompClient, setStompClient] = useState(null);
 
     useEffect(() => {
+        const token = localStorage.getItem('token')
+        const decodedToken = jwtDecode(token);
+
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-            stompClient.subscribe('/topic/notification', (message) => {
+
+            stompClient.subscribe('/topic/createNotification', (message) => {
+                getQuantityNotificationUnread();
+            });
+
+            if (isSalesMan()) {
+                stompClient.subscribe('/topic/salesman/createNotification', (message) => {
+                    getQuantityNotificationUnread();
+                    toast("Bạn vừa có thông báo mới!", {autoClose: 500})
+                });
+            }
+
+            if (isWarehouse()) {
+                console.log(isWarehouse());
+                stompClient.subscribe('/topic/warehouse/createNotification', (message) => {
+                    getQuantityNotificationUnread();
+                    toast("Bạn vừa có thông báo mới!", {autoClose: 500})
+                });
+            }
+        });
+        setStompClient(stompClient);
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect();
+            }
+        };
+    }, []);
+
+    useEffect(() => {
+        getRoleName();
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            stompClient.subscribe("/topic/notification", (message) => {
+                    console.log("useEffect ở header đang hoaạt động")
                     getQuantityNotificationUnread();
                 }
             )
@@ -48,14 +86,36 @@ export function HeaderDashboard(props) {
         getUserName();
         getQuantityNotificationUnread();
         getAvatar()
-        }, [])
+    }, [])
+
+    const getRoleName = () => {
+        const token = localStorage.getItem('token')
+        const decodedToken = jwtDecode(token);
+        const role = decodedToken.roles;
+        if (role === 'ROLE_ADMIN') {
+            setRoleName("admin");
+        }
+        if (role === 'ROLE_WAREHOUSE') {
+            setRoleName("warehouse");
+        }
+        if (role === 'ROLE_SALESMAN') {
+            setRoleName("salesman");
+        }
+        if (role === 'ROLE_MANAGER') {
+            setRoleName("storeManager");
+        }
+    }
 
     const getQuantityNotificationUnread = async () => {
         const temp = await getAllByStatusRead(0);
+        console.log(temp.length);
         if (temp.length > 99) {
+            console.log("đã vào temp.length")
             setQuantityUnread("99+")
+        } else {
+            setQuantityUnread(temp.length);
         }
-        setQuantityUnread(temp.length);
+
     };
 
     const getUserName = () => {
@@ -142,12 +202,12 @@ export function HeaderDashboard(props) {
                             </div>
                             {fullName}
                         </div>
-                        <Link to={`/dashboard/infor`}>
+                        <Link to={`/dashboard/${roleName}/infor`}>
                             <FaRegUserCircle/>
                             Thông tin cá nhân
                         </Link>
                         <a className="mode-switch" title="Switch Theme" onClick={openModal}>
-                            <GiLargePaintBrush />
+                            <GiLargePaintBrush/>
                             Chủ đề giao diện
                         </a>
                         <a onClick={handleLogout}>

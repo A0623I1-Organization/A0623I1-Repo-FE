@@ -138,6 +138,7 @@ export const UploadOneImage = ({onImageUrlChange,className,existingImageUrl}) =>
     }, [image]);
 
     return (
+
         <div>
             <input type="file" className={className} onChange={handleChange}
                    accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"/>
@@ -148,5 +149,6 @@ export const UploadOneImage = ({onImageUrlChange,className,existingImageUrl}) =>
                 {url && <img src={url} width="200px" alt={`Selected file preview`} />}
             </div>
         </div>
+
     );
 };
