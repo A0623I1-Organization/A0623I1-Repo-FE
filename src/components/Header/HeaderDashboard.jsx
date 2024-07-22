@@ -14,7 +14,6 @@ import {IoIosLogOut} from "react-icons/io";
 import {TopicModal} from "./TopicModal/TopicModal";
 import {GiLargePaintBrush} from "react-icons/gi";
 import {toast} from "react-toastify";
-import {jwtDecode} from "jwt-decode";
 
 export function HeaderDashboard(props) {
     const [roleName, setRoleName] = useState("");
@@ -25,17 +24,29 @@ export function HeaderDashboard(props) {
     const [darkMode, setDarkMode] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
-    const [quantityUnread, setQuantityUnread] = useState("");
+    const [quantityUnread, setQuantityUnread] = useState([]);
     const [stompClient, setStompClient] = useState(null);
-
     useEffect(() => {
-        const token = localStorage.getItem('token')
-        const decodedToken = jwtDecode(token);
-
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-
+            stompClient.subscribe("/topic/notification", (message) => {
+                    console.log("useEffect ở header đang hoaạt động")
+                    getQuantityNotificationUnread();
+                }
+            )
+        });
+        setStompClient(stompClient);
+        return () => {
+            if (stompClient) {
+                stompClient.disconnect();
+            }
+        };
+    }, []);
+    useEffect(() => {
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
             stompClient.subscribe('/topic/createNotification', (message) => {
                 getQuantityNotificationUnread();
             });
@@ -54,6 +65,11 @@ export function HeaderDashboard(props) {
                     toast("Bạn vừa có thông báo mới!", {autoClose: 500})
                 });
             }
+            stompClient.subscribe("/topic/notification", (message) => {
+                    console.log(message.body);
+                    getQuantityNotificationUnread();
+                }
+            );
         });
         setStompClient(stompClient);
         return () => {
@@ -64,53 +80,15 @@ export function HeaderDashboard(props) {
     }, []);
 
     useEffect(() => {
-        getRoleName();
-        const socket = new SockJS("http://localhost:8080/ws");
-        const stompClient = Stomp.over(socket);
-        stompClient.connect({}, () => {
-            stompClient.subscribe("/topic/notification", (message) => {
-                    console.log("useEffect ở header đang hoaạt động")
-                    getQuantityNotificationUnread();
-                }
-            )
-        });
-        setStompClient(stompClient);
-        return () => {
-            if (stompClient) {
-                stompClient.disconnect();
-            }
-        }
-    }, []);
-
-    useEffect(() => {
         getUserName();
+        getAvatar();
         getQuantityNotificationUnread();
-        getAvatar()
     }, [])
-
-    const getRoleName = () => {
-        const token = localStorage.getItem('token')
-        const decodedToken = jwtDecode(token);
-        const role = decodedToken.roles;
-        if (role === 'ROLE_ADMIN') {
-            setRoleName("admin");
-        }
-        if (role === 'ROLE_WAREHOUSE') {
-            setRoleName("warehouse");
-        }
-        if (role === 'ROLE_SALESMAN') {
-            setRoleName("salesman");
-        }
-        if (role === 'ROLE_MANAGER') {
-            setRoleName("storeManager");
-        }
-    }
 
     const getQuantityNotificationUnread = async () => {
         const temp = await getAllByStatusRead(0);
         console.log(temp.length);
         if (temp.length > 99) {
-            console.log("đã vào temp.length")
             setQuantityUnread("99+")
         } else {
             setQuantityUnread(temp.length);
