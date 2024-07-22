@@ -20,10 +20,12 @@ import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCr
 import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
+import UpdatePricing from "../pages/Dashboard/content/warehouse/product/UpdatePricing";
 import CustomerList from '../pages/Dashboard/Customer/CustomerList';
 import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
 import NewsDetailPage from '../pages/News/NewsDetailPage';
+
 
 const routes = [
     {
@@ -64,7 +66,18 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/warehouse/import-pricing',
+        path: '/dashboard/:role/create-pricing/:productId',
+        element: <CreatePricing/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/update-pricing/:pricingId',
+        element: <UpdatePricing/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/import-pricing',
+
         element: <ImportPricing/>,
         private: true
     },
