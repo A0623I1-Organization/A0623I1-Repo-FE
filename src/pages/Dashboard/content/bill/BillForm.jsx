@@ -218,7 +218,13 @@ const BillForm = () => {
 
         setFinalTotal(newFinalTotal);
     }, [billItems,discount,discountByCustomerType]);
-
+const handleCancel =()=>{
+    setCustomer('');
+    setBillItems([]);
+    setBillCode('');
+    setTotal('');
+    setFinalTotal('');
+}
     return (
         <DashboardMain path={role}
             content={
@@ -286,7 +292,7 @@ const BillForm = () => {
                             <button type="button" id="scanBarcode" onClick={toggleQRCodeReader}>Quét mã</button>
                             <button type="button" id="pay" onClick={openPayModal}>Thanh toán</button>
                             <button type="button" id="printInvoice" onClick={handlePrintInvoice}>In hóa đơn</button>
-                            <button type="button" id="cancel">Hủy</button>
+                            <button type="button" id="cancel" onClick={handleCancel}>Hủy</button>
                         </div>
                         {isQRCodeReaderVisible && <QRCodeReader handleScan={handleScan} handleError={handleError} />}
                     </form>

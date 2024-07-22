@@ -15,6 +15,8 @@ export const PricingView = () => {
     const [keyword, setKeyword] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [ascending, setAscending] = useState(true);
+    const [clickCount, setClickCount] = useState(0); // Biến đếm số lần click
+
 
     const callbackFunction = (childData) => {
         setIsShowSidebar(childData);
@@ -79,11 +81,22 @@ export const PricingView = () => {
     const handleSort = (columnName) => {
         if (sortBy === columnName) {
             setAscending(!ascending);
-        } else {
+        }else {
             setSortBy(columnName);
             setAscending(true);
         }
+        // Tăng biến đếm lần click
+        setClickCount(clickCount + 1);
     };
+
+    useEffect(() => {
+        // Nếu click lần thứ ba, reset lại các trạng thái
+        if (clickCount === 3) {
+            setSortBy('');
+            setAscending(true);
+            setClickCount(0); // Đặt lại biến đếm lần click về 0
+        }
+    }, [clickCount]);
 
     const getSortIndicator = (columnName) => {
         if (sortBy === columnName) {

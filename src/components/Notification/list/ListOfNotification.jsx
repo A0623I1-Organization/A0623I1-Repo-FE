@@ -8,6 +8,7 @@ import {vi} from "date-fns/locale";
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import {over} from "stompjs";
+import {isSalesMan, isWarehouse} from "../../../services/auth/AuthenticationService";
 
 export default function ListOfNotification(props) {
     const [overflow, setOverflow] = useState("hidden");
@@ -26,18 +27,28 @@ export default function ListOfNotification(props) {
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
+
             stompClient.subscribe('/topic/createNotification', (message) => {
                 getAllByStatusRead(0);
-                toast("Bạn vừa có thông báo mới!")
+                toast("Bạn vừa có thông báo mới!", {autoClose: 500})
             });
-            stompClient.connect({}, () => {
-                stompClient.subscribe('/topic/notification', (message) => {
-                    toast(message.body);
+
+            if (isSalesMan()) {
+                stompClient.subscribe('/topic/salesman/createNotification', (message) => {
+                    getAllByStatusRead(0);
+                    toast("Bạn vừa có thông báo mới!", {autoClose: 500})
                 });
-            });
+            }
+
+            if (isWarehouse()) {
+                console.log(isWarehouse());
+                stompClient.subscribe('/topic/warehouse/createNotification', (message) => {
+                    getAllByStatusRead(0);
+                    toast("Bạn vừa có thông báo mới!", {autoClose: 500})
+                });
+            }
         });
         setStompClient(stompClient);
-
         return () => {
             if (stompClient) {
                 stompClient.disconnect();
@@ -74,7 +85,7 @@ export default function ListOfNotification(props) {
         await notificationService.seeViewDetail(item.notifId);
         await fetchData();
         if (stompClient && stompClient.connected) {
-            stompClient.send("/app/detailNotification", {}, `Bạn vừa đọc thông báo \`${item.notifId}\``);
+            stompClient.send("/app/detailNotification", {}, "");
         } else {
             console.error("Stomp client is not connected");
         }

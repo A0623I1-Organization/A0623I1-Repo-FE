@@ -1,21 +1,25 @@
 import React, {useEffect, useState} from 'react';
-import { storage, database } from './firebase';
-import { ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ref as dbRef, push, set } from 'firebase/database';
+import {storage, database} from './firebase';
+import {ref as storageRef, uploadBytes, getDownloadURL} from 'firebase/storage';
+import {ref as dbRef, push, set} from 'firebase/database';
 
-export const UploadMultipleImage = ({ onImageUrlChange }) => {
+export const UploadMultipleImage = ({existingImageUrls,onImageUrlChange}) => {
     const [images, setImages] = useState(null);
-
+    const [urls, setUrls] = useState([]);
+    const [existingImageUrlss, setExistingImageUrlss] = useState([]);
+    useEffect(()=>{
+        setExistingImageUrlss(existingImageUrls)
+    },[existingImageUrls])
     const handleChange = (e) => {
         if (e.target.files) {
             setImages(e.target.files);
         }
     };
+    console.log(existingImageUrlss)
 
     const handleUpload = async () => {
         if (!images || images.length === 0) return; // Đảm bảo đã chọn ít nhất một ảnh
         const uploadedImageUrls = [];
-
         try {
             for (let i = 0; i < images.length; i++) {
                 const image = images[i];
@@ -29,9 +33,15 @@ export const UploadMultipleImage = ({ onImageUrlChange }) => {
                 const url = await getDownloadURL(storageReference);
                 console.log('File available at', url);
                 uploadedImageUrls.push(url);
+                setUrls(prevState => ([
+                        ...prevState,
+                        url
+                    ]
+                ));
+
 
                 // Lưu URL vào Firebase Realtime Database
-                const dbImagesRef = dbRef(database, 'images');
+                const dbImagesRef = dbRef(database, `images`);
                 const newImageRef = push(dbImagesRef);
                 await set(newImageRef, {
                     imageUrl: url,
@@ -54,25 +64,38 @@ export const UploadMultipleImage = ({ onImageUrlChange }) => {
         if (images && images.length > 0) {
             handleUpload().then().catch();
         }
+        setUrls([]); // Reset urls when images change
+        setExistingImageUrlss([]);
     }, [images]);
 
     return (
         <div>
-            <input type="file" multiple onChange={handleChange} />
+            <input type="file" multiple onChange={handleChange}
+                   accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"/>
+            {existingImageUrlss?.length>=1 && existingImageUrlss[0].map((url, index) => (
+                <img key={index} src={url} width="100px" alt={`Existing image ${index + 1}`} style={{ marginLeft: '5px' }} />
+            ))}
+            {urls && urls.map((url, index) => (
+                <img key={index} src={url} width="100px" alt={`Uploaded image ${index + 1}`} style={{ marginLeft: '5px' }} />
+            ))}
         </div>
     );
 };
 
-export const UploadOneImage = ({ onImageUrlChange,getDisabled , className}) => {
+export const UploadOneImage = ({onImageUrlChange,className,existingImageUrl}) => {
     const [image, setImage] = useState(null);
-    const [disabled,setDisabled]= useState(true);
+    const [url, setUrl] = useState(null);
+    const [existingImageUrls, setExistingImageUrls] = useState(null);
+    useEffect(() => {
+        setExistingImageUrls(existingImageUrl);
+    }, [existingImageUrl]);
+    console.log(existingImageUrl)
 
     const handleChange = (e) => {
-        if ( e.target.files[0]) {
+        if (e.target.files[0]) {
             setImage(e.target.files[0]);
         }
     };
-    getDisabled(disabled)
     const handleUpload = async () => {
         if (!image) return; // Đảm bảo đã chọn ít nhất một ảnh
 
@@ -85,9 +108,10 @@ export const UploadOneImage = ({ onImageUrlChange,getDisabled , className}) => {
 
             // Lấy URL để hiển thị ảnh
             const url = await getDownloadURL(storageReference);
+            setUrl(url);
 
             // Lưu URL vào Firebase Realtime Database
-            const dbImagesRef = dbRef(database, 'images');
+            const dbImagesRef = dbRef(database, `images`);
             const newImageRef = push(dbImagesRef);
             await set(newImageRef, {
                 imageUrl: url,
@@ -107,13 +131,24 @@ export const UploadOneImage = ({ onImageUrlChange,getDisabled , className}) => {
     useEffect(() => {
         // Auto upload when image state changes
         if (image) {
-            handleUpload().then(res=>setDisabled(false)).catch();
+            handleUpload().then().catch();
+            setExistingImageUrls(null);
         }
+        setUrl(null);
     }, [image]);
 
     return (
-        <>
-            <input type="file" accept="image/*"  className={className} onChange={handleChange} />
-        </>
+
+        <div>
+            <input type="file" className={className} onChange={handleChange}
+                   accept=".xlsx,.xls,image/*,.doc,.docx,.ppt,.pptx,.txt,.pdf"/>
+
+            <div>
+                {console.log(existingImageUrls)}
+                { existingImageUrls && <img src={existingImageUrls} width="200px" alt={`Selected file preview`} />}
+                {url && <img src={url} width="200px" alt={`Selected file preview`} />}
+            </div>
+        </div>
+
     );
 };

@@ -9,14 +9,12 @@ import * as NewsService from '../../../services/news/NewsService'
 import Editor from '../../../components/Editer';
 
 function NewsCreate(props) {
-
     const { role } = useParams();
     const [content, setContent] = useState('');
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
     const [disabled,setDisabled] = useState(false);
     const [validateError, setValidateError] = useState([])
     const navigate = useNavigate()
-
     const onSubmit = async (data) => {
 
         if(data.newsImgUrl == null){

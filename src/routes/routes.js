@@ -20,10 +20,12 @@ import {NotificationCreate} from "../pages/Dashboard/Notification/NotificationCr
 import LookOrder from '../pages/Home/LookOrder';
 import Statistic from "../components/Statistic/Statistic";
 import StatisticByChart from "../components/Statistic/StatisticByChart";
+import UpdatePricing from "../pages/Dashboard/content/warehouse/product/UpdatePricing";
 import CustomerList from '../pages/Dashboard/Customer/CustomerList';
 import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
 import NewsDetailPage from '../pages/News/NewsDetailPage';
+
 
 const routes = [
     {
@@ -64,17 +66,28 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/import-pricing',
+        path: '/dashboard/:role/create-pricing/:productId',
+        element: <CreatePricing/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/update-pricing/:pricingId',
+        element: <UpdatePricing/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/import-pricing',
+
         element: <ImportPricing/>,
         private: true
     },
     {
-        path: '/dashboard/statistic',
+        path: '/dashboard/:role/statistic',
         element: <Statistic/>,
         private: true
     },
     {
-        path: '/dashboard/statistic-by-chart',
+        path: '/dashboard/:role/statistic-by-chart',
         element: <StatisticByChart/>,
         private: true
     },
@@ -127,12 +140,7 @@ const routes = [
         element: <NewsDetailPage/>,
     },
     {
-        path: '/dashboard/salesman/notification',
-        element: <NotificationList />,
-        private: true,
-    },
-    {
-        path: '/dashboard/warehouse/notification',
+        path: '/dashboard/:role/notification',
         element: <NotificationList />,
         private: true,
     },

@@ -4,8 +4,7 @@ export const getAllColor =async ()=>{
     try {
         let temp = await axiosInstance.get(`/color`)
         return temp.data;
-    }catch (e)
-    {
-        console.log(e)
+    }catch (e) {
+        throw e.response.data.message;
     }
 }

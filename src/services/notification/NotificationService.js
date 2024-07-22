@@ -1,9 +1,8 @@
-
 import axiosInstance from '../../utils/axiosInstance';
-import axios from "axios";
+
 export const getAllNotification = async () => {
     try {
-        const temp = await axiosInstance.get(`http://localhost:8080/api/auth/notification/list`);
+        const temp = await axiosInstance.get(`/notification/list`);
         return temp.data;
     } catch (e) {
         console.log(e);
@@ -12,7 +11,7 @@ export const getAllNotification = async () => {
 }
 export const getAllByStatusRead = async (statusRead) => {
     try {
-        const temp = await axiosInstance.get(`http://localhost:8080/api/auth/notification/listByStatusRead/${statusRead}`);
+        const temp = await axiosInstance.get(`/notification/listByStatusRead/${statusRead}`);
         return temp.data;
     } catch (e) {
         console.log(e);
@@ -22,7 +21,7 @@ export const getAllByStatusRead = async (statusRead) => {
 
 export const markAllRead = async () => {
     try {
-        const temp = await axiosInstance.get(`http://localhost:8080/api/auth/notification/markAllRead`);
+        const temp = await axiosInstance.get(`/notification/markAllRead`);
         return temp.data;
     } catch (e) {
         console.log(e);
@@ -31,7 +30,7 @@ export const markAllRead = async () => {
 }
 export const seeViewDetail = async (notifId) => {
     try {
-        const temp = await axiosInstance.get(`http://localhost:8080/api/auth/notification/getInfoNotification/${notifId}`);
+        const temp = await axiosInstance.get(`/notification/getInfoNotification/${notifId}`);
         return temp.data;
     } catch (e) {
         console.log(e);
@@ -40,25 +39,19 @@ export const seeViewDetail = async (notifId) => {
 }
 export const getAllRole = async () => {
     try {
-        const roles = await axiosInstance.get("http://localhost:8080/api/auth/users/roles");
+        const roles = await axiosInstance.get("/users/roles");
         return roles.data;
     } catch (e) {
         console.log(e);
         return [];
     }
 };
+
 export const addNewNotification = async (data) => {
     try {
-        const accessToken = localStorage.getItem("token");
-        const temp = await axios.post("http://localhost:8080/api/auth/notification/create", data, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-        console.log('trong tang service :', temp.data)
+        const temp = await axiosInstance.post("/notification/create", data);
         return temp.data;
     } catch (error) {
-        console.log("error la:",error)
         throw error.response.data.errors;
     }
 }

@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
 import './warehouse.scss';
 import * as productService from '../../../../services/products/product-service';
-import {NavLink, useNavigate, useParams} from "react-router-dom";
-import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
+import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
 import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
+import {BiSolidShow} from "react-icons/bi";
+import {MdOutlineModeEdit} from "react-icons/md";
+import {IoTrashSharp} from "react-icons/io5";
+import {ProductDetailModal} from "./ProductDetailModal";
+import ModalDelete from "../../../../ui/ModalDelete";
+import * as productService1 from '../../../../services/products/ProductService';
+import {toast} from "react-toastify";
 
 export const WareHouse = () => {
     const {role} = useParams();
@@ -15,6 +21,12 @@ export const WareHouse = () => {
     const [keyword, setKeyword] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [ascending, setAscending] = useState(true); // true for ascending, false for descending
+    const [clickCount, setClickCount] = useState(0); // Biến đếm số lần click
+    const [productId, setProductId] = useState(null);
+    const [productDelete, setProductDelete] = useState(null);
+    const [product, setProduct] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpenD, setIsModalOpenD] = useState(false);
 
     // Function to toggle sidebar visibility
     const callbackFunction = (childData) => {
@@ -25,6 +37,7 @@ export const WareHouse = () => {
     useEffect(() => {
         getAllProduct(keyword,sortBy, ascending,page);
     }, [page,sortBy, ascending]);
+    console.log(products)
 
     const getAllProduct = ( keyword, sortBy, ascending, pageNumber) => {
         productService.getAllProduct(keyword, sortBy, ascending, pageNumber)
@@ -48,7 +61,20 @@ export const WareHouse = () => {
             setPage(page + 1);
         }
     };
+    const openDetailModal = (productId) => {
+        setIsModalOpen(true);
+        setProductId(productId);
+        console.log(productId)
+    }
+    const openDeleteModal =(productId)=>{
+        setIsModalOpenD(true);
+        setProductDelete(productId);
+        console.log(productId)
+    }
+    const closeDeleteModal =()=> setIsModalOpenD(false)
 
+
+    const closeDetailModal = () => setIsModalOpen(false);
 
 
     const showView = (productId) => {
@@ -90,7 +116,19 @@ export const WareHouse = () => {
             setSortBy(columnName);
             setAscending(true);
         }
+        // Tăng biến đếm lần click
+        setClickCount(clickCount + 1);
     };
+
+    useEffect(() => {
+        // Nếu click lần thứ ba, reset lại các trạng thái
+        if (clickCount === 3) {
+            setSortBy('');
+            setAscending(true);
+            setClickCount(0); // Đặt lại biến đếm lần click về 0
+        }
+    }, [clickCount]);
+
     const getSortIndicator = (columnName) => {
         if (sortBy === columnName) {
             return ascending ? <span>&#9650;</span> : <span>&#9660;</span>;
@@ -102,12 +140,26 @@ export const WareHouse = () => {
         // setPage(0);
         getAllProduct( keyword, sortBy, ascending,page);
     };
-
+    const  handleDelete = (productDelete,product)=>{
+        productService.deleteProduct(productDelete,product).then(
+            ()=>{
+                toast.success('xóa thành công');
+                closeDeleteModal();
+                getAllProduct(keyword,sortBy,ascending,page);
+            }
+        ).catch(err=>console.log(err))
+    }
+    useEffect(() => {
+        getProductById(productDelete);
+    }, [productDelete]);
+    const getProductById =  (id) => {
+        productService1.getProductById(id).then(res=> setProduct(res)).catch(err=>console.log(err));
+    };
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
                 <div className="nav-link-container">
-                    <NavLink className="nav-link" to='/dashboard/salesMan/create-pricing'>Thêm Hàng Hóa</NavLink>
+                    <NavLink className="nav-link" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
                 </div>
                 <div className="header-search">
                     {/* Header search content */}
@@ -147,6 +199,12 @@ export const WareHouse = () => {
                             <th>
                                 Pricing
                             </th>
+                            <th>
+                                Chọn
+                            </th>
+                            <th>
+                                Thêm Pricing
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
@@ -160,6 +218,23 @@ export const WareHouse = () => {
                                     <td>{item.productType.category.categoryName}</td>
                                     <td>{item.productType.typeName}</td>
                                     <td><a onClick={() => showView(item.productId)} style={{ color: 'green', padding: '5px' }}>Pricing in {item.productName}</a></td>
+                                    <td className={"edit-emp"}>
+                                        <a onClick={() => openDetailModal(item.productId)}>
+                                            <BiSolidShow fill="#3dc8d8"/>
+                                        </a>
+                                        <Link to={`/dashboard/${role}/update-pricing/${item.productId}`}>
+                                            <MdOutlineModeEdit fill="#00a762"/>
+                                        </Link>
+                                        <a onClick={() => openDeleteModal(item.productId)}>
+                                            <IoTrashSharp fill="red"/>
+                                        </a>
+                                    </td>
+                                    <td style={{textAlign:"center",color:"lightskyblue"}}>
+                                        <Link to={`/dashboard/${role}/create-pricing/${item.productId}`}>
+                                            +
+                                        </Link>
+                                    </td>
+
                                 </tr>
                             ))}
                         </tbody>
@@ -175,6 +250,12 @@ export const WareHouse = () => {
                     ))}
                     <button onClick={handleNext} hidden={page === totalPages - 1}>Next</button>
                 </div>
+                <ProductDetailModal
+                    isOpen={isModalOpen}
+                    onClose={closeDetailModal}
+                    id={productId}
+                />
+                <ModalDelete isOpen={isModalOpenD} onClose={closeDeleteModal} title={`Bạn có muốn xóa ${productDelete}`} content={'Bạn hãy xác nhận lại'} submit={()=>handleDelete(productDelete,product)} />
             </div>
         } />
     );

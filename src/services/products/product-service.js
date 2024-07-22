@@ -16,8 +16,7 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
         let temp = await axiosInstance.get(url);
         return temp.data;
     } catch (e) {
-        console.log(e);
-        throw e; // Re-throw the error to handle it in the calling function
+        throw e.response.data.message;
     }
 };
 
@@ -27,5 +26,22 @@ export const createProduct =async (product)=>{
     }catch (e)
     {
         console.log(e)
+    }
+}
+export const deleteProduct = async (productId,product)=>{
+    try {
+        const temp = await axiosInstance.put(`/products/delete/${productId}`,product);
+        return temp.data;
+    } catch (error) {
+        throw error.response.data.errors;
+    }
+
+}
+export const updateProduct = async (productId,product)=>{
+    try {
+        const temp = await axiosInstance.put(`/products/update/${productId}`,product);
+        return temp.data;
+    } catch (error) {
+        throw error.response.data.errors;
     }
 }
