@@ -1,13 +1,33 @@
 import axios from "axios";
 import {jwtDecode} from "jwt-decode";
 import axiosInstance from "../../utils/axiosInstance";
+import {useNavigate} from "react-router-dom";
 
 const baseURL = "http://localhost:8080";
+
+const rememberMe = {
+    "remember" : false,
+    "username" : ""
+}
+
+export const setRemember = (data) => {
+    rememberMe.remember = true;
+    rememberMe.username = data;
+    localStorage.setItem("rememberMe", JSON.stringify(rememberMe));
+}
+
+export const setDefaultRemember = () => {
+    rememberMe.remember = false;
+    rememberMe.username = "";
+}
+
+export const getRemember = () => {
+    return rememberMe;
+}
 
 export const login = async (data) => {
     try {
         const response = await axios.post(`${baseURL}/api/auth/authenticate`, data)
-        console.log(response.data);
         return response.data;
     } catch (e) {
         console.log(e);
@@ -26,7 +46,6 @@ export const register = async (userData) => {
 export const getYourProfile = async (token) => {
     try{
         const response = await axiosInstance.get(`get-profile`);
-        console.log(response.data)
         return response.data;
     }catch(err){
         console.log(err);
@@ -36,11 +55,10 @@ export const getYourProfile = async (token) => {
 export const updatePasswordUser = async (userData, token) => {
     try{
         const response = await axiosInstance.put(`update-password`, userData);
-        console.log(response)
         return response.data;
     }catch(err){
         console.log(err)
-        err.message = "Cập nhật mật khẩu thất bại!"
+        err.message = "Vui lòng nhập đúng mật khẩu!"
         throw err;
     }
 }
@@ -50,6 +68,7 @@ export const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('role')
     localStorage.removeItem('fullName')
+
 }
 
 export const isAuthenticated = () =>{

@@ -6,7 +6,7 @@ import {FaEye, FaEyeSlash} from "react-icons/fa";
 import {jwtDecode} from "jwt-decode";
 import {toast} from "react-toastify";
 import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import avatar from "../../../assets/images/avatar.jpg";
 import {MdOutlineModeEdit} from "react-icons/md";
 import {UploadOneImage} from "../../../firebase/UploadImage";
@@ -23,6 +23,7 @@ export function PersonInfo() {
     const [roles, setRoles] = useState([]);
     const [validateError, setValidateError] = useState([])
     const [disabled, setDisabled] = useState(true);
+    const navigate = useNavigate();
     const {register, handleSubmit, setValue, getValues, formState: {errors}} = useForm({
         criteriaMode: "all"
     });
@@ -85,7 +86,10 @@ export function PersonInfo() {
             const token = localStorage.getItem("token");
             const response = await authenticationService.updatePasswordUser(data, token);
             toast.success(response.message);
-            setUserInfo(response);
+            setTimeout(function () {
+                authenticationService.logout();
+                navigate("/login");
+            }, 1000);
         } catch (error) {
             setValidateError(error);
             toast.error(error.message);
@@ -241,7 +245,7 @@ export function PersonInfo() {
                                                         maxLength: {value: 50, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
                                                         pattern : {
                                                            value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,50}$/,
-                                                            message: "Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, và một chữ số, và phải dài từ 8 đến 50 ký tự!"
+                                                            message: "Mật khẩu phải bắt đầu bằng một chữ cái in hoa và phải chứa ít nhất một chữ thường, một chữ số, và phải dài từ 8 đến 50 ký tự!"
                                                         }
                                                 })}/>
                                     {openEyeTwo ? <FaEye onClick={() => handleShowPassword(2)}/>

@@ -278,7 +278,7 @@ const CreatePricing = () => {
                             <option value=''>--chọn loại sản phẩm--</option>
                             {
                                 productTypesByCategory?.map((item, index) => (
-                                    <option value={JSON.stringify(item)} key={item.typeId}>{item.typeName}</option>
+                                    <option value={JSON.stringify(item)} key={item.typeId} selected={item.typeId === productTypes.typeId}>{item.typeName}</option>
                                 ))
                             }
                         </select>

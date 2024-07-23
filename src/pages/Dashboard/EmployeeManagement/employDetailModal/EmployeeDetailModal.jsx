@@ -2,8 +2,10 @@ import styles from "./EmployeeDetailModal.module.scss";
 import React, {useEffect, useState} from "react";
 import avatar from "../../../../assets/images/avatar.jpg";
 import * as employeeService from "../../../../services/employee/EmployeeService";
+import * as userService from "../../../../services/employee/EmployeeService";
+import {toast} from "react-toastify";
 
-export const EmployeeDetailModal = ({isOpen, onClose, id}) => {
+export const EmployeeDetailModal = ({isOpen, onClose, id, onEnableSuccess}) => {
     const [employee, setEmployee] = useState(null);
     const [hasOpened, setHasOpened] = useState(false);
 
@@ -24,6 +26,15 @@ export const EmployeeDetailModal = ({isOpen, onClose, id}) => {
         setEmployee(temp);
     }
 
+    const handleEnableEmployee = async () => {
+        try {
+            await userService.enableEmployee(id);
+            toast.success("Khôi phục tài khoản thành công");
+            onEnableSuccess();
+        } catch (e) {
+            toast.error(e);
+        }
+    }
 
     return (
         <div className={`${styles.modal} ${isOpen ? styles.open : ''}`}>
@@ -83,6 +94,9 @@ export const EmployeeDetailModal = ({isOpen, onClose, id}) => {
                             </div>
                         </div>
                         <div className={styles.button}>
+                            {employee.enabled === false &&
+                                <button onClick={handleEnableEmployee} className={styles.enable}>Khôi phục</button>
+                            }
                             <button onClick={onClose}>Đóng</button>
                         </div>
                     </div>
