@@ -15,15 +15,18 @@
         padding: 30px;
         padding-top: 10px;
     }
+    h2{
+        background-color: var(--sidebar);
+        padding: 1rem;
+    }
     overflow: auto;  
-    background-color: var(--sidebar);
+    background-color: var(--content-bg);
     width: 96%;
     border-radius: 10px;
     box-shadow: 2px 2px 5px 0 #4d4b4b;
     margin-top: 80px;
 
     .box-contents {
-        padding: 10px;
         width: 100%;
 
         .box-content-header {

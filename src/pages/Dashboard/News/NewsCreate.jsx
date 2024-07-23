@@ -12,21 +12,22 @@ function NewsCreate(props) {
     const { role } = useParams();
     const [content, setContent] = useState('');
     const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm();
-    const [disabled,setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(true);
     const [validateError, setValidateError] = useState([])
     const navigate = useNavigate()
     const onSubmit = async (data) => {
 
         if(data.newsImgUrl == null){
-            toast.warn("Vui lòng chọn ảnh cho tin tức")            
+            toast.warn("Vui lòng chọn ảnh cho tin tức !")            
             return;
         }
         try {
             data.content = content;
+            console.log(data);
             await NewsService.createNews(data)
             reset();
             setDisabled(true)
-            setValue("newsImgUrl", null);
+            setValue("newsImgUrl", '');
             setContent('');
             setValidateError([])
             navigate(`/dashboard/${role}/news`)
@@ -38,6 +39,7 @@ function NewsCreate(props) {
     };
 
     const handleOneImageUrlChange = async (url, fieldName) => {
+        setDisabled(false)
         setValue(fieldName, url);
     }
 
@@ -58,11 +60,11 @@ function NewsCreate(props) {
                             </label>
                             <label htmlFor="">
                                 <span>Ảnh *</span>
-                                <input type="file" accept="image/*"  style={{display: "none"}} {...register("newsImgUrl", {})} />
+                                <input type="text" style={{display: "none"}} {...register("newsImgUrl", {})} />
                                 <UploadOneImage
                                     className={"input-img"}
                                     getDisabled={(e)=>setDisabled(e)}
-                                    onImageUrlChange ={(url) => handleOneImageUrlChange(url, "newsImgUrl")}/>
+                                    onImageUrlChange ={(url) => handleOneImageUrlChange(url, "newsImgUrl",{})}/>
                                 <small>{validateError?.newsImgUrl}</small>    
                             </label>
                             <label htmlFor="">
@@ -73,7 +75,7 @@ function NewsCreate(props) {
                             </label>
                             <label htmlFor="">
                                 <span>Nội dung *</span>
-                                <textarea rows="1" placeholder="" value={content} style={{display: "none"}} {...register("content", {})}></textarea>
+                                <textarea rows="1" placeholder="" value={content} style={{display: "none"}} {...register("content",{})}></textarea>
                                 <Editor value={content} onChange={handeleChangeContent} className="custom-editor"  />
                                 <small>{validateError?.content}</small>
                             </label>

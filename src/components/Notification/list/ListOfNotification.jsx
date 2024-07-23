@@ -12,6 +12,7 @@ import {isSalesMan, isWarehouse} from "../../../services/auth/AuthenticationServ
 
 export default function ListOfNotification(props) {
     const [overflow, setOverflow] = useState("hidden");
+    const [listNotification, setListNotification] = useState([]);
     const [listByRead, setListByRead] = useState([]);
     const [listByUnRead, setListByUnRead] = useState([]);
     const [notification, setNotification] = useState(null);
@@ -27,7 +28,6 @@ export default function ListOfNotification(props) {
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
-
             stompClient.subscribe('/topic/createNotification', (message) => {
                 getAllByStatusRead(0);
                 toast("Bạn vừa có thông báo mới!", {autoClose: 500})
@@ -39,7 +39,6 @@ export default function ListOfNotification(props) {
                     toast("Bạn vừa có thông báo mới!", {autoClose: 500})
                 });
             }
-
             if (isWarehouse()) {
                 console.log(isWarehouse());
                 stompClient.subscribe('/topic/warehouse/createNotification', (message) => {
@@ -47,6 +46,12 @@ export default function ListOfNotification(props) {
                     toast("Bạn vừa có thông báo mới!", {autoClose: 500})
                 });
             }
+            ;
+            stompClient.subscribe("/topic/notification", (message) => {
+                    console.log(message.body);
+                    getAllByStatusRead(0);
+                }
+            );
         });
         setStompClient(stompClient);
         return () => {
@@ -58,6 +63,7 @@ export default function ListOfNotification(props) {
 
     useEffect(() => {
         fetchData();
+        getAllNotification();
     }, []);
 
     const getAllByStatusRead = async (statusRead) => {
@@ -68,6 +74,10 @@ export default function ListOfNotification(props) {
             setListByUnRead(temp);
         }
     };
+    const getAllNotification = async () => {
+        const temp = await notificationService.getAllNotification();
+        setListNotification(temp);
+    };
 
     const markAll = async () => {
         const response = await notificationService.markAllRead();
@@ -77,6 +87,11 @@ export default function ListOfNotification(props) {
         } else {
             toast.error("Tất cả đã được đọc rồi nhé !");
         }
+        if (stompClient && stompClient.connected) {
+            stompClient.send("/app/detailNotification", {}, "ban vua doc thong bao");
+        } else {
+            console.error("Stomp client is not connected");
+        }
     };
 
     const getItem = useCallback(async (item) => {
@@ -85,7 +100,7 @@ export default function ListOfNotification(props) {
         await notificationService.seeViewDetail(item.notifId);
         await fetchData();
         if (stompClient && stompClient.connected) {
-            stompClient.send("/app/detailNotification", {}, "");
+            stompClient.send("/app/detailNotification", {}, "ban vua doc thong bao");
         } else {
             console.error("Stomp client is not connected");
         }
@@ -190,7 +205,7 @@ export default function ListOfNotification(props) {
                         <DetailModal notification={notification} showModal={showModal} setShowModal={setShowModal}/>
                     )}
                 </main>
-                {listByUnRead.length > 0 && listByRead.length > 0 && (
+                {listNotification.length > 0 && (
                     <div className="see-all-button" style={{backgroundColor: props.seeAllBackgroundColor}}>
                         <button onClick={handleSeeAllNotification}>
                             Xem tất cả
