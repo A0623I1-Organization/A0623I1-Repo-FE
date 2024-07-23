@@ -1,12 +1,44 @@
 import {HeaderDashboard} from "../Header/HeaderDashboard";
 import {SidebarDashboard} from "../Sidebar/SidebarDashboard";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import "./DashboardMain.scss";
 import ListOfNotification from "../Notification/list/ListOfNotification";
+import * as authenticationService from "../../services/auth/AuthenticationService";
 
 export function DashboardMain({content, path}) {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [showNotificationList, setShowNotificationList] = useState(false);
+
+    const handleLogout = () => {
+        authenticationService.logout();
+    };
+
+    const checkMidnightLogout = () => {
+        const now = new Date();
+        const lastLoginDate = localStorage.getItem("lastTime");
+        if (lastLoginDate) {
+            const lastLogin = new Date(lastLoginDate);
+            // Chỉ đăng xuất nếu ngày hiện tại khác ngày đăng nhập cuối cùng và đã qua 0 giờ
+            if (
+                now.getDate() !== lastLogin.getDate() ||
+                now.getMonth() !== lastLogin.getMonth() ||
+                now.getFullYear() !== lastLogin.getFullYear()
+            ) {
+                handleLogout();
+            }
+        }
+    };
+
+    useEffect(() => {
+        // Kiểm tra ngay khi trang được tải lại
+        checkMidnightLogout();
+
+        // Thiết lập kiểm tra mỗi phút
+        const interval = setInterval(checkMidnightLogout, 60000); // Kiểm tra mỗi phút
+
+        return () => clearInterval(interval);
+    }, []);
+
 
     const callbackFunction = (childData) => {
         setIsShowSidebar(childData);

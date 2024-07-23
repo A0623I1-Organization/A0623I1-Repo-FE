@@ -115,7 +115,7 @@ export function EmployeeCreate() {
                                         <span style={{color: "red"}}> *</span>
                                     </span>
                                 </label>
-                                <input type="text" disabled={id !== undefined} {...register("userCode", {
+                                <input type="text"  {...register("userCode", {
                                     required: "Mã nhân viên không được để trống!",
                                     pattern: {value: /^NV\d{4}$/, message: "Mã nhân viên phải được bắt đầu bằng NV và kết thúc với 4 chữ số!"}
                                 })} />
@@ -264,51 +264,6 @@ export function EmployeeCreate() {
                                 {errors.password && <p className="validate-error">{errors.password.message}</p>}
                                 {validateError && <p className="validate-error">{validateError.password}</p>}
                             </div>
-                            {id &&
-                            <div className="form-element">
-                                <label>
-                                    <span className={"element-title"}>Khoá tài khoản:
-                                        <span style={{color: "red"}}> *</span>
-                                    </span>
-                                </label>
-                                    <div className="form-gender">
-                                        {employee?.accountNonLocked === false ?
-                                            <input type="radio" checked {...register("accountNonLocked")} value={false}/>
-                                            : <input type="radio" {...register("accountNonLocked")} value={false}/>
-                                        }
-                                        <span>Khoá</span>
-
-                                        {employee?.accountNonLocked === true ?
-                                            <input type="radio" checked {...register("accountNonLocked")} value={true}/>
-                                            : <input type="radio" {...register("accountNonLocked")} value={true}/>
-                                        }
-                                        <span>Mở khoá</span>
-                                    </div>
-                            </div>
-                            }
-                            {id &&
-                            <div className="form-element">
-                                <label>
-                                    <span className={"element-title"}>Kích hoạt tài khoản:
-                                        <span style={{color: "red"}}> *</span>
-                                    </span>
-                                </label>
-                                    <div className="form-gender">
-                                        {employee?.enabled === false ?
-                                            <input type="radio" checked {...register("enabled")} value={false}/>
-                                            : <input type="radio"
-                                                     {...register("enabled")} value={false}/>
-                                        }
-                                            <span>Huỷ kích hoạt</span>
-                                        {employee?.enabled === true ?
-                                            <input type="radio" checked{...register("enabled")} value={true}/>
-                                            : <input type="radio"
-                                                     {...register("enabled")} value={true}/>
-                                        }
-                                        <span>Kích hoạt</span>
-                                    </div>
-                            </div>
-                            }
                         </div>
                     </div>
                     <div className="button-save">

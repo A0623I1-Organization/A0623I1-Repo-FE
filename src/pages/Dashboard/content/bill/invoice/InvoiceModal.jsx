@@ -1,5 +1,6 @@
 import React from 'react';
 import './InvoiceModal.scss';
+import {fCurrency} from "../../../../../utils/format-number";
 
 const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClose,finalTotal}) => {
     const handlePrint = () => {
@@ -72,7 +73,8 @@ const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClo
                 <div id="invoice-content">
                     <div className="invoice-header">
                         <h2>Fashion Shop</h2>
-                        <p>Mã hóa đơn: {billCode}</p>
+                        <p>Hóa đơn thanh toán</p>
+                        <span>Mã hóa đơn: {billCode}</span>
                     </div>
                     <div className="invoice-customer">
                         <p>Khách hàng: <span>{customerCode}</span></p>
@@ -111,9 +113,18 @@ const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClo
                         )}
                     </div>
                     <div className="invoice-summary">
-                        <p>Tổng tiền: {total} VNĐ </p>
-                        <p>Giảm giá: {discount} VNĐ</p>
-                        <p>Thành tiền: {total - discount} VNĐ</p>
+                        <div>
+                            <p>Tổng tiền: </p>
+                            <p className='total'>{fCurrency(total)} VNĐ</p>
+                        </div>
+                        <div>
+                            <p>Giảm giá: </p>
+                            <p className='discount'>{fCurrency(discount)} VNĐ</p>
+                        </div>
+                        <div>
+                            <p>Thành tiền: </p>
+                            <p className='last-total'>{fCurrency(total - discount)} VNĐ</p>
+                        </div>
                     </div>
                 </div>
                 <div className="invoice-actions">

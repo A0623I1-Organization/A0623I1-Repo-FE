@@ -11,7 +11,9 @@ import {EmployeeDetailModal} from "./employDetailModal/EmployeeDetailModal";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowUnsorted } from "react-icons/ti";
-import {DeleteEmployeeModal} from "./deleteEmployeeModal/DeleteEmployeeModal";
+import { MdCancel } from "react-icons/md";
+import {DisableEmployeeModal} from "./DisableEmployeeModal/DisableEmployeeModal";
+import {DeleteEmployeeModal} from "./DeleteEmployeeModal/DeleteEmployeeModal";
 
 export function EmployeeList() {
     const {role} = useParams();
@@ -27,15 +29,20 @@ export function EmployeeList() {
         criteriaMode: "all"
     });
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalDisableOpen, setIsModalDisableOpen] = useState(false);
     const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
+
+    const [employeeDisable, setEmployeeDisable] = useState({
+        employeeId: null,
+        employeeCode: "",
+        employeeName: ""
+    });
 
     const [employeeDelete, setEmployeeDelete] = useState({
         employeeId: null,
         employeeCode: "",
         employeeName: ""
     });
-
-    const [isDelete, setIsDelete] = useState(false);
 
     const [codeSort, setCodeSort] = useState({
         field: "",
@@ -120,6 +127,15 @@ export function EmployeeList() {
         setUserId(id);
     }
 
+    const openDisableModal = (employee) => {
+        setIsModalDisableOpen(true);
+        setEmployeeDisable({
+            employeeId: employee.userId,
+            employeeCode: employee.userCode,
+            employeeName: employee.fullName
+        });
+    }
+
     const openDeleteModal = (employee) => {
         setIsModalDeleteOpen(true);
         setEmployeeDelete({
@@ -130,6 +146,7 @@ export function EmployeeList() {
     }
 
     const closeDetailModal = () => setIsModalOpen(false);
+    const closeDisableModal = () => setIsModalDisableOpen(false);
     const closeDeleteModal = () => setIsModalDeleteOpen(false);
 
     const showPageNo = () => {
@@ -144,8 +161,9 @@ export function EmployeeList() {
         setPageNumber(pageNo);
     }
 
-    const handleDeleteEmployeeFlag = async () => {
-        setIsDelete(!isDelete);
+    const handleUpdateEmployeeFlag = async () => {
+        setIsModalDisableOpen(false);
+        setIsModalOpen(false);
         setIsModalDeleteOpen(false);
         await getEmployeeList(pageNumber, searchContent, codeSort.field, codeSort.direction,
             nameSort.field, nameSort.direction, roleSort.field, roleSort.direction); // Gọi lại getEmployeeList sau khi xóa
@@ -287,9 +305,15 @@ export function EmployeeList() {
                                             <Link to={`/dashboard/storeManager/employee-create/${employee.userId}`}>
                                                 <MdOutlineModeEdit fill="#00a762"/>
                                             </Link>
-                                            <a onClick={() => openDeleteModal(employee)}>
-                                                <IoTrashSharp fill="red"/>
-                                            </a>
+                                            {employee.enabled ?
+                                                <a onClick={() => openDisableModal(employee)}>
+                                                    <MdCancel fill="red"/>
+                                                </a>
+                                                :
+                                                <a onClick={() => openDeleteModal(employee)}>
+                                                    <IoTrashSharp fill="red"/>
+                                                </a>
+                                            }
                                         </td>
                                     </tr>
                                 ))}
@@ -317,15 +341,22 @@ export function EmployeeList() {
                         isOpen={isModalOpen}
                         onClose={closeDetailModal}
                         id={userId}
+                        onEnableSuccess={handleUpdateEmployeeFlag}
                     >
                     </EmployeeDetailModal>
+                    <DisableEmployeeModal
+                        isOpen={isModalDisableOpen}
+                        onClose={closeDisableModal}
+                        employeeDisable= {employeeDisable}
+                        onDisableSuccess={handleUpdateEmployeeFlag}
+                    >
+                    </DisableEmployeeModal>
                     <DeleteEmployeeModal
                         isOpen={isModalDeleteOpen}
                         onClose={closeDeleteModal}
                         employeeDelete = {employeeDelete}
-                        onDeleteSuccess={handleDeleteEmployeeFlag}
+                        onDeleteSuccess={handleUpdateEmployeeFlag}
                     >
-
                     </DeleteEmployeeModal>
                 </div>
             }>

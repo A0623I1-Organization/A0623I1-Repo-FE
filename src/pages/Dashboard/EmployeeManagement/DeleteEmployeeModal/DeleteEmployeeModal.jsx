@@ -9,7 +9,7 @@ export const DeleteEmployeeModal = ({isOpen, onClose, employeeDelete, onDeleteSu
     const handleDeleteEmployee = async () => {
         try {
             await userService.deleteEmployee(employeeDelete.employeeId);
-            toast.success("Employee Deleted");
+            toast.success("Khóa tài khoản thành công");
             onDeleteSuccess(); // Gọi callback để cập nhật danh sách
         } catch (e) {
             toast.error(e);
@@ -24,7 +24,7 @@ export const DeleteEmployeeModal = ({isOpen, onClose, employeeDelete, onDeleteSu
                 </div>
                 <div className={styles.modalBody}>
                     <div className={styles.modalTitle}>
-                        <p>Bạn có chắc muốn xoá nhân viên?</p>
+                        <p>Bạn có chắc xóa nhân viên?</p>
                     </div>
                     <div className={styles.employeeCode}>
                         <label>Mã nhân viên: </label>

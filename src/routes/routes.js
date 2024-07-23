@@ -76,13 +76,12 @@ const routes = [
         private: true,
     },
     {
-        path: '/dashboard/import-pricing',
-
+        path: '/dashboard/:role/import-pricing',
         element: <ImportPricing/>,
         private: true
     },
     {
-        path: '/dashboard/warehouse/statistic',
+        path: '/dashboard/:role/statistic',
         element: <Statistic/>,
         private: true
     },

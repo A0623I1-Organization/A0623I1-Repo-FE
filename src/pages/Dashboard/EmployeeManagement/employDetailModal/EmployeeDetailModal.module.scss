@@ -20,7 +20,7 @@
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     max-width: 90%; /* Thay đổi max-width để phù hợp với thiết bị nhỏ hơn */
     width: 400px; /* Kích thước mặc định cho modal */
-    height: 550px;
+    height: 600px;
 
     .backgroundImage {
       border-radius: 15px 15px 0 0;
@@ -29,7 +29,7 @@
     }
     .boxInfo {
       width: 100%;
-      height: calc(550px - 100px);
+      height: calc(600px - 100px);
       background-color: white;
       border-radius: 0 0 15px 15px;
       .avatar {
@@ -106,9 +106,18 @@
           border-radius: 5px;
           background: var(--action-color);
           color: var(--button-char-color);
+          margin: 5px;
 
           &:hover {
             background: var(--button-bg-hover);
+          }
+        }
+
+        .enable {
+          background-color: #29b629;
+          color: var(--button-char-color);
+          &:hover {
+            background: green;
           }
         }
       }

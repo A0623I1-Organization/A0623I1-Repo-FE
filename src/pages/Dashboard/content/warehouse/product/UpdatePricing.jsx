@@ -103,8 +103,7 @@ const CreatePricing = () => {
                 price: pricing.price,
                 size: pricing.size,
                 qrCode: '',
-                color: JSON.stringify(pricing.color),
-                pricingImgUrl: pricing.pricingImgUrl
+                color: JSON.stringify(pricing.color)
             }));
             setValue('pricingList', pricingListValues);
             // Populate productImages array (assuming productImages is an array)
