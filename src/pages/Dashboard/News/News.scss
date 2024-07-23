@@ -2,7 +2,7 @@
 #main-news {
     width: 100%;
     height: auto;
-    background-color: var(--sidebar);
+    background-color: var(--content-bg);
     margin-top: 80px;
     box-shadow: 2px 2px 5px 0 #4d4b4b;
     border-radius: 10px;
@@ -11,6 +11,7 @@
     h2 {
         text-align: center;
         padding: 1rem;
+        background-color: var(--sidebar);
     }
 
     .create {
@@ -60,6 +61,9 @@
                         &:focus {
                             border-color: rgb(110, 177, 9);
                         }
+                    }
+                    >div{
+                        width: 75%;
                     }
                     textarea{
                         max-height: none;
@@ -125,7 +129,7 @@
                         flex-direction: column;
                         span,
                         input,
-                        select {
+                        select, div {
                             width: 100%;
                         }
 

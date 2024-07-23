@@ -77,6 +77,7 @@ const routes = [
     },
     {
         path: '/dashboard/:role/import-pricing',
+
         element: <ImportPricing/>,
         private: true
     },
