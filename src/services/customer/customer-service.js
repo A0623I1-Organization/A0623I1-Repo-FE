@@ -1,8 +1,8 @@
 import axiosInstance from '../../utils/axiosInstance';
 
-export const getAllCustomer =async (page)=>{
+export const getAllCustomer =async (keyWord,pages)=>{
     try {
-        let temp = await axiosInstance.get(`/customer?page=${page}`)
+        const temp = await axiosInstance.get(`/customer?keyword=${keyWord}&page=${pages}`);
         return temp.data;
     }catch (e)
     {

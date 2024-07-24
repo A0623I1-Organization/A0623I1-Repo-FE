@@ -30,13 +30,15 @@ const schema = yup.object().shape({
             size: yup.string().required('Kích thước là bắt buộc'),
             qrCode: yup.string().default(''),
             color: yup.string().required('Màu sắc là bắt buộc'),
-            pricingImgUrl: yup.string().nullable()
+            pricingImgUrl: yup.string().nullable(),
+
         })
     ),
     productImages: yup.array().of(
         yup.object().shape({
             imageId: yup.string().default(''),
-            imageUrl: yup.string().nullable()
+            imageUrl: yup.string().nullable(),
+
         })
     ).required('Ảnh là bắt buộc'),
 });
@@ -248,7 +250,7 @@ console.log(product)
                             <option value=''>--chọn loại sản phẩm--</option>
                             {
                                 productTypesByCategory?.map((item, index) => (
-                                    <option value={JSON.stringify(item)} key={item.typeId}>{item.typeName}</option>
+                                    <option value={JSON.stringify(item)} key={item.typeId} selected={item.typeId === productTypes.typeId}>{item.typeName}</option>
                                 ))
                             }
                         </select>
@@ -264,28 +266,32 @@ console.log(product)
                                            disabled={true}/>
                                     {errors.pricingList?.[index]?.pricingCode &&
                                         <p>{errors.pricingList[index].pricingCode.message}</p>}
-                                    {/*<small>{validateError?.pricingList[index].pricingCode}</small>*/}
+                                    {/*<small>{validateError?.pricingList[index]?.pricingCode}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Tên sản phẩm chi tiết:</label>
                                     <input type="text" {...register(`pricingList[${index}].pricingName`)} />
                                     {errors.pricingList?.[index]?.pricingName &&
                                         <p>{errors.pricingList[index].pricingName.message}</p>}
-                                    {/*<small>{validateError?.pricingList[index].pricingName}</small>*/}
+                                    {/*<small>{validateError?.pricingList[index]?.pricingName}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Giá:</label>
                                     <input type="number" {...register(`pricingList[${index}].price`)} />
                                     {errors.pricingList?.[index]?.price &&
                                         <p>{errors.pricingList[index].price.message}</p>}
-                                    {/*<small>{validateError?.pricingList[index].price}</small>*/}
+                                    {/*<small>{validateError?.pricingList[index]?.price}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Kích thước:</label>
                                     <input type="text" {...register(`pricingList[${index}].size`)} />
                                     {errors.pricingList?.[index]?.size &&
                                         <p>{errors.pricingList[index].size.message}</p>}
-                                    {/*<small>{validateError?.pricingList[index].size}</small>*/}
+                                    {/*<small>{validateError?.pricingList[index]?.size}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Màu sắc:</label>
@@ -300,7 +306,8 @@ console.log(product)
                                     </select>
                                     {errors.pricingList?.[index]?.color &&
                                         <p>{errors.pricingList[index].color.message}</p>}
-                                    {/*<small>{validateError?.pricingList[index].color}</small>*/}
+                                    {/*<small>{validateError?.pricingList[index]?.color}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Ảnh sản phẩm chi tiết:</label>
@@ -316,7 +323,8 @@ console.log(product)
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
                                         <p>{errors.pricingList[index].pricingImgUrl.message}</p>}
-                                    {/*<small>{validateError?.pricingList[index].pricingImgUrl}</small>*/}
+                                    {/*<small>{validateError?.pricingList[index]?.pricingImgUrl}</small>*/}
+
                                 </div>
                             </div>
                         ))}
