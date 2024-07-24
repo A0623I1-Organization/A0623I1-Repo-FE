@@ -2,7 +2,7 @@ import axiosInstance from '../../utils/axiosInstance';
 
 export const getPromotionByPromotionCode = async (promotionCode) => {
     try {
-        const temp = await axiosInstance.get(`/promotions/${promotionCode}`);
+        const temp = await axiosInstance.get(`/promotions?promotionCode=${promotionCode}`);
         return temp.data;
     }catch (e)
     {

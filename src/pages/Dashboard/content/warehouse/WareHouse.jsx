@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import './warehouse.scss';
 import * as productService from '../../../../services/products/product-service';
 import {Link, NavLink, useNavigate, useParams} from "react-router-dom";
@@ -16,7 +16,7 @@ export const WareHouse = () => {
     const navigate = useNavigate()
     const [products, setProducts] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
-    const [page, setPage] = useState(0);
+    const [pageNumber, setPageNumber] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [sortBy, setSortBy] = useState('');
@@ -35,8 +35,8 @@ export const WareHouse = () => {
 
     // Function to fetch products based on page number, keyword, sortBy, and ascending
     useEffect(() => {
-        getAllProduct(keyword,sortBy, ascending,page);
-    }, [page,sortBy, ascending]);
+        getAllProduct(keyword,sortBy, ascending,pageNumber);
+    }, [pageNumber,sortBy, ascending]);
     console.log(products)
 
     const getAllProduct = ( keyword, sortBy, ascending, pageNumber) => {
@@ -48,19 +48,6 @@ export const WareHouse = () => {
             .catch(err => console.error("Error fetching products: ", err));
     };
 
-    // Handler for previous page button
-    const handlePrevious = () => {
-        if (page > 0) {
-            setPage(page - 1);
-        }
-    };
-
-    // Handler for next page button
-    const handleNext = () => {
-        if (page < totalPages - 1) {
-            setPage(page + 1);
-        }
-    };
     const openDetailModal = (productId) => {
         setIsModalOpen(true);
         setProductId(productId);
@@ -81,34 +68,6 @@ export const WareHouse = () => {
         navigate(`/dashboard/pricingView`, { state: { productId: productId } })
     };
 
-    // Function to generate array of page numbers for pagination
-    const getPageNumbers = () => {
-        const maxPagesToShow = 2; // Adjust this number to show more/less page buttons
-        let startPage, endPage;
-
-        if (totalPages <= maxPagesToShow) {
-            startPage = 0;
-            endPage = totalPages - 1;
-        } else {
-            const middlePage = Math.floor(maxPagesToShow / 2);
-            if (page <= middlePage) {
-                startPage = 0;
-                endPage = maxPagesToShow - 1;
-            } else if (page + middlePage >= totalPages) {
-                startPage = totalPages - maxPagesToShow;
-                endPage = totalPages - 1;
-            } else {
-                startPage = page - middlePage;
-                endPage = page + middlePage;
-            }
-        }
-
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i);
-        }
-        return pages;
-    };
     const handleSort = (columnName) => {
         if (sortBy === columnName) {
             setAscending(!ascending);
@@ -138,14 +97,14 @@ export const WareHouse = () => {
     const handleSearch = (e) => {
         e.preventDefault();
         // setPage(0);
-        getAllProduct( keyword, sortBy, ascending,page);
+        getAllProduct( keyword, sortBy, ascending,pageNumber);
     };
     const  handleDelete = (productDelete,product)=>{
         productService.deleteProduct(productDelete,product).then(
             ()=>{
                 toast.success('xóa thành công');
                 closeDeleteModal();
-                getAllProduct(keyword,sortBy,ascending,page);
+                getAllProduct(keyword,sortBy,ascending,pageNumber);
             }
         ).catch(err=>console.log(err))
     }
@@ -155,107 +114,126 @@ export const WareHouse = () => {
     const getProductById =  (id) => {
         productService1.getProductById(id).then(res=> setProduct(res)).catch(err=>console.log(err));
     };
+
+    const showPageNo = () => {
+        let pageNoTags = [];
+        for (let i = 0; i < totalPages; i++) {
+            pageNoTags.push(<a key={i} className="page-a" onClick={() => handlePage(i)}>{i + 1}</a>);
+        }
+        return pageNoTags;
+    }
+
+    const handlePage = (pageNo) => {
+        setPageNumber(pageNo);
+    }
+
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
-                <div className="nav-link-container">
-                    <NavLink className="nav-link" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
-                </div>
-                <div className="header-search">
-                    {/* Header search content */}
-                    <form onSubmit={handleSearch}>
-                        <input type="text" placeholder="Search..."  value={keyword} onChange={(e)=>setKeyword(e.target.value)} />
-                        <button onClick={handleSearch}>Search</button>
-                    </form>
-                </div>
-                <div className="data-table">
-                    {/* Data table content */}
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>
-                                STT
-                            </th>
-                            <th onClick={() => handleSort('productCode')}>
-                                Mã hàng
-                                {getSortIndicator('productCode')}
-                            </th>
-                            <th onClick={() => handleSort('productName')}>
-                                Tên
-                                {getSortIndicator('productName')}
-                            </th>
-                            <th onClick={() => handleSort('description')}>
-                                Mô tả
-                                {getSortIndicator('description')}
-                            </th>
-                            <th onClick={() => handleSort('productType.category.categoryName')}>
-                                Loại
-                                {getSortIndicator('productType.category.categoryName')}
-                            </th>
-                            <th onClick={() => handleSort('productType.typeName')}>
-                                Danh mục
-                                {getSortIndicator('productType.typeName')}
-                            </th>
-                            <th>
-                                Pricing
-                            </th>
-                            <th>
-                                Chọn
-                            </th>
-                            <th>
-                                Thêm Pricing
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {products.length === 0 ? <tr><td colSpan="7" className='container'>Không có kết quả</td></tr> :
-                            products?.map((item, index) => (
-                                <tr key={item.productId}>
-                                    <td>{index + 1}</td>
-                                    <td>{item.productCode}</td>
-                                    <td>{item.productName}</td>
-                                    <td>{item.description}</td>
-                                    <td>{item.productType.category.categoryName}</td>
-                                    <td>{item.productType.typeName}</td>
-                                    <td><a onClick={() => showView(item.productId)} style={{ color: 'green', padding: '5px' }}>Pricing in {item.productName}</a></td>
-                                    <td className={"edit-emp"}>
-                                        <a onClick={() => openDetailModal(item.productId)}>
-                                            <BiSolidShow fill="#3dc8d8"/>
-                                        </a>
-                                        <Link to={`/dashboard/${role}/update-pricing/${item.productId}`}>
-                                            <MdOutlineModeEdit fill="#00a762"/>
-                                        </Link>
-                                        <a onClick={() => openDeleteModal(item.productId)}>
-                                            <IoTrashSharp fill="red"/>
-                                        </a>
-                                    </td>
-                                    <td style={{textAlign:"center",color:"lightskyblue"}}>
-                                        <Link to={`/dashboard/${role}/create-pricing/${item.productId}`}>
-                                            +
-                                        </Link>
-                                    </td>
+                <div className="content-element">
+                    <div className="header-content">
+                        <form onSubmit={handleSearch} className="form-search">
+                            <input type="text" placeholder="Search..." className="search-bar" value={keyword}
+                                   onChange={(e)=>setKeyword(e.target.value)} />
+                            <button onClick={handleSearch} className="btn btn-search">Search</button>
+                        </form>
+                        <NavLink className="link-move" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
 
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    </div>
+                    <div className="box-content" id='warehouse-table'>
+                        <p>Danh sách nhân viên</p>
+                        {/* Data table content */}
+                        <table className="table">
+                            <thead>
+                            <tr>
+                                <th>
+                                    STT
+                                </th>
+                                <th onClick={() => handleSort('productCode')}>
+                                    Mã hàng
+                                    {getSortIndicator('productCode')}
+                                </th>
+                                <th onClick={() => handleSort('productName')}>
+                                    Tên
+                                    {getSortIndicator('productName')}
+                                </th>
+                                <th onClick={() => handleSort('description')}>
+                                    Mô tả
+                                    {getSortIndicator('description')}
+                                </th>
+                                <th onClick={() => handleSort('productType.category.categoryName')}>
+                                    Loại
+                                    {getSortIndicator('productType.category.categoryName')}
+                                </th>
+                                <th onClick={() => handleSort('productType.typeName')}>
+                                    Danh mục
+                                    {getSortIndicator('productType.typeName')}
+                                </th>
+                                <th>
+                                    Pricing
+                                </th>
+                                <th>
+                                    Chọn
+                                </th>
+                                <th>
+                                    Thêm Pricing
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {!products ? <tr><td colSpan="7" className='container'>Không có kết quả</td></tr> :
+                                products?.map((item, index) => (
+                                    <tr key={item.productId}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.productCode}</td>
+                                        <td>{item.productName}</td>
+                                        <td>{item.description}</td>
+                                        <td>{item.productType.category.categoryName}</td>
+                                        <td>{item.productType.typeName}</td>
+                                        <td><a onClick={() => showView(item.productId)} style={{ color: 'green', padding: '5px' }}>Pricing in {item.productName}</a></td>
+                                        <td className={"edit-emp"}>
+                                            <a onClick={() => openDetailModal(item.productId)}>
+                                                <BiSolidShow fill="#3dc8d8"/>
+                                            </a>
+                                            <Link to={`/dashboard/${role}/update-pricing/${item.productId}`}>
+                                                <MdOutlineModeEdit fill="#00a762"/>
+                                            </Link>
+                                            <a onClick={() => openDeleteModal(item.productId)}>
+                                                <IoTrashSharp fill="red"/>
+                                            </a>
+                                        </td>
+                                        <td style={{textAlign:"center",color:"lightskyblue"}}>
+                                            <Link to={`/dashboard/${role}/create-pricing/${item.productId}`}>
+                                                +
+                                            </Link>
+                                        </td>
+
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="page">
+                        <div className="page-box">
+                            {pageNumber !== 0 &&
+                                <a className="page-a" onClick={() => handlePage(pageNumber - 1)}>Trang trước</a>
+                            }
+                            <span>
+                                    {showPageNo()}
+                                </span>
+                            {pageNumber < (totalPages - 1) &&
+                                <a className="page-a" onClick={() => handlePage(pageNumber + 1)}>Trang sau</a>
+                            }
+                        </div>
+                    </div>
+
+                    <ProductDetailModal
+                        isOpen={isModalOpen}
+                        onClose={closeDetailModal}
+                        id={productId}
+                    />
+                    <ModalDelete isOpen={isModalOpenD} onClose={closeDeleteModal} title={`Bạn có muốn xóa ${productDelete}`} content={'Bạn hãy xác nhận lại'} submit={()=>handleDelete(productDelete,product)} />
                 </div>
-                <div className="pagination">
-                    {/* Pagination buttons */}
-                    <button onClick={handlePrevious} hidden={page === 0}>Previous</button>
-                    {getPageNumbers().map(pageNum => (
-                        <button key={pageNum} onClick={() => setPage(pageNum)} className={pageNum === page ? 'active' : ''}>
-                            {pageNum + 1}
-                        </button>
-                    ))}
-                    <button onClick={handleNext} hidden={page === totalPages - 1}>Next</button>
-                </div>
-                <ProductDetailModal
-                    isOpen={isModalOpen}
-                    onClose={closeDetailModal}
-                    id={productId}
-                />
-                <ModalDelete isOpen={isModalOpenD} onClose={closeDeleteModal} title={`Bạn có muốn xóa ${productDelete}`} content={'Bạn hãy xác nhận lại'} submit={()=>handleDelete(productDelete,product)} />
             </div>
         } />
     );

@@ -17,10 +17,9 @@ import PromotionModal from "./promotionModal/PromotionModal";
 
 // Define Yup validation schema
 const schema = yup.object().shape({
-    billCode: yup.string().required('Mã hóa đơn không được để trống'),
+    billCode: yup.string().required('Mã hóa đơn không được để trống').matches(/^HD-\d{6,}$/, 'Mã hóa đơn phải được bắt đầu bằng HD- và kết thúc với 6 chữ số!'),
     dateCreate: yup.string().required('Ngày tạo không được để trống'),
     customer: yup.string().required("Mã khách hàng không được để trống"),
-    promotionCode: yup.string().default(''),
     billItemList: yup.array().of(
         yup.object().shape({
             pricing: yup.string().required('ID mặt hàng không được để trống'),
@@ -47,6 +46,8 @@ const BillForm = () => {
     const [quantity, setQuantity] = useState('');
     const [customer, setCustomer] = useState('');
     const [discount,setDiscount] = useState('0')
+    const [errorMessage, setErrorMessage] = useState('');
+    const [validateError, setValidateError] = useState([]);
 
     // React Hook Form setup
     const { register, handleSubmit, setValue, control, formState: { errors } } = useForm({
@@ -75,24 +76,29 @@ const BillForm = () => {
     }
 
     const addItem = () => {
-        if (pricingByCode && pricingByCode.pricingCode && pricingByCode.pricingName && pricingByCode.size && pricingByCode.price) {
-            const newItem = new BillItem(
-                pricingByCode.pricingId,
-                pricingByCode.pricingCode,
-                pricingByCode.pricingName,
-                quantity,
-                pricingByCode.size,
-                pricingByCode.price,
-                pricingByCode.price * quantity
-            );
+        if (pricingByCode) {
+           if(pricingByCode.quantity>=quantity)
+           {
+               const newItem = new BillItem(
+                   pricingByCode.pricingId,
+                   pricingByCode.pricingCode,
+                   pricingByCode.pricingName,
+                   quantity,
+                   pricingByCode.size,
+                   pricingByCode.price,
+                   pricingByCode.price * quantity
+               );
 
-            setBillItems([...billItems, newItem]);
-            setQuantity('');
-            setPricingCode('');
-            setTotal(total + newItem.total);
-            append({ pricing: JSON.stringify(pricingByCode), quantity: newItem.quantity });
+               setBillItems([...billItems, newItem]);
+               setQuantity('');
+               setPricingCode('');
+               setTotal(total + newItem.total);
+               append({ pricing: JSON.stringify(pricingByCode), quantity: newItem.quantity });
+           }else{
+               setErrorMessage('số lương nhập vượt quá số lương trong kho, hiện tại số lượng trong kho là : '+pricingByCode.quantity)
+           }
         } else {
-            console.error('Invalid pricing data');
+            setErrorMessage('mã code không hợp lệ')
         }
     };
 
@@ -107,9 +113,10 @@ const BillForm = () => {
 
 
     useEffect(() => {
-        const today = new Date();
-        setValue("dateCreate", Moment(today).format("DD/MM/yyyy"));
+        const today = Moment().format("DD/MM/yyyy");
+        setValue("dateCreate", today);
 
+        console.log(today)
         fetchUniqueBillCode();
     }, []);
 
@@ -121,7 +128,7 @@ const BillForm = () => {
                 setValue('billCode', res);
             })
             .catch(err => console.log(err)
-        );
+            );
     };
     useEffect(() => {
         fetchPricingByCode(pricingCode);
@@ -153,9 +160,9 @@ const BillForm = () => {
                     }
                 )),
                 customer: JSON.parse(data.customer),
-                dateCreate: Moment(data.dateCreate,"yyyy-MM-DD")// Định dạng ngày tháng
+                dateCreate: Moment(data.dateCreate, "DD/MM/yyyy").format("yyyy-MM-DD")
             };
-
+            setValidateError([])
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
@@ -168,6 +175,7 @@ const BillForm = () => {
         } catch (error) {
             console.error('Error submitting form:', error);
             toast.error('Submission Failed');
+            setValidateError(error);
         }
     };
 
@@ -218,105 +226,119 @@ const BillForm = () => {
 
         setFinalTotal(newFinalTotal);
     }, [billItems,discount,discountByCustomerType]);
-const handleCancel =()=>{
-    setCustomer('');
-    setBillItems([]);
-    setBillCode('');
-    setTotal('');
-    setFinalTotal('');
-}
+    const handleCancel =()=>{
+        setCustomer('');
+        setBillItems([]);
+        setBillCode('');
+        setTotal('');
+        setFinalTotal('');
+    }
+    const clearErrorMessage = () => {
+        setErrorMessage('');
+    };
     return (
         <DashboardMain path={role}
-            content={
-                <div className="content-body">
-                    <form className="bill-form" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-group">
-                            <label htmlFor="billCode">Mã hóa đơn</label>
-                            <input type="text" id="billCode" disabled={true} {...register('billCode')} className="input-large" />
-                            {errors.billCode && <span>{errors.billCode.message}</span>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="customerCode">Mã khách hàng</label>
-                            <input type="text" id="customerCode" value={customer?.customerCode || ''} disabled className="input-large"/>
-                            <button type="button" id="lookupCustomer" onClick={openModal}>Tra cứu khách hàng</button>
-                            {errors.customer &&<p>{errors.customer.message}</p>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="date">Ngày tháng năm</label>
-                            <input type="text" id="date"  disabled={true} {...register('dateCreate')} className="input-large"/>
-                            {errors.dateCreate && <span>{errors.dateCreate.message}</span>}
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="itemCode">Mã hàng</label>
-                            <input type="text" id="itemCode" value={pricingCode} onChange={e => setPricingCode(e.target.value)}   className="input-small" />
-                            <label htmlFor="quantity" style={{marginLeft:'30px'}}>Số lượng</label>
-                            <input type="number" id="quantity" style={{width:'10px'}} value={quantity} onChange={e => setQuantity(e.target.value)}   className="input-small" />
-                            <button type="button" id="addItem" onClick={addItem}>Nhập</button>
-                        </div>
-                        <div className="table-container">
-                            <table id="billItems">
-                                <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Mã hàng</th>
-                                    <th>Tên hàng</th>
-                                    <th>Số lượng</th>
-                                    <th>Size</th>
-                                    <th>Đơn giá</th>
-                                    <th>Tổng</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {billItems.map((item, index) => (
-                                    <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td>{item.code}</td>
-                                        <td>{item.name}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.size}</td>
-                                        <td>{item.price}</td>
-                                        <td>{item.total}</td>
-                                        <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="summary">
-                            <span>Tổng: <span id="total">{total}</span></span>
-                            <span>Giảm giá: <span id="discount">{discount}</span></span>
-                            <span>Thành tiền: <span id="finalTotal">{finalTotal}</span></span>
-                        </div>
-                        <div className="actions">
-                            <button type="button" id="scanBarcode" onClick={toggleQRCodeReader}>Quét mã</button>
-                            <button type="button" id="pay" onClick={openPayModal}>Thanh toán</button>
-                            <button type="button" id="printInvoice" onClick={handlePrintInvoice}>In hóa đơn</button>
-                            <button type="button" id="cancel" onClick={handleCancel}>Hủy</button>
-                        </div>
-                        {isQRCodeReaderVisible && <QRCodeReader handleScan={handleScan} handleError={handleError} />}
-                    </form>
-                    <CustomerModal isOpen={modalOpen} onClose={closeModal} getCustomer={handleCustomerSelect} />
-                    <PromotionModal
-                        isOpen={isModalOpen}
-                        onClose={closePayModal}
-                        onPayment={handlePayment}
-                    />
-                    {printInvoice && (
-                        <div className="invoice-print">
-                            <InvoiceModal
-                                billCode={billCode}
-                                customerCode={customer.customerCode}
-                                billItems={billItems}
-                                total={total}
-                                discount={discount}
-                                finalTotal={finalTotal}
-                                onClose={() => setPrintInvoice(false)}
-                            />
-                        </div>
-                    )}
-                </div>
-            }
+                       content={
+                           <div className="content-body">
+                               <form className="bill-form" onSubmit={handleSubmit(onSubmit)}>
+                                   <div className="form-group">
+                                       <label htmlFor="billCode">Mã hóa đơn</label>
+                                       <input type="text" id="billCode" disabled={true} {...register('billCode')} className="input-large" />
+                                       {errors.billCode && <span>{errors.billCode.message}</span>}
+                                       <small>{validateError?.billCode}</small>
+                                   </div>
+                                   <div className="form-group">
+                                       <label htmlFor="customerCode">Mã khách hàng</label>
+                                       <input type="text" id="customerCode" value={customer?.customerCode || ''} disabled className="input-large"/>
+                                       <button type="button" id="lookupCustomer" onClick={openModal}>Tra cứu khách hàng</button>
+                                       {errors.customer &&<p>{errors.customer.message}</p>}
+                                       <small>{validateError?.customer}</small>
+                                   </div>
+                                   <div className="form-group">
+                                       <label htmlFor="date">Ngày tháng năm</label>
+                                       <input type="text" id="date"  disabled={true} {...register('dateCreate')} className="input-large"/>
+                                       {errors.dateCreate && <span>{errors.dateCreate.message}</span>}
+                                       <small>{validateError?.dateCreate}</small>
+                                   </div>
+                                   <div className="form-group">
+                                       <label htmlFor="itemCode">Mã hàng</label>
+                                       <input type="text" id="itemCode" value={pricingCode} onChange={e => {
+                                           setPricingCode(e.target.value);
+                                           clearErrorMessage();
+                                       }}   className="input-small" />
+                                       <label htmlFor="quantity" style={{marginLeft:'30px'}}>Số lượng</label>
+                                       <input type="number" id="quantity" style={{width:'10px'}} value={quantity} onChange={e => {
+                                           clearErrorMessage();
+                                           setQuantity(e.target.value);
+
+                                       }}   className="input-small" />
+                                       <button type="button" id="addItem" onClick={addItem}>Nhập</button>
+                                   </div>
+                                   {errorMessage && <p className="error-message">{errorMessage}</p>}
+                                   <div className="table-container">
+                                       <table id="billItems">
+                                           <thead>
+                                           <tr>
+                                               <th>STT</th>
+                                               <th>Mã hàng</th>
+                                               <th>Tên hàng</th>
+                                               <th>Số lượng</th>
+                                               <th>Size</th>
+                                               <th>Đơn giá</th>
+                                               <th>Tổng</th>
+                                               <th>Action</th>
+                                           </tr>
+                                           </thead>
+                                           <tbody>
+                                           {billItems.map((item, index) => (
+                                               <tr key={index}>
+                                                   <td>{index + 1}</td>
+                                                   <td>{item.code}</td>
+                                                   <td>{item.name}</td>
+                                                   <td>{item.quantity}</td>
+                                                   <td>{item.size}</td>
+                                                   <td>{item.price}</td>
+                                                   <td>{item.total}</td>
+                                                   <td><button onClick={() => deleteBillItem(index)}>Xóa</button></td>
+                                               </tr>
+                                           ))}
+                                           </tbody>
+                                       </table>
+                                   </div>
+                                   <div className="summary">
+                                       <span>Tổng: <span id="total">{total}</span></span>
+                                       <span>Giảm giá: <span id="discount">{discount}</span></span>
+                                       <span>Thành tiền: <span id="finalTotal">{finalTotal}</span></span>
+                                   </div>
+                                   <div className="actions">
+                                       <button type="button" id="scanBarcode" onClick={toggleQRCodeReader}>Quét mã</button>
+                                       <button type="button" id="pay" onClick={openPayModal}>Thanh toán</button>
+                                       <button type="button" id="printInvoice" onClick={handlePrintInvoice}>In hóa đơn</button>
+                                       <button type="button" id="cancel" onClick={handleCancel}>Hủy</button>
+                                   </div>
+                                   {isQRCodeReaderVisible && <QRCodeReader handleScan={handleScan} handleError={handleError} />}
+                               </form>
+                               <CustomerModal isOpen={modalOpen} onClose={closeModal} getCustomer={handleCustomerSelect} />
+                               <PromotionModal
+                                   isOpen={isModalOpen}
+                                   onClose={closePayModal}
+                                   onPayment={handlePayment}
+                               />
+                               {printInvoice && (
+                                   <div className="invoice-print">
+                                       <InvoiceModal
+                                           billCode={billCode}
+                                           customerCode={customer.customerCode}
+                                           billItems={billItems}
+                                           total={total}
+                                           discount={discount}
+                                           finalTotal={finalTotal}
+                                           onClose={() => setPrintInvoice(false)}
+                                       />
+                                   </div>
+                               )}
+                           </div>
+                       }
         />
     );
 };

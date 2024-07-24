@@ -1,30 +1,25 @@
-import { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import './warehouse.scss';
 import * as pricingService from '../../../../services/products/pricing-service';
 import {NavLink, useLocation, useParams} from "react-router-dom";
 import DownloadImageFromFireBase from "../../../../firebase/DownloadImageFromFireBase";
-import { DashboardMain } from "../../../../components/Dashboard/DashboardMain";
+import {DashboardMain} from "../../../../components/Dashboard/DashboardMain";
 
 export const PricingView = () => {
     const {role} = useParams();
     const {state} = useLocation()
     const [pricings, setPricings] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
-    const [page, setPage] = useState(0);
+    const [pageNumber, setPageNumber] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [sortBy, setSortBy] = useState('');
     const [ascending, setAscending] = useState(true);
     const [clickCount, setClickCount] = useState(0); // Biến đếm số lần click
 
-
-    const callbackFunction = (childData) => {
-        setIsShowSidebar(childData);
-    };
-
     useEffect(() => {
-        getAllPricingByProductId(state?.productId, keyword, sortBy, ascending, page);
-    }, [state?.productId, sortBy, ascending, page]);
+        getAllPricingByProductId(state?.productId, keyword, sortBy, ascending, pageNumber);
+    }, [state?.productId, sortBy, ascending, pageNumber]);
 
 
     const getAllPricingByProductId = (productId, pageNumber) => {
@@ -37,51 +32,10 @@ export const PricingView = () => {
             .catch(err => console.error("Error fetching pricings: ", err));
     };
 
-
-    const handlePrevious = () => {
-        if (page > 0) {
-            setPage(page - 1);
-        }
-    };
-
-    const handleNext = () => {
-        if (page < totalPages - 1) {
-            setPage(page + 1);
-        }
-    };
-
-    const getPageNumbers = () => {
-        const maxPagesToShow = 2;
-        let startPage, endPage;
-
-        if (totalPages <= maxPagesToShow) {
-            startPage = 0;
-            endPage = totalPages - 1;
-        } else {
-            const middlePage = Math.floor(maxPagesToShow / 2);
-            if (page <= middlePage) {
-                startPage = 0;
-                endPage = maxPagesToShow - 1;
-            } else if (page + middlePage >= totalPages) {
-                startPage = totalPages - maxPagesToShow;
-                endPage = totalPages - 1;
-            } else {
-                startPage = page - middlePage;
-                endPage = page + middlePage;
-            }
-        }
-
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(i);
-        }
-        return pages;
-    };
-
     const handleSort = (columnName) => {
         if (sortBy === columnName) {
             setAscending(!ascending);
-        }else {
+        } else {
             setSortBy(columnName);
             setAscending(true);
         }
@@ -107,24 +61,35 @@ export const PricingView = () => {
 
     const handleSearch = (e) => {
         e.preventDefault();
-        getAllPricingByProductId(state?.productId, keyword, sortBy, ascending, page);
+        getAllPricingByProductId(state?.productId, keyword, sortBy, ascending, pageNumber);
     };
+
+    const showPageNo = () => {
+        let pageNoTags = [];
+        for (let i = 0; i < totalPages; i++) {
+            pageNoTags.push(<a key={i} className="page-a" onClick={() => handlePage(i)}>{i + 1}</a>);
+        }
+        return pageNoTags;
+    }
+
+    const handlePage = (pageNo) => {
+        setPageNumber(pageNo);
+    }
 
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
-                <div>
-                    <div className="nav-link-container">
-                        <NavLink className="nav-link" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
-                    </div>
-                    <div className="header-search">
-                        <form onSubmit={handleSearch}>
-                            <input type="text" placeholder="Search..." value={keyword} onChange={(e) => setKeyword(e.target.value)} />
-                            <button type="submit">Search</button>
+                <div className='content-element'>
+                    <div className="header-content">
+                        <form onSubmit={handleSearch} className="form-search">
+                            <input type="text" placeholder="Search..." className="search-bar" value={keyword}
+                                   onChange={(e) => setKeyword(e.target.value)}/>
+                            <button onClick={handleSearch} className="btn btn-search">Search</button>
                         </form>
+                        <NavLink className="link-move" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
                     </div>
-                    <div className="data-table">
-                        <table>
+                    <div className="box-content" id='warehouse-table'>
+                        <table className="table">
                             <thead>
                             <tr>
                                 <th>STT</th>
@@ -157,7 +122,9 @@ export const PricingView = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {pricings.length === 0 ? <tr><td colSpan="9" className='container'>Không có kết quả</td></tr> :
+                            {pricings.length === 0 ? <tr>
+                                    <td colSpan="9" className='container'>Không có kết quả</td>
+                                </tr> :
                                 pricings.map((item, index) => (
                                     <tr key={item.pricingCode}>
                                         <td>{index + 1}</td>
@@ -165,27 +132,31 @@ export const PricingView = () => {
                                         <td>{item.pricingName}</td>
                                         <td>{item.quantity}</td>
                                         <td>{item.size}</td>
-                                        <td><DownloadImageFromFireBase key={index} imagePath={item.pricingImgUrl} /></td>
+                                        <td><DownloadImageFromFireBase key={index} imagePath={item.pricingImgUrl}/></td>
                                         <td>{item.color.colorName}</td>
-                                        <td><DownloadImageFromFireBase key={index} imagePath={item.qrCode} /></td>
+                                        <td><DownloadImageFromFireBase key={index} imagePath={item.qrCode}/></td>
                                         <td>{item.price}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
-                    <div className="pagination">
-                        <button onClick={handlePrevious} hidden={page === 0}>Previous</button>
-                        {getPageNumbers().map(pageNum => (
-                            <button key={pageNum} onClick={() => setPage(pageNum)} className={pageNum === page ? 'active' : ''}>
-                                {pageNum + 1}
-                            </button>
-                        ))}
-                        <button onClick={handleNext} hidden={page === totalPages - 1}>Next</button>
+                    <div className="page">
+                        <div className="page-box">
+                            {pageNumber !== 0 &&
+                                <a className="page-a" onClick={() => handlePage(pageNumber - 1)}>Trang trước</a>
+                            }
+                            <span>
+                                    {showPageNo()}
+                                </span>
+                            {pageNumber < (totalPages - 1) &&
+                                <a className="page-a" onClick={() => handlePage(pageNumber + 1)}>Trang sau</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        } />
+        }/>
     );
 };
 export default PricingView;

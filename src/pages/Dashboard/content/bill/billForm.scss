@@ -1,11 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap");
 .bill-form {
-  background: #fff;
+  background: var(--content-bg);
   padding: 20px;
   box-shadow: 30px 30px rgba(0, 0, 0, 0.1);
   border-radius: 16px;
   max-width: 900px;
   margin: 0 auto;
+  .error-message{
+    padding: 10px;
+    color: #801818;
+  }
 
   .form-group {
     display: flex;
