@@ -166,7 +166,7 @@ const BillForm = () => {
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate(`/dashboard/${role}/payment`);
+                    navigate(`/dashboard/${role}/bill-list`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');
