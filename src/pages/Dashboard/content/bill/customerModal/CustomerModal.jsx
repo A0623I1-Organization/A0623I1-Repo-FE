@@ -6,18 +6,20 @@ const CustomerModal = ({ isOpen, onClose, getCustomer }) => {
     const [customers, setCustomers] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [page, setPage] = useState(0);
+    const [search, setSearch] = useState('');
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
-        getAllCustomer(page);
-    }, [page]);
+        getAllCustomer(search,page);
+    }, [search,page]);
 
-    const getAllCustomer = (pageNumber) => {
-        customerService.getAllCustomer(pageNumber).then(res => {
+    const getAllCustomer = (search,pageNumber) => {
+        customerService.getAllCustomer(search,pageNumber).then(res => {
             setCustomers(res.content);
             setTotalPages(res.totalPages);
         }).catch(err => console.error("Error fetching customers: ", err));
     };
+    console.log(customers)
 
     const handlePrevious = () => {
         if (page > 0) {

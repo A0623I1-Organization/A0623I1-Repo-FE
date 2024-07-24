@@ -10,9 +10,13 @@ import {ProductDetailModal} from "./ProductDetailModal";
 import ModalDelete from "../../../../ui/ModalDelete";
 import * as productService1 from '../../../../services/products/ProductService';
 import {toast} from "react-toastify";
+import {isWarehouse} from "../../../../services/auth/AuthenticationService";
+import * as authenticationService from "../../../../services/auth/AuthenticationService";
 
 export const WareHouse = () => {
     const {role} = useParams();
+    const isWarehouse = authenticationService.isWarehouse();
+    const isAdmin = authenticationService.isAdmin();
     const navigate = useNavigate()
     const [products, setProducts] = useState([]);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
@@ -137,6 +141,9 @@ export const WareHouse = () => {
                                    onChange={(e)=>setKeyword(e.target.value)} />
                             <button onClick={handleSearch} className="btn btn-search">Search</button>
                         </form>
+                        {/*{isWarehouse && isAdmin &&*/}
+                        {/*<NavLink className="link-move" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>*/}
+                        {/*}*/}
                         <NavLink className="link-move" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
 
                     </div>
