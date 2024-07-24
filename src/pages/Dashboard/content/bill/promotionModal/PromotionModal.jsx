@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './PromotionModal.scss';
 import * as promotionService from "../../../../../services/promotion/promotion-service";
 
@@ -6,10 +6,10 @@ const PromotionModal = ({ isOpen, onClose, onPayment }) => {
     const [promotionCode, setPromotionCode] = useState('');
     const [discount, setDiscount] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-
     const applyPromotion = async () => {
         try {
-            if (promotionCode.trim() !== '') {
+            console.log(promotionCode)
+            if (promotionCode) {
                 const promotion = await promotionService.usePromotionByPromotionCode(promotionCode);
                 if (promotion.enabled) {
                     setErrorMessage('Mã giảm giá đã được áp dụng thành công.');

@@ -52,7 +52,9 @@ const CreatePricing = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
     const [productImages, setProductImages] = useState([]);
     const [product,setProduct]= useState('');
-    const [images,setImages]= useState([])
+    const [images,setImages]= useState([]);
+    const [validateError, setValidateError] = useState([]);
+
     const {register, handleSubmit, formState: {errors}, setValue, control} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -155,6 +157,7 @@ console.log(product)
                     throw error;
                 }
             }));
+            setValidateError([])
             const updatedData = {
                 ...data,
                 pricingList: updatedPricingList.map(item => ({
@@ -169,13 +172,15 @@ console.log(product)
                     toast.success('Sửa thành công');
                     navigate(`/dashboard/${role}/warehouse`);
                 })
-                .catch(err => {
+                .catch(error => {
                     toast.error('Sửa thất bại');
-                    console.error('Error updating product:', err);
+                    console.error('Error updating product:', error);
+                    setValidateError(error);
                 });
         } catch (error) {
             console.error('Error submitting form:', error);
             toast.error('Gửi thất bại');
+            setValidateError(error);
         }
     };
 
@@ -200,16 +205,19 @@ console.log(product)
                         <label>Mã sản phẩm:</label>
                         <input type="text" {...register('productCode')} disabled={true}/>
                         {errors.productCode && <p>{errors.productCode.message}</p>}
+                        <small>{validateError?.productCode}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
                         <input type="text" {...register('productName')} />
                         {errors.productName && <p>{errors.productName.message}</p>}
+                        <small>{validateError?.productName}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Mô tả:</label>
                         <input type="text" {...register('description')} />
                         {errors.description && <p>{errors.description.message}</p>}
+                        <small>{validateError?.description}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Ảnh sản phẩm:</label>
@@ -221,6 +229,7 @@ console.log(product)
                             )}
                         />
                         {errors.productImages && <p>{errors.productImages.message}</p>}
+                        <small>{validateError?.productImages}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Danh mục:</label>
@@ -244,6 +253,7 @@ console.log(product)
                             }
                         </select>
                         {errors.productType && <p>{errors.productType.message}</p>}
+                        <small>{validateError?.productType}</small>
                     </div>
                     <div className={styles.pricingContainer}>
                         {fields.map((item, index) => (
@@ -254,24 +264,28 @@ console.log(product)
                                            disabled={true}/>
                                     {errors.pricingList?.[index]?.pricingCode &&
                                         <p>{errors.pricingList[index].pricingCode.message}</p>}
+                                    <small>{validateError?.pricingList[index].pricingCode}</small>
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Tên sản phẩm chi tiết:</label>
                                     <input type="text" {...register(`pricingList[${index}].pricingName`)} />
                                     {errors.pricingList?.[index]?.pricingName &&
                                         <p>{errors.pricingList[index].pricingName.message}</p>}
+                                    <small>{validateError?.pricingList[index].pricingName}</small>
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Giá:</label>
                                     <input type="number" {...register(`pricingList[${index}].price`)} />
                                     {errors.pricingList?.[index]?.price &&
                                         <p>{errors.pricingList[index].price.message}</p>}
+                                    <small>{validateError?.pricingList[index].price}</small>
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Kích thước:</label>
                                     <input type="text" {...register(`pricingList[${index}].size`)} />
                                     {errors.pricingList?.[index]?.size &&
                                         <p>{errors.pricingList[index].size.message}</p>}
+                                    <small>{validateError?.pricingList[index].size}</small>
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Màu sắc:</label>
@@ -286,6 +300,7 @@ console.log(product)
                                     </select>
                                     {errors.pricingList?.[index]?.color &&
                                         <p>{errors.pricingList[index].color.message}</p>}
+                                    <small>{validateError?.pricingList[index].color}</small>
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Ảnh sản phẩm chi tiết:</label>
@@ -301,6 +316,7 @@ console.log(product)
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
                                         <p>{errors.pricingList[index].pricingImgUrl.message}</p>}
+                                    <small>{validateError?.pricingList[index].pricingImgUrl}</small>
                                 </div>
                             </div>
                         ))}
