@@ -34,9 +34,9 @@ export default function DetailModal({notification, showModal, setShowModal}) {
                                         <b className="justify-text">{notification.topic}</b>
                                     </div>
                                     <div className="relative p-6 flex-auto overflow-auto max-h-60">
-                                        <p className="my-4 text-blueGray-500 text-lg leading-relaxed text-sm ">
+                                        <div className="formatted-text my-4 text-blueGray-500 text-lg leading-relaxed text-sm ">
                                             {notification.content}
-                                        </p>
+                                        </div>
                                     </div>
                                     <div className="text-blue-200 relative p-6 flex justify-center items-center ">
                                         <span>{format(new Date(notification.createDate), "dd-MM-yyyy HH:mm")}</span>
