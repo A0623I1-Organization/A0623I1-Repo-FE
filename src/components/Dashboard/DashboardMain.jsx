@@ -62,19 +62,20 @@ export function DashboardMain({content, path}) {
                 <div className="overlay-nhi" onClick={(event) => event.stopPropagation()}>
                     <div className="notification-content-header-nhi">
                         <ListOfNotification
-                            widthList={"100%"}
+                            widthList={"300px"}
                             backgroundColorList={"white"}
                             marginTopList={"-10px"}
-                            marginList={"-10px -20px"}
+                            marginList={"-10px -5px"}
                             paddingList={"10px"}
                             heightList={"550px"}
-                            fontSizeHeader={"12px"}
                             heightMain={"400px"}
                             seeAllBackgroundColor={"white"}
                             fontSizeMain={"11px"}
                             paddingCard={"0.6rem 0.125rem"}
                             widthImg={"45px"}
                             heightImg={"40px"}
+                            fontSizeNodata={"12px"}
+                            fontSizeHeader={"12px"}
                         />
                     </div>
                 </div>
