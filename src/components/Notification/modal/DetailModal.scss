@@ -2,3 +2,11 @@
   text-align: justify;
   text-align-last: center;
 }
+.formatted-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: Arial, sans-serif;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
