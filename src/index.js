@@ -13,8 +13,6 @@ root.render(
     <App />
       <ToastContainer/>
 
-    <ToastContainer/>
-
   </React.StrictMode>
 );
 
