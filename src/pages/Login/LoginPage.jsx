@@ -15,10 +15,14 @@ function LoginPage(props) {
     const [openEye, setOpenEye] = useState(false);
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState('')
-    const {register, handleSubmit, formState: {errors}} = useForm({
+    const {register, handleSubmit, formState: {errors}, setValue} = useForm({
         criteriaMode: "all"
     });
     const [showPopupElement, setShowPopupElement] = useState(false);
+
+    useEffect(() => {
+        checkRememberMe();
+    }, []);
 
     useEffect(() => {
         setTimeout(function () {
@@ -26,14 +30,33 @@ function LoginPage(props) {
         }, 3000);
     }, [showPopupElement]);
 
+    const checkRememberMe = () => {
+        let rememberMe =  JSON.parse(localStorage.getItem("rememberMe"));
+        if (rememberMe === undefined) {
+            rememberMe = authenticationService.getRemember();
+        }
+        if (rememberMe?.remember === true) {
+            setValue("username", rememberMe.username);
+            setValue("rememberMe", rememberMe.remember);
+        }
+    }
+
     const onSubmit = async (data) => {
+        const remember = data.rememberMe;
+        console.log(remember)
         try {
             const userData = await authenticationService.login(data);
             if (userData.token) {
                 localStorage.setItem('token', userData.token);
                 localStorage.setItem('fullName', userData.fullName);
                 localStorage.setItem('avatar', userData.avatar);
-                const decodedToken = jwtDecode(userData.token);
+                localStorage.setItem('lastTime', new Date().toISOString());
+                if (remember) {
+                    authenticationService.setRemember(data.username);
+                } else {
+                    authenticationService.setDefaultRemember();
+                    localStorage.removeItem("rememberMe");
+                }
                 navigate("/dashboard");
                 toast.success("Đăng nhập thành công!");
             } else {
@@ -108,11 +131,11 @@ function LoginPage(props) {
                                     </div>
                                     <div className="remember-me-and-forgot">
                                         <label>
-                                            <input type="checkbox" name="remember" defaultValue="true"/>
+                                            <input type="checkbox" {...register("rememberMe")}/>
                                             Ghi nhớ đăng nhập
                                         </label>
                                     </div>
-                                    <button className="btn bkg">Đăng nhập</button>
+                                    <button type={"submit"} className="btn bkg">Đăng nhập</button>
                                 </form>
                             </div>
                         </div>

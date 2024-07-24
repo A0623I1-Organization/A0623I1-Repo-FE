@@ -49,6 +49,7 @@ export function HeaderDashboard(props) {
         stompClient.connect({}, () => {
             stompClient.subscribe('/topic/createNotification', (message) => {
                 getQuantityNotificationUnread();
+                toast("Bạn vừa có thông báo mới!", {autoClose: 500})
             });
 
             if (isSalesMan()) {

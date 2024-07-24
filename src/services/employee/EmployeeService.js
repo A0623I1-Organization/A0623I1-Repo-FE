@@ -54,3 +54,23 @@ export const deleteEmployee = async (employeeId) => {
         throw e.response.data.errors;
     }
 }
+
+export const disableEmployee = async (employeeId) => {
+    try {
+        const temp = await axiosInstance.put(`/users/disable/${employeeId}`);
+        console.log(temp.data);
+        return temp.data;
+    } catch (e) {
+        throw e.response.data.errors;
+    }
+}
+
+export const enableEmployee = async (employeeId) => {
+    try {
+        const temp = await axiosInstance.put(`/users/enable/${employeeId}`);
+        console.log(temp.data);
+        return temp.data;
+    } catch (e) {
+        throw e.response.data.errors;
+    }
+}

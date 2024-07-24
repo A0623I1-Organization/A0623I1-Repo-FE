@@ -40,7 +40,7 @@ export const codeAuto = async () => {
 
 export const deleteCustomer = async (id)=>{
     try {
-        const temp = await axiosInstance.delete(`/customer/${id}`);
+        const temp = await axiosInstance.patch(`/customer/${id}`);
         return temp.data;
     } catch (e) {
         console.log(e)
