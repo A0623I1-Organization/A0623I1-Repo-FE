@@ -197,7 +197,7 @@ export default function ListOfNotification(props) {
                     ))}
                     {listByUnRead.length === 0 && listByRead.length === 0 && (
                         <div
-                            className="p-tag-no-data-notification-nhi bg-gray-300 rounded-2xl h-full text-3xl text-gray-500 flex justify-center items-center">
+                            className="p-tag-no-data-notification-nhi bg-gray-300 rounded-2xl h-full text-3xl text-gray-500 flex justify-center items-center" style={{fontSize:props.fontSizeNodata}}>
                             <p>Không có dữ liệu hiển thị</p>
                         </div>
                     )}
