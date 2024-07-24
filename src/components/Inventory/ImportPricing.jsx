@@ -6,8 +6,11 @@ import { SidebarDashboard } from "../Sidebar/SidebarDashboard";
 import { getPricingList, createReceipt, updatePricingQuantity } from "../../services/pricing/PricingService";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import {useParams} from "react-router-dom";
+import {DashboardMain} from "../Dashboard/DashboardMain";
 
 const ImportPricing = () => {
+  const {role} = useParams();
   const [isShowSidebar, setIsShowSidebar] = useState(false);
   const [receipt, setReceipt] = useState({});
   const [pricings, setPricings] = useState([]);
@@ -81,11 +84,7 @@ const ImportPricing = () => {
   };
 
   return (
-      <div className="app-container">
-        <HeaderDashboard parentCallback={callbackFunction}></HeaderDashboard>
-        <div id="content-wrapper">
-          <SidebarDashboard showSidebar={isShowSidebar}></SidebarDashboard>
-          <div className="import-pricing">
+      <DashboardMain path={role} content={
             <div className="content-body mt-14">
               <div className="content-element">
                 <div className="flex justify-center">
@@ -222,10 +221,7 @@ const ImportPricing = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <ToastContainer />
-      </div>
+      }/>
   );
 };
 
