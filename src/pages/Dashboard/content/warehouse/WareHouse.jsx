@@ -141,9 +141,11 @@ export const WareHouse = () => {
                                    onChange={(e)=>setKeyword(e.target.value)} />
                             <button onClick={handleSearch} className="btn btn-search">Search</button>
                         </form>
+
                         {/*{isWarehouse && isAdmin &&*/}
                         {/*<NavLink className="link-move" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>*/}
                         {/*}*/}
+
                         <NavLink className="link-move" to={`/dashboard/${role}/create-pricing`}>Thêm Hàng Hóa</NavLink>
 
                     </div>

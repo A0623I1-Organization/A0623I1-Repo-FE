@@ -32,13 +32,23 @@ const schema = yup.object().shape({
             size: yup.string().required('Kích thước là bắt buộc'),
             qrCode: yup.string().default(''),
             color: yup.string().required('Màu sắc là bắt buộc'),
+<<<<<<< HEAD
             pricingImgUrl: yup.string(),
+=======
+            pricingImgUrl: yup.string().nullable(),
+
+>>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
         })
     ),
     productImages: yup.array().of(
         yup.object().shape({
             imageId: yup.string().default(''),
+<<<<<<< HEAD
             imageUrl: yup.string(),
+=======
+            imageUrl: yup.string().nullable(),
+
+>>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
         })
     ).required('Ảnh là bắt buộc'),
 });
@@ -271,6 +281,7 @@ console.log(product)
                                     {errors.pricingList?.[index]?.pricingCode &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingCode}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Tên sản phẩm chi tiết:</label>
@@ -278,6 +289,7 @@ console.log(product)
                                     {errors.pricingList?.[index]?.pricingName &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingName}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Giá:</label>
@@ -285,6 +297,7 @@ console.log(product)
                                     {errors.pricingList?.[index]?.price &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.price}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Kích thước:</label>
@@ -292,6 +305,7 @@ console.log(product)
                                     {errors.pricingList?.[index]?.size &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.size}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Màu sắc:</label>
@@ -307,6 +321,7 @@ console.log(product)
                                     {errors.pricingList?.[index]?.color &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.color}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Ảnh sản phẩm chi tiết:</label>
@@ -323,6 +338,7 @@ console.log(product)
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingImgUrl}</small>*/}
+
                                 </div>
                             </div>
                         ))}

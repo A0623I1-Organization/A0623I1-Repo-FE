@@ -34,13 +34,13 @@ const schema = yup.object().shape({
             size: yup.string().required('Kích thước là bắt buộc'),
             qrCode: yup.string().default(''),
             color: yup.string().required('Màu sắc là bắt buộc'),
-            pricingImgUrl: yup.string().url('Phải là URL hợp lệ').required('Ảnh giá là bắt buộc'),
+            pricingImgUrl: yup.string().nullable()
         })
     ),
     productImages: yup.array().of(
         yup.object().shape({
             imageId: yup.string().default(''),
-            imageUrl: yup.string().url('Phải là URL hợp lệ').required('URL ảnh là bắt buộc'),
+            imageUrl: yup.string().nullable()
         })
     ),
 });
@@ -254,12 +254,20 @@ const CreatePricing = () => {
                     <div className={styles.formGroup}>
                         <label>Mã sản phẩm:</label>
                         <input type="text" {...register('productCode')} disabled={true}/>
+<<<<<<< HEAD
                         {errors.productCode && <p className={styles.errorMessage}>{errors.productCode.message}</p>}
                         <small className={styles.errorMessage}>{validateError?.productCode}</small>
+=======
+                        {errors.productCode && <p>{errors.productCode.message}</p>}
+
+                        {/*<small>{validateError?.productCode}</small>*/}
+
+>>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
                     </div>
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
                         <input type="text" {...register('productName')} disabled={disabled}/>
+<<<<<<< HEAD
                         {errors.productName && <p  className={styles.errorMessage}>{errors.productName.message}</p>}
                         <small className={styles.errorMessage}>{validateError?.productName}</small>
                     </div>
@@ -268,6 +276,18 @@ const CreatePricing = () => {
                         <input type="text" {...register('description')} disabled={disabled} onChange={e=>setContent(e.target.value)}/>
                         {errors.description && <p  className={styles.errorMessage}>{errors.description.message}</p>}
                         <small  className={styles.errorMessage}>{validateError?.description}</small>
+=======
+                        {errors.productName && <p>{errors.productName.message}</p>}
+                        {/*<small>{validateError?.productName}</small>*/}
+
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Mô tả:</label>
+                        <input type="text" {...register('description')} disabled={disabled}/>
+                        {errors.description && <p>{errors.description.message}</p>}
+                        {/*<small>{validateError?.description}</small>*/}
+
+>>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
                     </div>
                     <label htmlFor="">
                         <span>Nội dung *</span>
@@ -287,6 +307,7 @@ const CreatePricing = () => {
                         />
                         {errors.productImages && <p  className={styles.errorMessage}>{errors.productImages.message}</p>}
                         {/*<small>{validateError?.productImages}</small>*/}
+
                     </div>
                     <div className={styles.formGroup}>
                         <label>Danh mục:</label>
@@ -311,6 +332,7 @@ const CreatePricing = () => {
                         </select>
                         {errors.productType && <p  className={styles.errorMessage}>{errors.productType.message}</p>}
                         {/*<small>{validateError?.productType}</small>*/}
+
                     </div>
                     <div className={styles.pricingContainer}>
                         {fields.map((item, index) => (
@@ -322,6 +344,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.pricingCode &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingCode}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Tên sản phẩm chi tiết:</label>
@@ -329,6 +352,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.pricingName &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingName}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Giá:</label>
@@ -336,6 +360,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.price &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.price}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Kích thước:</label>
@@ -343,6 +368,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.size &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.size}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Màu sắc:</label>
@@ -358,6 +384,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.color &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.color}</small>*/}
+
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Ảnh sản phẩm chi tiết:</label>
@@ -373,6 +400,7 @@ const CreatePricing = () => {
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
                                         <p  className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingImgUrl}</small>*/}
+
                                 </div>
                                 <button type="button" onClick={() => handleRemovePricingRow(index)}
                                         className={styles.removeButton}>
