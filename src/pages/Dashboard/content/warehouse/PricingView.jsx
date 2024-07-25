@@ -82,7 +82,7 @@ export const PricingView = () => {
                 <div className='content-element'>
                     <div className="header-content">
                         <form onSubmit={handleSearch} className="form-search">
-                            <input type="text" placeholder="Search..." className="search-bar" value={keyword}
+                            <input type="text" placeholder="Tìm kiếm..." className="search-bar" value={keyword}
                                    onChange={(e) => setKeyword(e.target.value)}/>
                             <button onClick={handleSearch} className="btn btn-search">Search</button>
                         </form>

@@ -15,6 +15,7 @@ import {DashboardMain} from '../../../../../components/Dashboard/DashboardMain';
 import {generateUniqueCode} from '../../../../../services/bill/random_mhd';
 import {UploadMultipleImage, UploadOneImage} from '../../../../../firebase/UploadImage';
 import * as productService1 from "../../../../../services/products/ProductService";
+import Editor from "../../../../../components/Editer";
 
 const schema = yup.object().shape({
     productId: yup.string().default(''),
@@ -27,7 +28,9 @@ const schema = yup.object().shape({
             pricingId: yup.string().default(''),
             pricingName: yup.string().required('Tên giá là bắt buộc'),
             pricingCode: yup.string().matches(/^H-\d{6,}$/, 'Mã sản phẩm phải có định dạng H-XXXXXX'),
-            price: yup.number().required('Giá là bắt buộc').positive('Giá phải là số dương'),
+            price: yup.number().required('Giá là bắt buộc').transform((value, originalValue) => (originalValue === '' ? null : value))
+                .required('Giá là bắt buộc')
+                .positive('Giá phải là số dương'),
             size: yup.string().required('Kích thước là bắt buộc'),
             qrCode: yup.string().default(''),
             color: yup.string().required('Màu sắc là bắt buộc'),
@@ -55,7 +58,9 @@ const CreatePricing = () => {
     const [disabled, setDisabled] = useState(false);
     const [images, setImages] = useState([]);
     const [validateError, setValidateError] = useState([]);
-    const {register, handleSubmit, formState: {errors}, setValue, control} = useForm({
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [content, setContent] = useState(false);
+    const {register, handleSubmit,reset, formState: {errors}, setValue, control} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             pricingList: [],
@@ -166,6 +171,7 @@ const CreatePricing = () => {
     };
 
     const onSubmit = async (data) => {
+        setIsSubmitting(true);
         try {
             const updatedPricingList = await Promise.all(data.pricingList.map(async (item) => {
                 try {
@@ -196,9 +202,11 @@ const CreatePricing = () => {
                 pricingService.addPricing(productId,updatedData.pricingList)
                     .then(() => {
                         toast.success('Tạo thành công');
+                        reset();
                         navigate(`/dashboard/${role}/warehouse`);
                     })
                     .catch(error => {
+                        setIsSubmitting(false);
                         toast.error('Tạo thất bại');
                         console.error('Error creating product:', error);
                         setValidateError(error);
@@ -207,8 +215,10 @@ const CreatePricing = () => {
                 .then(() => {
                     toast.success('Tạo thành công');
                     navigate(`/dashboard/${role}/warehouse`);
+                    reset();
                 })
                 .catch(error => {
+                    setIsSubmitting(false);
                     toast.error('Tạo thất bại');
                     console.error('Error creating product:', error);
                     setValidateError(error);
@@ -233,6 +243,9 @@ const CreatePricing = () => {
     const handleOneImageUrlChange = async (uploadedImageUrl, index) => {
         await setValue(`pricingList[${index}].pricingImgUrl`, uploadedImageUrl);
     };
+    const handeleChangeContent = (value) => {
+        setContent(value);
+    }
 
     return (
         <DashboardMain path={role} content={
@@ -241,23 +254,29 @@ const CreatePricing = () => {
                     <div className={styles.formGroup}>
                         <label>Mã sản phẩm:</label>
                         <input type="text" {...register('productCode')} disabled={true}/>
-                        {errors.productCode && <p>{errors.productCode.message}</p>}
-                        {/*<small>{validateError?.productCode}</small>*/}
+                        {errors.productCode && <p className={styles.errorMessage}>{errors.productCode.message}</p>}
+                        <small className={styles.errorMessage}>{validateError?.productCode}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
                         <input type="text" {...register('productName')} disabled={disabled}/>
-                        {errors.productName && <p>{errors.productName.message}</p>}
-                        {/*<small>{validateError?.productName}</small>*/}
+                        {errors.productName && <p  className={styles.errorMessage}>{errors.productName.message}</p>}
+                        <small className={styles.errorMessage}>{validateError?.productName}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Mô tả:</label>
-                        <input type="text" {...register('description')} disabled={disabled}/>
-                        {errors.description && <p>{errors.description.message}</p>}
-                        {/*<small>{validateError?.description}</small>*/}
+                        <input type="text" {...register('description')} disabled={disabled} onChange={e=>setContent(e.target.value)}/>
+                        {errors.description && <p  className={styles.errorMessage}>{errors.description.message}</p>}
+                        <small  className={styles.errorMessage}>{validateError?.description}</small>
                     </div>
+                    <label htmlFor="">
+                        <span>Nội dung *</span>
+                        <textarea rows="1" placeholder="" value={content} style={{display: "none"}} {...register("content",{})}></textarea>
+                        <Editor value={content} onChange={handeleChangeContent} className="custom-editor"  />
+                        <small>{validateError?.content}</small>
+                    </label>
                     <div className={styles.formGroup}>
-                        <label>Images:</label>
+                        <label>Ảnh sản phẩm:</label>
                         <Controller
                             name="productImages"
                             control={control}
@@ -266,7 +285,7 @@ const CreatePricing = () => {
                                 <UploadMultipleImage onImageUrlChange={handleImageUrlChange} existingImageUrls={images} />
                             )}
                         />
-                        {errors.productImages && <p>{errors.productImages.message}</p>}
+                        {errors.productImages && <p  className={styles.errorMessage}>{errors.productImages.message}</p>}
                         {/*<small>{validateError?.productImages}</small>*/}
                     </div>
                     <div className={styles.formGroup}>
@@ -290,7 +309,7 @@ const CreatePricing = () => {
                                 ))
                             }
                         </select>
-                        {errors.productType && <p>{errors.productType.message}</p>}
+                        {errors.productType && <p  className={styles.errorMessage}>{errors.productType.message}</p>}
                         {/*<small>{validateError?.productType}</small>*/}
                     </div>
                     <div className={styles.pricingContainer}>
@@ -301,28 +320,28 @@ const CreatePricing = () => {
                                     <input type="text" {...register(`pricingList[${index}].pricingCode`)}
                                            disabled={true}/>
                                     {errors.pricingList?.[index]?.pricingCode &&
-                                        <p>{errors.pricingList[index].pricingCode.message}</p>}
+                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingCode}</small>*/}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Tên sản phẩm chi tiết:</label>
                                     <input type="text" {...register(`pricingList[${index}].pricingName`)} />
                                     {errors.pricingList?.[index]?.pricingName &&
-                                        <p>{errors.pricingList[index].pricingName.message}</p>}
+                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingName}</small>*/}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Giá:</label>
                                     <input type="number" {...register(`pricingList[${index}].price`)} />
                                     {errors.pricingList?.[index]?.price &&
-                                        <p>{errors.pricingList[index].price.message}</p>}
+                                        <p  className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.price}</small>*/}
                                 </div>
                                 <div className={styles.formGroup}>
                                     <label>Kích thước:</label>
                                     <input type="text" {...register(`pricingList[${index}].size`)} />
                                     {errors.pricingList?.[index]?.size &&
-                                        <p>{errors.pricingList[index].size.message}</p>}
+                                        <p  className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.size}</small>*/}
                                 </div>
                                 <div className={styles.formGroup}>
@@ -337,7 +356,7 @@ const CreatePricing = () => {
                                         }
                                     </select>
                                     {errors.pricingList?.[index]?.color &&
-                                        <p>{errors.pricingList[index].color.message}</p>}
+                                        <p  className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.color}</small>*/}
                                 </div>
                                 <div className={styles.formGroup}>
@@ -352,7 +371,7 @@ const CreatePricing = () => {
                                             />
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
-                                        <p>{errors.pricingList[index].pricingImgUrl.message}</p>}
+                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingImgUrl}</small>*/}
                                 </div>
                                 <button type="button" onClick={() => handleRemovePricingRow(index)}
@@ -363,8 +382,9 @@ const CreatePricing = () => {
                         ))}
                     </div>
                     <div className={styles.buttonWrapper}>
-                        <button type="submit" className={styles.submitButton}>
-                            Thêm mới
+                        <button type="submit" className={styles.submitButton}
+                                disabled={isSubmitting}>
+                            {isSubmitting ? 'Đang xử lý...' : ' Thêm mới'}
                         </button>
                         <button type="button" onClick={handleAddPricingRow} className={
                             styles.addButton}>

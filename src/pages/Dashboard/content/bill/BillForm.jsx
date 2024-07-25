@@ -23,7 +23,7 @@ const schema = yup.object().shape({
     billItemList: yup.array().of(
         yup.object().shape({
             pricing: yup.string().required('ID mặt hàng không được để trống'),
-            quantity: yup.number().required('Số lượng không được để trống').min(1, 'Số lượng phải lớn hơn 0'),
+            quantity: yup.number().required('Số lượng không được để trống').min(1, 'Số lượng phải lớn hơn 0').positive('phải là số nguyn dương')
         })
     ),
 });
@@ -50,7 +50,7 @@ const BillForm = () => {
     const [validateError, setValidateError] = useState([]);
 
     // React Hook Form setup
-    const { register, handleSubmit, setValue, control, formState: { errors } } = useForm({
+    const { register, handleSubmit,reset, setValue, control, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             billItemList: [],
@@ -166,6 +166,7 @@ const BillForm = () => {
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
+                    reset();
                     navigate(`/dashboard/${role}/bill-list`);
                 })
                 .catch(err => {
@@ -245,21 +246,21 @@ const BillForm = () => {
                                    <div className="form-group">
                                        <label htmlFor="billCode">Mã hóa đơn</label>
                                        <input type="text" id="billCode" disabled={true} {...register('billCode')} className="input-large" />
-                                       {errors.billCode && <span>{errors.billCode.message}</span>}
-                                       <small>{validateError?.billCode}</small>
+                                       {errors.billCode && <span className="error-message">{errors.billCode.message}</span>}
+                                       <small className="error-message">{validateError?.billCode}</small>
                                    </div>
                                    <div className="form-group">
                                        <label htmlFor="customerCode">Mã khách hàng</label>
                                        <input type="text" id="customerCode" value={customer?.customerCode || ''} disabled className="input-large"/>
                                        <button type="button" id="lookupCustomer" onClick={openModal}>Tra cứu khách hàng</button>
-                                       {errors.customer &&<p>{errors.customer.message}</p>}
-                                       <small>{validateError?.customer}</small>
+                                       {errors.customer &&<p className="error-message">{errors.customer.message}</p>}
+                                       <small className="error-message">{validateError?.customer}</small>
                                    </div>
                                    <div className="form-group">
                                        <label htmlFor="date">Ngày tháng năm</label>
                                        <input type="text" id="date"  disabled={true} {...register('dateCreate')} className="input-large"/>
-                                       {errors.dateCreate && <span>{errors.dateCreate.message}</span>}
-                                       <small>{validateError?.dateCreate}</small>
+                                       {errors.dateCreate && <span className="error-message">{errors.dateCreate.message}</span>}
+                                       <small className="error-message">{validateError?.dateCreate}</small>
                                    </div>
                                    <div className="form-group">
                                        <label htmlFor="itemCode">Mã hàng</label>
@@ -268,10 +269,20 @@ const BillForm = () => {
                                            clearErrorMessage();
                                        }}   className="input-small" />
                                        <label htmlFor="quantity" style={{marginLeft:'30px'}}>Số lượng</label>
-                                       <input type="number" id="quantity" style={{width:'10px'}} value={quantity} onChange={e => {
+                                       <input type="number" id="quantity" style={{width:'10px'}} value={quantity} min={1} onChange={e => {
+                                           const value = e.target.value;
+                                           // Chuyển đổi giá trị thành số nguyên
+                                           const intValue = parseInt(value, 10);
+                                           // Kiểm tra xem giá trị là số nguyên dương
+                                           if (intValue >= 1 && Number.isInteger(intValue)) {
+                                               setQuantity(intValue);
+                                               setErrorMessage(''); // Xóa thông báo lỗi nếu giá trị hợp lệ
+                                           } else {
+                                               setQuantity('');
+                                               setErrorMessage('Số lượng phải là số nguyên dương!'); // Thiết lập thông báo lỗi nếu giá trị không hợp lệ
+                                           }
+                                       
                                            clearErrorMessage();
-                                           setQuantity(e.target.value);
-
                                        }}   className="input-small" />
                                        <button type="button" id="addItem" onClick={addItem}>Nhập</button>
                                    </div>

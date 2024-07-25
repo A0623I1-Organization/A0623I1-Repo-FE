@@ -6,15 +6,14 @@ const CustomerModal = ({ isOpen, onClose, getCustomer }) => {
     const [customers, setCustomers] = useState([]);
     const [searchInput, setSearchInput] = useState('');
     const [page, setPage] = useState(0);
-    const [search, setSearch] = useState('');
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
-        getAllCustomer(search,page);
-    }, [search,page]);
+        getAllCustomer(searchInput,page);
+    }, [page]);
 
-    const getAllCustomer = (search,pageNumber) => {
-        customerService.getAllCustomer(search,pageNumber).then(res => {
+    const getAllCustomer = (searchInput,pageNumber) => {
+        customerService.getAllCustomer(searchInput,pageNumber).then(res => {
             setCustomers(res.content);
             setTotalPages(res.totalPages);
         }).catch(err => console.error("Error fetching customers: ", err));
@@ -61,25 +60,32 @@ const CustomerModal = ({ isOpen, onClose, getCustomer }) => {
         return pages;
     };
 
-    const handleRowClick = (customer) => {
-        setSearchInput(customer.customerName); // Update searchInput with customer name or any other field
+    const handleRowClick = (customer) => {// Update searchInput with customer name or any other field
         getCustomer(customer); // Pass customer ID to parent component
         onClose(); // Close modal after selection
     };
+    const handleSearch = (e) => {
+        e.preventDefault();
+        console.log(searchInput)
+        getAllCustomer(searchInput,page);
+    };
+    console.log(customers)
 
     return (
         <div className="modal" style={{ display: isOpen ? 'block' : 'none' }}>
             <div className="modal-content">
                 <span className="close" onClick={onClose}>&times;</span>
                 <h2>Tra cứu khách hàng</h2>
-                <div className="search-bar">
+                <div>
+                <form onSubmit={handleSearch} className="search-bar">
                     <input
                         type="text"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         placeholder="Nhập mã KH, tên KH hoặc Sdt"
                     />
-                    <button>Chọn</button>
+                    <button onClick={handleSearch}>Chọn</button>
+                </form>
                 </div>
                 <div className='data-table'>
                     <table id="tableId">
@@ -92,7 +98,8 @@ const CustomerModal = ({ isOpen, onClose, getCustomer }) => {
                         </tr>
                         </thead>
                         <tbody>
-                        {customers.map((item, index) => (
+                        {!customers&&<h5>không tìm thấy thông tin khách hàng</h5>}
+                        {customers?.map((item, index) => (
                             <tr key={item.customerId} onClick={() => handleRowClick(item)}>
                                 <td>{index + 1}</td>
                                 <td>{item.customerCode}</td>

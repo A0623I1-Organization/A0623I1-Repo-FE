@@ -14,9 +14,9 @@ export const getAllBill =async ()=>{
 export const createBill =async (bill)=>{
     try {
         await axiosInstance.post(`/bills`,bill);
-    }catch (e)
+    }catch (error)
     {
-        console.log(e)
+        throw error.response.data.errors;
     }
 }
 

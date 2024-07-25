@@ -137,7 +137,7 @@ export const WareHouse = () => {
                 <div className="content-element">
                     <div className="header-content">
                         <form onSubmit={handleSearch} className="form-search">
-                            <input type="text" placeholder="Search..." className="search-bar" value={keyword}
+                            <input type="text" placeholder="Tìm kiếm..." className="search-bar" value={keyword}
                                    onChange={(e)=>setKeyword(e.target.value)} />
                             <button onClick={handleSearch} className="btn btn-search">Search</button>
                         </form>
@@ -163,10 +163,6 @@ export const WareHouse = () => {
                                 <th onClick={() => handleSort('productName')}>
                                     Tên
                                     {getSortIndicator('productName')}
-                                </th>
-                                <th onClick={() => handleSort('description')}>
-                                    Mô tả
-                                    {getSortIndicator('description')}
                                 </th>
                                 <th onClick={() => handleSort('productType.category.categoryName')}>
                                     Loại
@@ -194,7 +190,6 @@ export const WareHouse = () => {
                                         <td>{index + 1}</td>
                                         <td>{item.productCode}</td>
                                         <td>{item.productName}</td>
-                                        <td>{item.description}</td>
                                         <td>{item.productType.category.categoryName}</td>
                                         <td>{item.productType.typeName}</td>
                                         <td><a onClick={() => showView(item.productId)} style={{ color: 'green', padding: '5px' }}>Pricing in {item.productName}</a></td>
@@ -239,7 +234,7 @@ export const WareHouse = () => {
                         onClose={closeDetailModal}
                         id={productId}
                     />
-                    <ModalDelete isOpen={isModalOpenD} onClose={closeDeleteModal} title={`Bạn có muốn xóa ${productDelete}`} content={'Bạn hãy xác nhận lại'} submit={()=>handleDelete(productDelete,product)} />
+                    <ModalDelete isOpen={isModalOpenD} onClose={closeDeleteModal} title={`Bạn có muốn xóa sản phẩm có mã là : ${product?.productCode}`} content={'Bạn hãy xác nhận lại'} submit={()=>handleDelete(productDelete,product)} />
                 </div>
             </div>
         } />

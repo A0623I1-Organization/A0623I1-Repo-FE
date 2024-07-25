@@ -25,7 +25,7 @@ export const createProduct =async (product)=>{
         await axiosInstance.post(`/products`,product)
     }catch (e)
     {
-        console.log(e)
+        throw e.response.data.errors;
     }
 }
 export const deleteProduct = async (productId,product)=>{
