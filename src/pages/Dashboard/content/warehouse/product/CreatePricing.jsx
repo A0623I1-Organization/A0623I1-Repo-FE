@@ -254,20 +254,15 @@ const CreatePricing = () => {
                     <div className={styles.formGroup}>
                         <label>Mã sản phẩm:</label>
                         <input type="text" {...register('productCode')} disabled={true}/>
-<<<<<<< HEAD
                         {errors.productCode && <p className={styles.errorMessage}>{errors.productCode.message}</p>}
                         <small className={styles.errorMessage}>{validateError?.productCode}</small>
-=======
+
                         {errors.productCode && <p>{errors.productCode.message}</p>}
-
                         {/*<small>{validateError?.productCode}</small>*/}
-
->>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
                     </div>
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
                         <input type="text" {...register('productName')} disabled={disabled}/>
-<<<<<<< HEAD
                         {errors.productName && <p  className={styles.errorMessage}>{errors.productName.message}</p>}
                         <small className={styles.errorMessage}>{validateError?.productName}</small>
                     </div>
@@ -276,7 +271,6 @@ const CreatePricing = () => {
                         <input type="text" {...register('description')} disabled={disabled} onChange={e=>setContent(e.target.value)}/>
                         {errors.description && <p  className={styles.errorMessage}>{errors.description.message}</p>}
                         <small  className={styles.errorMessage}>{validateError?.description}</small>
-=======
                         {errors.productName && <p>{errors.productName.message}</p>}
                         {/*<small>{validateError?.productName}</small>*/}
 
@@ -286,8 +280,6 @@ const CreatePricing = () => {
                         <input type="text" {...register('description')} disabled={disabled}/>
                         {errors.description && <p>{errors.description.message}</p>}
                         {/*<small>{validateError?.description}</small>*/}
-
->>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
                     </div>
                     <label htmlFor="">
                         <span>Nội dung *</span>

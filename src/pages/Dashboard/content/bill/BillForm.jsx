@@ -281,7 +281,7 @@ const BillForm = () => {
                                                setQuantity('');
                                                setErrorMessage('Số lượng phải là số nguyên dương!'); // Thiết lập thông báo lỗi nếu giá trị không hợp lệ
                                            }
-                                       
+
                                            clearErrorMessage();
                                        }}   className="input-small" />
                                        <button type="button" id="addItem" onClick={addItem}>Nhập</button>

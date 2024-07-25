@@ -32,23 +32,13 @@ const schema = yup.object().shape({
             size: yup.string().required('Kích thước là bắt buộc'),
             qrCode: yup.string().default(''),
             color: yup.string().required('Màu sắc là bắt buộc'),
-<<<<<<< HEAD
             pricingImgUrl: yup.string(),
-=======
-            pricingImgUrl: yup.string().nullable(),
-
->>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
         })
     ),
     productImages: yup.array().of(
         yup.object().shape({
             imageId: yup.string().default(''),
-<<<<<<< HEAD
             imageUrl: yup.string(),
-=======
-            imageUrl: yup.string().nullable(),
-
->>>>>>> 6e97d4d28e2149f68574182c18c42df03ef02922
         })
     ).required('Ảnh là bắt buộc'),
 });
