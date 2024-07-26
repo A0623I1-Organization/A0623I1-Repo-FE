@@ -174,7 +174,7 @@ export function HeaderDashboard(props) {
             </div>
             {/*-------------logon-brand----------*/}
             <div className="logo-brand">
-                <span>Luxury shop</span>
+                <span>FM Style</span>
             </div>
             {/*-----------login-box-----------*/}
             <div className="login-btn">

@@ -29,6 +29,7 @@ export const getRemember = () => {
 export const login = async (data) => {
     try {
         const response = await axios.post(`${baseURL}/api/auth/authenticate`, data)
+        console.log(response.data);
         return response.data;
     } catch (e) {
         console.log(e);

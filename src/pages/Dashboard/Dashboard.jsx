@@ -8,6 +8,7 @@ import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import {toast} from "react-toastify";
 import {getAllByStatusRead} from "../../services/notification/NotificationService";
+import {BillModal} from "./BillModal/BillModal";
 
 export function Dashboard() {
     const [totalCustomers, setTotalCustomers] = useState(null);
@@ -16,6 +17,8 @@ export function Dashboard() {
     const [bestSalesPersons, setBestSalesPersons] = useState([]);
     const [newBills, setNewBills] = useState([]);
     const [stompClient, setStompClient] = useState(null);
+    const [dateCreate, setDateCreate] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const socket = new SockJS("http://localhost:8080/ws");
@@ -40,6 +43,7 @@ export function Dashboard() {
             }
         };
     }, []);
+
     useEffect(() => {
         const fetchData = async () => {
             await getTotalCustomers();
@@ -87,6 +91,13 @@ export function Dashboard() {
         }
         return circumference - (100 / 100) * circumference;
     }
+
+    const openDetailModal = (dateCreate) => {
+        setIsModalOpen(true);
+        setDateCreate(dateCreate);
+    }
+
+    const closeDetailModal = () => setIsModalOpen(false);
 
     const totalCustomersGrowthOffset = totalCustomers ? handleGrowthPercent(36, totalCustomers.growth) : 0;
     const totalBillsGrowthOffset = totalBills ? handleGrowthPercent(36, totalBills.growth) : 0;
@@ -222,7 +233,7 @@ export function Dashboard() {
                         <p>Top 5 đơn hàng mới nhất</p>
                         <ol className="styled-list">
                             {newBills && newBills.map((item, index) => (
-                                <li key={index}>
+                                <li key={index} onClick={()=> openDetailModal(item.dateCreate)}>
                                     <span className="date">{Moment(item.dateCreate).format("DD/MM/yyyy")}</span>
                                     <span className="customer-name">{item.customerName}</span>
                                 </li>
@@ -230,6 +241,13 @@ export function Dashboard() {
                         </ol>
                     </div>
                 </div>
+                <BillModal
+                    isOpen={isModalOpen}
+                    onClose={closeDetailModal}
+                    dateCreate={dateCreate}
+                >
+
+                </BillModal>
             </div>
         }/>
     );
