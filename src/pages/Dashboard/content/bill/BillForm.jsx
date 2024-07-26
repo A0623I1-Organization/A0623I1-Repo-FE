@@ -166,7 +166,7 @@ const BillForm = () => {
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    navigate(`/dashboard/${role}/payment`);
+                    navigate(`/dashboard/${role}/bill-list`);
                 })
                 .catch(err => {
                     toast.error('Create Failed');
@@ -187,7 +187,7 @@ const BillForm = () => {
     const handleError = (err) => console.error(err);
     const toggleQRCodeReader = () => setIsQRCodeReaderVisible(!isQRCodeReaderVisible);
 
-    const handlePrintInvoice = () => setPrintInvoice(true);
+    // const handlePrintInvoice = () => setPrintInvoice(true);
     const handlePayment =  (promotion) => {
         try {
             if (promotion) {
@@ -198,6 +198,7 @@ const BillForm = () => {
                 setValue("promotionCode", ''); // Set default promotion code if no promotion applied
             }
             handleSubmit(onSubmit)();
+            setPrintInvoice(true);
         } catch (error) {
             console.error("Failed to use promotion:", error);
         }
@@ -313,7 +314,7 @@ const BillForm = () => {
                                    <div className="actions">
                                        <button type="button" id="scanBarcode" onClick={toggleQRCodeReader}>Quét mã</button>
                                        <button type="button" id="pay" onClick={openPayModal}>Thanh toán</button>
-                                       <button type="button" id="printInvoice" onClick={handlePrintInvoice}>In hóa đơn</button>
+                                       {/*<button type="button" id="printInvoice" onClick={handlePrintInvoice}>In hóa đơn</button>*/}
                                        <button type="button" id="cancel" onClick={handleCancel}>Hủy</button>
                                    </div>
                                    {isQRCodeReaderVisible && <QRCodeReader handleScan={handleScan} handleError={handleError} />}

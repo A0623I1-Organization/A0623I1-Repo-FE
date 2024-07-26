@@ -25,6 +25,7 @@ import CustomerList from '../pages/Dashboard/Customer/CustomerList';
 import NewsList from '../pages/Dashboard/News/NewsList';
 import NewsCreate from '../pages/Dashboard/News/NewsCreate';
 import NewsDetailPage from '../pages/News/NewsDetailPage';
+import BillList from "../pages/Dashboard/content/bill/BillList";
 
 
 const routes = [
@@ -94,6 +95,11 @@ const routes = [
     {
         path: '/dashboard/:role/payment',
         element: <BillForm/>,
+        private: true,
+    },
+    {
+        path: '/dashboard/:role/bill-list',
+        element: <BillList/>,
         private: true,
     },
     {

@@ -1,6 +1,15 @@
 
 import axiosInstance from '../../utils/axiosInstance';
 
+export const getAllBill =async ()=>{
+    try {
+        const temp = await axiosInstance.get(`/bills`);
+        return temp.data;
+    }catch (e)
+    {
+        console.log(e)
+    }
+}
 
 export const createBill =async (bill)=>{
     try {

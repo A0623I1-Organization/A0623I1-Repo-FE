@@ -24,9 +24,10 @@ function NewsCreate(props) {
         try {
             data.content = content;
             console.log(data);
+            setDisabled(true)
             await NewsService.createNews(data)
             reset();
-            setDisabled(true)
+            setDisabled(false)
             setValue("newsImgUrl", '');
             setContent('');
             setValidateError([])

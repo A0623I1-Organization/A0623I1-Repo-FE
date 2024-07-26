@@ -9,6 +9,7 @@ function MainNewsDetail(props) {
     const { newsId } = useParams();
     const [news, setNews] = useState(null);
     useEffect(() => {
+        window.scrollTo(0, 0);
         getNewsById()
     }, []);
 

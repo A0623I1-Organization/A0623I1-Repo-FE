@@ -65,7 +65,7 @@ export function DashboardMain({content, path}) {
                             widthList={"300px"}
                             backgroundColorList={"white"}
                             marginTopList={"-10px"}
-                            marginList={"-10px -5px"}
+                            marginList={"-10px -30px"}
                             paddingList={"10px"}
                             heightList={"550px"}
                             heightMain={"400px"}
