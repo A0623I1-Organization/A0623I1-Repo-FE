@@ -15,10 +15,20 @@ export function SidebarDashboard(props) {
     const [sidebarActive, setSidebarActive] = useState(props.showSidebar);
     const [functionCall, setFunctionCall] = useState(props.path);
     const [showDropdown, setShowDropdown] = useState("");
-    const isAdmin = authenticationService.isAdmin();
-    const isSalesMan = authenticationService.isSalesMan();
-    const isWarehouse = authenticationService.isWarehouse();
-    const isStoreManager = authenticationService.isStoreManager();
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isSalesMan, setIsSalesMan] = useState(false);
+    const [isWarehouse, setIsWarehouse] = useState(false);
+    const [isStoreManager, setIsStoreManager] = useState(false);
+
+    useEffect(()=> {
+        const fetchData = async () => {
+            setIsAdmin(await authenticationService.isAdmin());
+            setIsSalesMan(await authenticationService.isSalesMan());
+            setIsWarehouse(await authenticationService.isWarehouse());
+            setIsStoreManager(await authenticationService.isStoreManager());
+        }
+        fetchData()
+    }, [])
 
     useEffect(() => {
         setSidebarActive(props.showSidebar);

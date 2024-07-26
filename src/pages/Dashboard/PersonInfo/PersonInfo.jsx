@@ -3,14 +3,13 @@ import * as authenticationService from "../../../services/auth/AuthenticationSer
 import {useForm} from "react-hook-form";
 import "./info.scss";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
-import {jwtDecode} from "jwt-decode";
 import {toast} from "react-toastify";
 import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
 import {useNavigate, useParams} from "react-router-dom";
-import avatar from "../../../assets/images/avatar.jpg";
 import {MdOutlineModeEdit} from "react-icons/md";
 import {UploadOneImage} from "../../../firebase/UploadImage";
 import * as userService from "../../../services/auth/UserService";
+import spinner from "../../../assets/icons/Spinner.gif";
 
 export function PersonInfo() {
     const {role} = useParams();
@@ -22,6 +21,7 @@ export function PersonInfo() {
     const [openEyeThree, setOpenEyeThree] = useState(false);
     const [roles, setRoles] = useState([]);
     const [validateError, setValidateError] = useState([])
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
     const [disabled, setDisabled] = useState(true);
     const navigate = useNavigate();
     const {register, handleSubmit, setValue, getValues, formState: {errors}} = useForm({
@@ -40,7 +40,7 @@ export function PersonInfo() {
             if (avatarUrl !== null) {
                 await updateAvatarAndBackgroundImage(avatarUrl, backgroundImage);
             }
-            if (backgroundImage!== null){
+            if (backgroundImage !== null) {
                 await updateAvatarAndBackgroundImage(avatarUrl, backgroundImage);
             }
         }
@@ -49,7 +49,7 @@ export function PersonInfo() {
 
     const getUserInfo = async () => {
         try {
-            const temp = await authenticationService.getYourProfile(localStorage.getItem("token"));
+            const temp = await authenticationService.getYourProfile();
             if (temp) {
                 setUserInfo(temp);
                 setValue("userId", temp.userId);
@@ -58,7 +58,7 @@ export function PersonInfo() {
             }
         } catch (e) {
             if (e.response.status === 401) {
-                authenticationService.logout();
+                await authenticationService.logout();
                 window.location.href = "/login";
             }
         }
@@ -78,6 +78,10 @@ export function PersonInfo() {
             }
         } catch (e) {
             toast.error(e.message);
+        } finally {
+            setTimeout(function () {
+                setIsLoading(false);
+            }, 3000);
         }
     }
 
@@ -110,7 +114,7 @@ export function PersonInfo() {
 
     const handleOneImageUrlChange = (uploadedImageUrl, field) => {
         if (field === "avatar") {
-           setAvatarUrl(uploadedImageUrl);
+            setAvatarUrl(uploadedImageUrl);
         }
         if (field === "background") {
             setBackgroundImage(uploadedImageUrl);
@@ -118,46 +122,68 @@ export function PersonInfo() {
     };
 
     const triggerFileInput = (inputClass) => {
+        setIsLoading(true);
         document.querySelector(inputClass).click();
     };
 
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
-
                 <div className="content-element">
-                    <div className="avatar" style={{ backgroundImage: `url(${userInfo.backgroundImage})` }}>
+                    <div className="avatar" style={{backgroundImage: `url(${userInfo.backgroundImage})`}}>
                         <div className="update-avatar">
                             <img src={userInfo.avatar} alt="avatar"/>
-                            <div className="edit-button" onClick={() => triggerFileInput(".avatar-input")}>
-                                <MdOutlineModeEdit/>
-                            </div>
+                            {isLoading ?
+                                <div className="edit-button">
+                                    <img className="spinner" src={spinner} alt="spinner"/>
+                                </div>
+                                :
+                                <div className="edit-button" onClick={() => triggerFileInput(".avatar-input")}>
+                                    <MdOutlineModeEdit/>
+                                </div>
+                            }
                             <div className="input-file">
                                 <UploadOneImage
                                     className={"avatar-input"}
-                                    getDisabled={(e)=>setDisabled(e)}
-                                    onImageUrlChange ={(url) => handleOneImageUrlChange(url, "avatar")}/>
+                                    getDisabled={(e) => setDisabled(e)}
+                                    onImageUrlChange={(url) => handleOneImageUrlChange(url, "avatar")}/>
                             </div>
                             <div className="person-name">
                                 <span>{userInfo.fullName}</span>
                             </div>
                         </div>
-                        <div className="update-bg" onClick={() => triggerFileInput(".background-input")}>
-                            <div className="edit-button">
-                                <MdOutlineModeEdit/>
+                        {isLoading ?
+                            <div className="update-bg">
+                                <div className="edit-button">
+                                    <img className="spinner" src={spinner} alt="spinner"/>
+                                </div>
+                                <div className="input-file">
+                                    <UploadOneImage
+                                        className={"background-input"}
+                                        style={{display: "none"}}
+                                        getDisabled={(e) => setDisabled(e)}
+                                        onImageUrlChange={(url) => handleOneImageUrlChange(url, "background")}/>
+                                </div>
+                                <span>Chỉnh sửa ảnh bìa</span>
                             </div>
-                            <div className="input-file">
-                            <UploadOneImage
-                                className={"background-input"}
-                                style={{ display: "none" }}
-                                getDisabled={(e)=>setDisabled(e)}
-                                onImageUrlChange={(url) => handleOneImageUrlChange(url, "background")}/>
+                            :
+                            <div className="update-bg" onClick={() => triggerFileInput(".background-input")}>
+                                <div className="edit-button">
+                                    <MdOutlineModeEdit/>
+                                </div>
+                                <div className="input-file">
+                                    <UploadOneImage
+                                        className={"background-input"}
+                                        style={{display: "none"}}
+                                        getDisabled={(e) => setDisabled(e)}
+                                        onImageUrlChange={(url) => handleOneImageUrlChange(url, "background")}/>
+                                </div>
+                                <span>Chỉnh sửa ảnh bìa</span>
                             </div>
-                            <span>Chỉnh sửa ảnh bìa</span>
-                        </div>
+                        }
                     </div>
                     <div className="flex-content">
-                    <div className="person-info">
+                        <div className="person-info">
                             <div className="info-element">
                                 <label>
                                     <span className={"element-title"}>Tên nhân viên: </span>
@@ -226,8 +252,8 @@ export function PersonInfo() {
                                 <label>Mật khẩu cũ: </label>
                                 <span className="inputValue">
                                         <input type={openEyeOne ? "text" : "password"}
-                                               name="oldPassword" {...register("oldPassword",{
-                                               required: "Mật khẩu không được để trống"
+                                               name="oldPassword" {...register("oldPassword", {
+                                            required: "Mật khẩu không được để trống"
                                         })}/>
                                     {openEyeOne ? <FaEye onClick={() => handleShowPassword(1)}/>
                                         : <FaEyeSlash onClick={() => handleShowPassword(1)}/>}
@@ -240,14 +266,14 @@ export function PersonInfo() {
                                 <span className="inputValue">
                                             <input type={openEyeTwo ? "text" : "password"}
                                                    name="newPassword" {...register("newPassword", {
-                                                       required: "Mật khẩu không được để trống!",
-                                                        minLength: {value: 8, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
-                                                        maxLength: {value: 50, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
-                                                        pattern : {
-                                                           value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,50}$/,
-                                                            message: "Mật khẩu phải bắt đầu bằng một chữ cái in hoa và phải chứa ít nhất một chữ thường, một chữ số, và phải dài từ 8 đến 50 ký tự!"
-                                                        }
-                                                })}/>
+                                                required: "Mật khẩu không được để trống!",
+                                                minLength: {value: 8, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
+                                                maxLength: {value: 50, message: "Mật khẩu phải từ 8 đến 50 chữ!"},
+                                                pattern: {
+                                                    value: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,50}$/,
+                                                    message: "Mật khẩu phải chứa ít nhất một chữ hoa, một chữ thường, và một chữ số, và phải dài từ 8 đến 50 ký tự!"
+                                                }
+                                            })}/>
                                     {openEyeTwo ? <FaEye onClick={() => handleShowPassword(2)}/>
                                         : <FaEyeSlash onClick={() => handleShowPassword(2)}/>}
                                         </span>
@@ -259,13 +285,14 @@ export function PersonInfo() {
                                 <span className="inputValue">
                                         <input type={openEyeThree ? "text" : "password"}
                                                name="confirmPassword" {...register("confirmPassword"
-                                        , {
-                                        validate: value => value === getValues('newPassword') || "Mật khẩu không trùng khớp!"
-                                    })}/>
+                                            , {
+                                                validate: value => value === getValues('newPassword') || "Mật khẩu không trùng khớp!"
+                                            })}/>
                                     {openEyeThree ? <FaEye onClick={() => handleShowPassword(3)}/>
                                         : <FaEyeSlash onClick={() => handleShowPassword(3)}/>}
                                         </span>
-                                {errors.confirmPassword && <p className="validate-error">{errors.confirmPassword.message}</p>}
+                                {errors.confirmPassword &&
+                                    <p className="validate-error">{errors.confirmPassword.message}</p>}
                                 {validateError && <p className="validate-error">{validateError.confirmPassword}</p>}
                             </div>
                             <div className="form-element">

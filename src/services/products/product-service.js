@@ -1,4 +1,5 @@
 import axiosInstance from '../../utils/axiosInstance';
+
 export const getAllProduct = async (keyword, sortBy, ascending, page) => {
     try {
         let url = `/products?page=${page}`;
@@ -20,7 +21,7 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
     }
 };
 
-export const createProduct =async (product)=>{
+export const createProduct = async (product)=>{
     try {
         await axiosInstance.post(`/products`,product)
     }catch (e)

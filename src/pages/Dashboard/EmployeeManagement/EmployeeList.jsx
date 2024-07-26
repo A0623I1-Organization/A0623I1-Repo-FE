@@ -14,6 +14,7 @@ import { TiArrowUnsorted } from "react-icons/ti";
 import { MdCancel } from "react-icons/md";
 import {DisableEmployeeModal} from "./DisableEmployeeModal/DisableEmployeeModal";
 import {DeleteEmployeeModal} from "./DeleteEmployeeModal/DeleteEmployeeModal";
+import * as roleService from "../../../services/employee/RoleService";
 
 export function EmployeeList() {
     const {role} = useParams();
@@ -21,8 +22,10 @@ export function EmployeeList() {
     const [totalPages, setTotalPages] = useState({});
     const [pageNumber, setPageNumber] = useState(0);
     const [searchContent, setSearchContent] = useState('');
+    const [roleName, setRoleName] = useState('');
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [userId, setUserId] = useState(null);
+    const currentUserId = Number.parseInt(localStorage.getItem("id"));
     const [roles, setRoles] = useState([]);
     const [message, setMessage] = useState(null);
     const {register, handleSubmit, formState: {errors}} = useForm({
@@ -60,15 +63,16 @@ export function EmployeeList() {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getEmployeeList('', '', codeSort.field, codeSort.direction,
+            await getEmployeeList('', '', roleName, codeSort.field, codeSort.direction,
                 nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
+            await getRoleList();
         };
         fetchData();
     }, [])
 
     useEffect(() => {
         const fetchData = async () => {
-            await getEmployeeList(pageNumber, searchContent, codeSort.field, codeSort.direction,
+            await getEmployeeList(pageNumber, searchContent, roleName, codeSort.field, codeSort.direction,
                 nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
         }
         fetchData();
@@ -76,42 +80,35 @@ export function EmployeeList() {
 
     useEffect(() => {
         const fetchData = async () => {
-            await getEmployeeList(pageNumber, searchContent, codeSort.field, codeSort.direction,
+            await getEmployeeList(pageNumber, searchContent, roleName, codeSort.field, codeSort.direction,
                 nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
         }
         fetchData();
     }, [codeSort, nameSort, roleSort]);
 
-    const getEmployeeList = async (page, searchContent, codeSort, codeDirection, nameSort, nameDirection,
+    const getEmployeeList = async (page, searchContent, roleName, codeSort, codeDirection, nameSort, nameDirection,
                                    roleSort, roleDirection) => {
-        const temp = await employeeService.getAllEmployees(page, searchContent, codeSort, codeDirection,
-            nameSort, nameDirection, roleSort, roleDirection);
-        setEmployeeList(temp.content);
-        setTotalPages(temp.totalPages);
+        try {
+            const temp = await employeeService.getAllEmployees(page, searchContent, roleName, codeSort, codeDirection,
+                nameSort, nameDirection, roleSort, roleDirection);
+            setEmployeeList(temp.content);
+            setTotalPages(temp.totalPages);
+        }catch (e) {
+            setMessage(e);
+        }
+    }
+
+    const getRoleList = async () => {
+        const temp = await roleService.getAllRoles();
+        setRoles(temp);
     }
 
     const onSubmit = async (data) => {
         try {
-            switch (data.searchContent.toLowerCase()) {
-                case "nhân viên" :
-                    data.searchContent = "role"
-                    break;
-                case "nhân viên bán hàng" || "bán hàng":
-                    console.log("salesman")
-                    data.searchContent = "salesman";
-                    break;
-                case "Quản lý kho" || "Nhân viên kho" || "Kho" :
-                    data.searchContent = "warehouse";
-                    break;
-                case "quản lý cửa hàng" || "quản lý" || "cửa hàng" :
-                    data.searchContent = "manager";
-                    break;
-                default:
-                    break;
-            }
-            const temp = await employeeService.getAllEmployees('', data.searchContent, codeSort.field, codeSort.direction,
-                nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
+            const temp = await employeeService.getAllEmployees('', data.searchContent, data.roleName, codeSort.field,
+                codeSort.direction, nameSort.field, nameSort.direction, roleSort.field, roleSort.direction);
             setSearchContent(data.searchContent);
+            setRoleName(data.roleName);
             setEmployeeList(temp.content);
             setTotalPages(temp.totalPages);
             setMessage(null);
@@ -165,7 +162,7 @@ export function EmployeeList() {
         setIsModalDisableOpen(false);
         setIsModalOpen(false);
         setIsModalDeleteOpen(false);
-        await getEmployeeList(pageNumber, searchContent, codeSort.field, codeSort.direction,
+        await getEmployeeList(pageNumber, searchContent, roleName, codeSort.field, codeSort.direction,
             nameSort.field, nameSort.direction, roleSort.field, roleSort.direction); // Gọi lại getEmployeeList sau khi xóa
     }
 
@@ -176,8 +173,20 @@ export function EmployeeList() {
                     <div className="content-element">
                         <div className="header-content">
                             <form onSubmit={handleSubmit(onSubmit)} className="form-search">
+                                <label className="search-title"> Tên/Mã nhân viên:</label>
                                 <input type="text" {...register("searchContent")} className="search-bar"
                                        placeholder="Nhập nội dung tìm kiếm"/>
+                                <select {...register("roleName")}  className="search-bar">
+                                    <option value="">--Chọn một chức vụ--</option>
+                                    {roles.map(role => (
+                                        <option key={role.roleId} value={role.roleName}>
+                                            {role.roleId === 1 ? "Admin"
+                                                : role.roleId === 2 ? "Quản lý cửa hàng"
+                                                    : role.roleId === 3 ? "Nhân viên bán hàng"
+                                                        : "Quản lý kho"}
+                                        </option>
+                                        ))}
+                                </select>
                                 <button className="btn btn-search">Tìm kiếm</button>
                             </form>
                             <Link to={"/dashboard/storeManager/employee-create"} className="link-move">Thêm mới nhân
@@ -279,7 +288,8 @@ export function EmployeeList() {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {employeeList && employeeList.map((employee, index) => (
+                                {employeeList && employeeList.filter((employee) => employee.userId !== currentUserId
+                                )?.map((employee, index) => (
                                     <tr key={employee.userId}>
                                         <td className={"no"}>{++index}</td>
                                         <td className={"emp-code"}>{employee.userCode}</td>

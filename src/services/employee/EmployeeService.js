@@ -1,10 +1,10 @@
 import axiosInstance from "../../utils/axiosInstance";
 
-export const getAllEmployees = async (page, searchContent, codeSort, codeDirection, nameSort, nameDirection,
+export const getAllEmployees = async (page, searchContent, roleName, codeSort, codeDirection, nameSort, nameDirection,
                                       roleSort, roleDirection) => {
     try {
         const temp = await axiosInstance.get(`/users?page=${page}&searchContent=${searchContent}` +
-        `&codeSort=${codeSort}&codeDirection=${codeDirection}&nameSort=${nameSort}&nameDirection=${nameDirection}` +
+        `&roleName=${roleName}&codeSort=${codeSort}&codeDirection=${codeDirection}&nameSort=${nameSort}&nameDirection=${nameDirection}` +
         `&roleSort=${roleSort}&roleDirection=${roleDirection}`);
         console.log(temp.data);
         return temp.data.users;

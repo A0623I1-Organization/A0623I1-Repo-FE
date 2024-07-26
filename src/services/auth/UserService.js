@@ -1,4 +1,3 @@
-import {jwtDecode} from "jwt-decode";
 import axiosInstance from "../../utils/axiosInstance";
 
 export const updateAvatarAndBackgroundImage = async (username, avatar, backgroundImage) => {

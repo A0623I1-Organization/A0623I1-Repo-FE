@@ -9,8 +9,8 @@ export function DashboardMain({content, path}) {
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [showNotificationList, setShowNotificationList] = useState(false);
 
-    const handleLogout = () => {
-        authenticationService.logout();
+    const handleLogout = async () => {
+        await authenticationService.logout();
     };
 
     const checkMidnightLogout = () => {

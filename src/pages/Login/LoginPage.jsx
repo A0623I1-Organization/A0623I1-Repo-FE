@@ -9,12 +9,14 @@ import {toast} from "react-toastify";
 import {useEffect, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
+import spinner from "../../assets/icons/Spinner.gif";
 
 function LoginPage(props) {
-    const isAuthenticated = authenticationService.isAuthenticated();
+    const isAuthenticated = !!localStorage.getItem("isAuthenticated");
     const [openEye, setOpenEye] = useState(false);
     const navigate = useNavigate();
     const [loginError, setLoginError] = useState('')
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
     const {register, handleSubmit, formState: {errors}, setValue} = useForm({
         criteriaMode: "all"
     });
@@ -31,7 +33,7 @@ function LoginPage(props) {
     }, [showPopupElement]);
 
     const checkRememberMe = () => {
-        let rememberMe =  JSON.parse(localStorage.getItem("rememberMe"));
+        let rememberMe = JSON.parse(localStorage.getItem("rememberMe"));
         if (rememberMe === undefined) {
             rememberMe = authenticationService.getRemember();
         }
@@ -43,34 +45,37 @@ function LoginPage(props) {
 
     const onSubmit = async (data) => {
         const remember = data.rememberMe;
-        console.log(remember)
-        try {
-            const userData = await authenticationService.login(data);
-            if (userData.token) {
-                localStorage.setItem('token', userData.token);
-                localStorage.setItem('fullName', userData.fullName);
-                localStorage.setItem('avatar', userData.avatar);
-                localStorage.setItem('lastTime', new Date().toISOString());
-                if (remember) {
-                    authenticationService.setRemember(data.username);
+        setIsLoading(true);
+        setTimeout(async () => {
+            try {
+                const userData = await authenticationService.login(data);
+                setIsLoading(false);
+                if (userData.statusCode === 200) {
+                    localStorage.setItem("id", userData.userId);
+                    localStorage.setItem('token', userData.token);
+                    localStorage.setItem('fullName', userData.fullName);
+                    localStorage.setItem('avatar', userData.avatar);
+                    localStorage.setItem('isAuthenticated', "authenticated");
+                    localStorage.setItem('lastTime', new Date().toISOString());
+                    if (remember) {
+                        authenticationService.setRemember(data.username);
+                    } else {
+                        authenticationService.setDefaultRemember();
+                        localStorage.removeItem("rememberMe");
+                    }
+                    navigate("/dashboard");
+                    toast.success("Đăng nhập thành công!");
                 } else {
-                    authenticationService.setDefaultRemember();
-                    localStorage.removeItem("rememberMe");
+                    setLoginError(userData.message);
+                    setShowPopupElement(true);
                 }
-                navigate("/dashboard");
-                toast.success("Đăng nhập thành công!");
-            } else {
-                setLoginError(userData.message);
-                setShowPopupElement(true);
+            } catch (error) {
+                toast.error(error.message);
+                setIsLoading(false);
             }
-        } catch (error) {
-            toast.error(error.message);
-        }
+        }, 2000)
     }
 
-    const closePopup = () => {
-
-    }
 
     if (isAuthenticated) {
         return <Navigate to="/dashboard"/>
@@ -135,7 +140,14 @@ function LoginPage(props) {
                                             Ghi nhớ đăng nhập
                                         </label>
                                     </div>
-                                    <button type={"submit"} className="btn bkg">Đăng nhập</button>
+                                    <button type={"submit"} disabled={isLoading}
+                                            style={isLoading ? {background: "#ccc"} : null} className="btn bkg">
+                                        {isLoading ?
+                                            <img src={spinner} alt="spinner"/>
+                                            :
+                                            "Đăng nhập"
+                                        }
+                                    </button>
                                 </form>
                             </div>
                         </div>

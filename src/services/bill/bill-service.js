@@ -11,6 +11,17 @@ export const getAllBill =async ()=>{
     }
 }
 
+export const getBillByDateCreate = async (dateCreate) => {
+    try {
+        const temp = await axiosInstance.get(`/bills/find-bill?dateCreate=${dateCreate}`);
+        console.log(temp.data);
+        return temp.data;
+    }catch (e)
+    {
+        console.log(e)
+    }
+}
+
 export const createBill =async (bill)=>{
     try {
         await axiosInstance.post(`/bills`,bill);
