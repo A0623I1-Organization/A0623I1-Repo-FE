@@ -26,6 +26,7 @@
     padding: 1rem;
   }
 
+
   .box-contents {
     width: 100%;
 
@@ -304,4 +305,24 @@
       color: var(--sidebar-main-color);
     }
   }
+
+  .sortByName {
+    margin-left: 10px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .sortByName:hover {
+    background-color: #45a049;
+  }
+
 }

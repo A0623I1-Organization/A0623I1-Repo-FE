@@ -51,7 +51,7 @@ export const deleteCustomer = async (id)=>{
 
 export const getCustomers = async (keyWord, pages = 0) => {
     try {
-        const temp = await axiosInstance.get(`/customer?keyword=${keyWord}&page=${pages}`);
+        const temp = await axiosInstance.get(`/customer?keyword=${keyWord}&page=${pages}&sortBy=${sortBy}`);
         return temp.data;
     } catch (e) {
         console.log(e)

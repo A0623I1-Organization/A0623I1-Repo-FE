@@ -87,7 +87,7 @@ function CustomerList(props) {
         setKeyWord(e.target.value);
     };
 
-    const hanleSubmitSearch = async () => {
+    const handleSubmitSearch = async () => {
         setPage(0);
         const response = await CustomerService.getCustomers(keyWord);
         setCustomers(response.content);
@@ -99,6 +99,7 @@ function CustomerList(props) {
         const response = await CustomerService.getCustomers(keyWord, pageNumber);
         setCustomers(response.content);
     };
+
 
     return (
         <>
@@ -118,7 +119,7 @@ function CustomerList(props) {
                                     aria-label="Search"
                                     onChange={handleSearch}
                                 />
-                                <button onClick={hanleSubmitSearch} className='search'>Tìm kiếm</button>
+                                <button onClick={handleSubmitSearch} className='search'>Tìm kiếm</button>
                             </div>
                             <div className="button-crud">
                                 <Link to="/dashboard/storeManager/customer/create">
@@ -180,6 +181,9 @@ function CustomerList(props) {
                                         </td>
                                     </tr>
                                 ))}
+
+
+
                                 </tbody>
                             </table>
                             <ModalDelete isOpen={isModalOpen} onClose={closeModal} title={"Xóa khách hàng"} content={`Xác nhận xóa khách hàng tên: ${customerDelete?.customerName} có mã: ${customerDelete?.customerCode}`} submit={handleSubmitDelete} />
@@ -201,3 +205,7 @@ function CustomerList(props) {
 }
 
 export default CustomerList;
+
+
+
+
