@@ -21,7 +21,6 @@ export function HeaderDashboard(props) {
     const [avatarUrl, setAvatarUrl] = useState("");
     const [isShowUserMenu, setIsShowUserMenu] = useState(false);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
-    const [darkMode, setDarkMode] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
     const [quantityUnread, setQuantityUnread] = useState([]);
@@ -43,7 +42,12 @@ export function HeaderDashboard(props) {
             }
         };
     }, []);
+
     useEffect(() => {
+        const fetchData = async () => {
+            await getRoleName();
+        }
+        fetchData().then().catch();
         const socket = new SockJS("http://localhost:8080/ws");
         const stompClient = Stomp.over(socket);
         stompClient.connect({}, () => {
@@ -86,6 +90,22 @@ export function HeaderDashboard(props) {
         getQuantityNotificationUnread();
     }, [])
 
+    const getRoleName = async () => {
+        const role = await authenticationService.getRole();
+        if (role === 'ROLE_ADMIN') {
+            setRoleName("admin");
+        }
+        if (role === 'ROLE_WAREHOUSE') {
+            setRoleName("warehouse");
+        }
+        if (role === 'ROLE_SALESMAN') {
+            setRoleName("salesman");
+        }
+        if (role === 'ROLE_MANAGER') {
+            setRoleName("storeManager");
+        }
+    }
+
     const getQuantityNotificationUnread = async () => {
         const temp = await getAllByStatusRead(0);
         console.log(temp.length);
@@ -116,17 +136,20 @@ export function HeaderDashboard(props) {
         props.parentCallback(isShowSidebar);
     }
 
-    const handleLogout = () => {
-        authenticationService.logout();
-        navigate("/login");
-    }
-
-    const handleDarkMode = () => {
-        setDarkMode(!darkMode);
-        if (darkMode) {
-            document.documentElement.classList.add("dark");
-        } else {
-            document.documentElement.classList.remove("dark");
+    const handleLogout = async () => {
+        try {
+            const temp = authenticationService.logout();
+            toast.success(temp);
+            navigate("/login");
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            localStorage.removeItem('fullName');
+            localStorage.removeItem('avatar');
+            localStorage.removeItem('id');
+            localStorage.removeItem('isAuthenticated')
+            localStorage.removeItem('lastTime');
+        } catch (e) {
+            toast.error(e.message);
         }
     }
 

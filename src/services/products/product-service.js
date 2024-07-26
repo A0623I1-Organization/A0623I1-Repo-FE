@@ -20,7 +20,7 @@ export const getAllProduct = async (keyword, sortBy, ascending, page) => {
     }
 };
 
-export const createProduct =async (product)=>{
+export const createProduct = async (product)=>{
     try {
         await axiosInstance.post(`/products`,product)
     }catch (e)

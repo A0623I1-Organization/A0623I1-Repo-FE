@@ -206,7 +206,7 @@ const CreatePricing = () => {
             : productService.createProduct(updatedData)
                 .then(() => {
                     toast.success('Tạo thành công');
-                    navigate(`/dashboard/${role}/warehouse`);
+                    // navigate(`/dashboard/${role}/warehouse`);
                 })
                 .catch(error => {
                     toast.error('Tạo thất bại');

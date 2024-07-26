@@ -6,12 +6,14 @@ import * as roleService from "../../../services/employee/RoleService";
 import * as employeeService from "../../../services/employee/EmployeeService";
 import {useParams} from "react-router-dom";
 import {DashboardMain} from "../../../components/Dashboard/DashboardMain";
+import spinner from "../../../assets/icons/Spinner.gif";
 
 export function EmployeeCreate() {
     const {role} = useParams();
     const {id} = useParams();
     const [employee, setEmployee] = useState(null);
     const [isShowSidebar, setIsShowSidebar] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Add loading state
     const [roles, setRoles] = useState([]);
     const [validateError, setValidateError] = useState([])
     const {register, handleSubmit, setValue, formState: {errors}} = useForm({
@@ -62,6 +64,7 @@ export function EmployeeCreate() {
 
     const onSubmit = async (data) => {
         try {
+            setIsLoading(true);
             const now = Date.now();
             data.role = JSON.parse(data.role);
             data.gender = Number.parseInt(data.gender);
@@ -85,7 +88,12 @@ export function EmployeeCreate() {
             if (e.statusCode === 400) {
                 toast.error(e.message);
             }
+        } finally {
+            setTimeout(function () {
+                setIsLoading(false);
+            }, 2000);
         }
+
     }
 
     const calculateDays = (value) => {
@@ -267,8 +275,10 @@ export function EmployeeCreate() {
                         </div>
                     </div>
                     <div className="button-save">
-                        <button type="submit" className="btn-submit">
-                            {employee ? "Sửa đổi" : "Thêm mới"}
+                        <button type="submit" disabled={isLoading}
+                                style={isLoading ? {background: "#ccc"} : null}
+                                className="btn-submit">
+                            {isLoading ? "Đang xử lý..." : (employee ? "Sửa đổi" : "Thêm mới")}
                         </button>
                     </div>
                 </form>
