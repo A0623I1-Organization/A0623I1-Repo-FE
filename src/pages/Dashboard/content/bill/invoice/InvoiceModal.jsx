@@ -1,8 +1,11 @@
 import React from 'react';
 import './InvoiceModal.scss';
 import {fCurrency} from "../../../../../utils/format-number";
+import {useNavigate, useParams} from "react-router-dom";
 
 const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClose,finalTotal}) => {
+    const {role} = useParams();
+    const navigate = useNavigate();
     const handlePrint = () => {
 
         // Lấy nội dung của invoice để in
@@ -10,6 +13,7 @@ const InvoiceModal = ({billCode, customerCode, billItems, discount, total, onClo
 
         // Tạo một cửa sổ in mới
         const printWindow = window.open('', '_blank');
+        navigate(`/dashboard/${role}/bill-list`);
 
         // Đặt nội dung của cửa sổ in là nội dung của invoice
         printWindow.document.write(`

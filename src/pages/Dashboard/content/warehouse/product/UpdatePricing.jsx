@@ -11,9 +11,11 @@ import {toast} from 'react-toastify';
 import {useNavigate, useParams} from 'react-router-dom';
 import {generateAndUploadQRCode} from '../../../../../firebase/generateAndUploadQRCode';
 import {DashboardMain} from '../../../../../components/Dashboard/DashboardMain';
-import {generateUniqueCode} from '../../../../../services/bill/random_mhd';
 import {UploadMultipleImage, UploadOneImage} from '../../../../../firebase/UploadImage';
 import * as productService1 from "../../../../../services/products/ProductService";
+import Editor from "../../../../../components/Editer";
+import {UploadMultiple, UploadOne} from "../../../../../firebase/Upload";
+import {handleUploadMultiple, handleUploadOne} from "../../../../../firebase/handleUpload";
 
 const schema = yup.object().shape({
     productId: yup.string().default(''),
@@ -44,7 +46,7 @@ const schema = yup.object().shape({
 });
 
 const CreatePricing = () => {
-    const {role,pricingId} = useParams();
+    const {role, pricingId} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [colors, setColors] = useState([]);
@@ -52,12 +54,14 @@ const CreatePricing = () => {
     const [productTypes, setProductTypes] = useState([]);
     const [productTypesByCategory, setProductTypesByCategory] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
-    const [productImages, setProductImages] = useState([]);
-    const [product,setProduct]= useState('');
-    const [images,setImages]= useState([]);
+    const [product, setProduct] = useState('');
+    const [images, setImages] = useState([]);
     const [validateError, setValidateError] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const {register, handleSubmit, formState: {errors}, setValue, control} = useForm({
+    const [multipleImage, setMultipleImage] = useState([]);
+    const [oneImage, setOneImage] = useState([]);
+    const [content, setContent] = useState('');
+    const {register, handleSubmit, formState: {errors}, setValue, control, getValues} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             pricingList: [],
@@ -77,6 +81,7 @@ const CreatePricing = () => {
         setIsShowSidebar(childData);
     };
 
+
     useEffect(() => {
         const fetchData = async () => {
             await getAllCategory();
@@ -89,23 +94,25 @@ const CreatePricing = () => {
     useEffect(() => {
         getProductById(pricingId)
     }, [pricingId]);
-    const getProductById = (pricingId)=>{
-        productService1.getProductById(pricingId).then(res =>{
+    const getProductById = (pricingId) => {
+        productService1.getProductById(pricingId).then(res => {
             setProduct(res);
             setSelectedCategory(res.productType.category.categoryName)
+            console.log(oneImage)
             console.log(res.productType.category.categoryName);
             setValue('productId', res.productId);
             setValue('productCode', res.productCode);
             setValue('productName', res.productName);
             setValue('description', res.description);
+            setContent(res.description)
             setValue('productType', JSON.stringify(res.productType));
             // Populate pricingList array
             const pricingListValues = res.pricingList?.map(pricing => ({
-                pricingId : pricing.pricingId,
+                pricingId: pricing.pricingId,
                 pricingName: pricing.pricingName,
                 pricingCode: pricing.pricingCode,
-                pricingImgUrl : pricing.pricingImgUrl,
-                quantity : pricing.quantity,
+                pricingImgUrl: pricing.pricingImgUrl,
+                quantity: pricing.quantity,
                 price: pricing.price,
                 size: pricing.size,
                 qrCode: '',
@@ -119,11 +126,10 @@ const CreatePricing = () => {
             }));
             setValue('productImages', productImagesValues);
             console.log(productImagesValues)
-            setImages( [ res.productImages?.map((item => item.imageUrl))]);
+            setImages([res.productImages?.map((item => item.imageUrl))]);
             console.log(images)
-        }).catch(err=>console.log(err))
+        }).catch(err => console.log(err))
     }
-console.log(product)
     const getAllCategory = () => {
         categoryService.getAllCategory().then(res => setCategories(res)).catch(err => console.log(err));
     };
@@ -143,10 +149,36 @@ console.log(product)
             .then(res => setProductTypes(res))
             .catch(err => console.log(err));
     };
+    const isFirebaseUrl = (url) => {
+        // Đảm bảo url là một chuỗi
+        if (typeof url !== 'string') {
+            return false;
+        }
+        // Kiểm tra nếu URL bắt đầu với URL Firebase
+        return url.startsWith('https://firebasestorage.googleapis.com/v0/b/');
+    };
+    console.log(multipleImage)
     const onSubmit = async (data) => {
-        console.log(data);
+        setIsSubmitting(true);
         try {
-            setIsSubmitting(true);
+            await handleUploadMultiple(multipleImage, 'productImages',setValue)
+            console.log(oneImage)
+            const uploadPromises = oneImage.map(async (imgUrl, index) => {
+                if (isFirebaseUrl(imgUrl)) {
+                    console.log(imgUrl)
+                    setValue(`pricingList[${index}].pricingImgUrl`, imgUrl)
+                } else {
+                    console.log(imgUrl.url)
+                    // Nếu là file hình ảnh, thực hiện upload
+                    await handleUploadOne(imgUrl.url, `pricingList[${index}].pricingImgUrl`, setValue);
+                }
+            });
+            console.log(data.pricingList)
+
+            // Chờ tất cả các Promise hoàn thành
+            await Promise.all(uploadPromises);
+
+
             const updatedPricingList = await Promise.all(data.pricingList.map(async (item) => {
                 try {
                     const qrDataURL = await generateAndUploadQRCode({
@@ -165,14 +197,16 @@ console.log(product)
             setValidateError([])
             const updatedData = {
                 ...data,
-                pricingList: updatedPricingList.map(item => ({
+                pricingList: updatedPricingList.map((item,index) => ({
                     ...item,
+                    pricingImgUrl:getValues(`pricingList[${index}].pricingImgUrl`) ,
                     color: JSON.parse(item.color)
                 })),
-                productType: JSON.parse(data.productType)
+                productType: JSON.parse(data.productType),
+                productImages: getValues('productImages')
             };
             console.log(updatedData);
-            productService.updateProduct(pricingId,updatedData)
+            productService.updateProduct(pricingId, updatedData)
                 .then(() => {
                     toast.success('Sửa thành công');
                     navigate(`/dashboard/${role}/warehouse`);
@@ -189,20 +223,31 @@ console.log(product)
             setValidateError(error);
         }
     };
-
-    const handleImageUrlChange = async (uploadedImageUrls) => {
-        const currentImages = productImages.map(img => ({...img}));
-
-        for (let url of uploadedImageUrls) {
-            currentImages.push({imageUrl: url});
+    console.log(product)
+    useEffect(() => {
+        if (product && product.pricingList) {
+            setOneImage(product.pricingList.map(item => (
+                 item.pricingImgUrl
+            )));
         }
-
-        await setValue('productImages', currentImages);
+    }, [product]);
+    console.log(oneImage)
+    const handleOneImageUrlChange = async (url, index) => {
+        console.log(url)
+        setOneImage(prevImages => {
+            // Tạo bản sao của danh sách hình ảnh cũ
+            const newImages = [...prevImages];
+            // Cập nhật URL cho mục tại chỉ mục index
+            newImages[index] = {
+                ...newImages[index],
+                url
+            };
+            return newImages;
+        });
+        console.log(oneImage)
     };
 
-    const handleOneImageUrlChange = async (uploadedImageUrl, index) => {
-        await setValue(`pricingList[${index}].pricingImgUrl`, uploadedImageUrl);
-    };
+
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
@@ -210,20 +255,22 @@ console.log(product)
                     <div className={styles.formGroup}>
                         <label>Mã sản phẩm:</label>
                         <input type="text" {...register('productCode')} disabled={true}/>
-                        {errors.productCode && <p  className={styles.errorMessage}>{errors.productCode.message}</p>}
+                        {errors.productCode && <p className={styles.errorMessage}>{errors.productCode.message}</p>}
                         <small>{validateError?.productCode}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
                         <input type="text" {...register('productName')} />
-                        {errors.productName && <p  className={styles.errorMessage}>{errors.productName.message}</p>}
-                        <small  className={styles.errorMessage}>{validateError?.productName}</small>
+                        {errors.productName && <p className={styles.errorMessage}>{errors.productName.message}</p>}
+                        <small className={styles.errorMessage}>{validateError?.productName}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Mô tả:</label>
-                        <input type="text" {...register('description')} />
-                        {errors.description && <p  className={styles.errorMessage}>{errors.description.message}</p>}
-                        <small  className={styles.errorMessage}>{validateError?.description}</small>
+                        <textarea rows="1" placeholder="" value={content}
+                                  style={{display: "none"}} {...register("description", {})}></textarea>
+                        <Editor value={content} className="custom-editor"/>
+                        {errors.description && <p className={styles.errorMessage}>{errors.description.message}</p>}
+                        <small className={styles.errorMessage}>{validateError?.description}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Ảnh sản phẩm:</label>
@@ -231,10 +278,11 @@ console.log(product)
                             name="productImages"
                             control={control}
                             render={({field}) => (
-                                <UploadMultipleImage onImageUrlChange={handleImageUrlChange} existingImageUrls={images}/>
+                                <UploadMultiple existingUrlImage={images}
+                                                onImageChange={(images) => setMultipleImage(images)}/>
                             )}
                         />
-                        {errors.productImages && <p  className={styles.errorMessage}>{errors.productImages.message}</p>}
+                        {errors.productImages && <p className={styles.errorMessage}>{errors.productImages.message}</p>}
                         {/*<small>{validateError?.productImages}</small>*/}
                     </div>
                     <div className={styles.formGroup}>
@@ -254,11 +302,11 @@ console.log(product)
                             <option value=''>--chọn loại sản phẩm--</option>
                             {
                                 productTypesByCategory?.map((item, index) => (
-                                    <option value={JSON.stringify(item)} key={item.typeId} selected={item.typeId === productTypes.typeId}>{item.typeName}</option>
+                                    <option value={JSON.stringify(item)} key={item.typeId}>{item.typeName}</option>
                                 ))
                             }
                         </select>
-                        {errors.productType && <p  className={styles.errorMessage}>{errors.productType.message}</p>}
+                        {errors.productType && <p className={styles.errorMessage}>{errors.productType.message}</p>}
                         {/*<small>{validateError?.productType}</small>*/}
                     </div>
                     <div className={styles.pricingContainer}>
@@ -269,7 +317,7 @@ console.log(product)
                                     <input type="text" {...register(`pricingList[${index}].pricingCode`)}
                                            disabled={true}/>
                                     {errors.pricingList?.[index]?.pricingCode &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingCode}</small>*/}
 
                                 </div>
@@ -277,7 +325,7 @@ console.log(product)
                                     <label>Tên sản phẩm chi tiết:</label>
                                     <input type="text" {...register(`pricingList[${index}].pricingName`)} />
                                     {errors.pricingList?.[index]?.pricingName &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingName}</small>*/}
 
                                 </div>
@@ -285,7 +333,7 @@ console.log(product)
                                     <label>Giá:</label>
                                     <input type="number" {...register(`pricingList[${index}].price`)} />
                                     {errors.pricingList?.[index]?.price &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.price}</small>*/}
 
                                 </div>
@@ -293,7 +341,7 @@ console.log(product)
                                     <label>Kích thước:</label>
                                     <input type="text" {...register(`pricingList[${index}].size`)} />
                                     {errors.pricingList?.[index]?.size &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.size}</small>*/}
 
                                 </div>
@@ -309,7 +357,7 @@ console.log(product)
                                         }
                                     </select>
                                     {errors.pricingList?.[index]?.color &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.color}</small>*/}
 
                                 </div>
@@ -320,13 +368,11 @@ console.log(product)
                                         control={control}
                                         defaultValue={item.pricingImgUrl}
                                         render={({field}) => (
-                                            <UploadOneImage
-                                                onImageUrlChange={(url) => handleOneImageUrlChange(url, index)}
-                                                existingImageUrl={product.pricingList[index].pricingImgUrl}
-                                            />
+                                            <UploadOne onImageChange={(url) => handleOneImageUrlChange(url, index)}
+                                                       existingImageUrl={product.pricingList[index].pricingImgUrl}/>
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingImgUrl}</small>*/}
 
                                 </div>

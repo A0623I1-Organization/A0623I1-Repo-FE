@@ -166,8 +166,7 @@ const BillForm = () => {
             billService.createBill(updatedData)
                 .then(() => {
                     toast.success('Create Success');
-                    reset();
-                    navigate(`/dashboard/${role}/bill-list`);
+
                 })
                 .catch(err => {
                     toast.error('Create Failed');
@@ -345,7 +344,10 @@ const BillForm = () => {
                                            total={total}
                                            discount={discount}
                                            finalTotal={finalTotal}
-                                           onClose={() => setPrintInvoice(false)}
+                                           onClose={() =>{
+                                               setPrintInvoice(false);
+                                               navigate(`/dashboard/${role}/bill-list`);
+                                           }}
                                        />
                                    </div>
                                )}

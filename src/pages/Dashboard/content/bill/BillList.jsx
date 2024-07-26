@@ -6,21 +6,25 @@ import {useParams} from "react-router-dom";
 const BillList =()=>{
     const [bills,setBills] = useState([])
     const {role} = useParams();
-    const getAllBills =()=>{
-        billService.getAllBill().then(res=>setBills(res)).catch()
+    const [page,setPage]= useState(0);
+    const [search,setSearch]= useState('');
+    const [date,setDate]= useState(null);
+    console.log(bills)
+    const getAllBills =(page,search,date)=>{
+        billService.getAllBill(page,search,date).then(res=>setBills(res.content)).catch()
     }
     console.log(bills)
     useEffect(() => {
-        getAllBills();
-    }, []);
+        getAllBills(page,search,date);
+    }, [page,search,date]);
     return(
         <DashboardMain path={role} content={
             <div className="content-body">
                 <div className="content-element">
                     <div className="header-content">
                         <form className="form-search">
-                            <input type="text" placeholder="Search..." className="search-bar"
-                                  />
+                            <input type="date" onChange={e=>setDate(e.target.value)}/>
+                            <input type="text" placeholder="Search..." className="search-bar" onChange={e=>setSearch(e.target.value)}/>
                             <button className="btn btn-search">Search</button>
                         </form>
                     </div>

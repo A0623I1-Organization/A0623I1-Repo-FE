@@ -1,13 +1,18 @@
 
 import axiosInstance from '../../utils/axiosInstance';
 
-export const getAllBill =async ()=>{
+
+export const getAllBill = async (page = 0, search = '', dateCreate = null) => {
     try {
-        const temp = await axiosInstance.get(`/bills`);
+        const params = {
+            page,
+            search,
+            dateCreate
+        };
+        const temp = await axiosInstance.get('/bills', { params });
         return temp.data;
-    }catch (e)
-    {
-        console.log(e)
+    } catch (e) {
+        console.log(e);
     }
 }
 

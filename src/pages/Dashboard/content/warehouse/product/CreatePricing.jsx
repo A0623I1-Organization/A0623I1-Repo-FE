@@ -13,9 +13,10 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {generateAndUploadQRCode} from '../../../../../firebase/generateAndUploadQRCode';
 import {DashboardMain} from '../../../../../components/Dashboard/DashboardMain';
 import {generateUniqueCode} from '../../../../../services/bill/random_mhd';
-import {UploadMultipleImage, UploadOneImage} from '../../../../../firebase/UploadImage';
 import * as productService1 from "../../../../../services/products/ProductService";
 import Editor from "../../../../../components/Editer";
+import {UploadMultiple, UploadOne} from "../../../../../firebase/Upload";
+import {handleUploadMultiple, handleUploadOne} from "../../../../../firebase/handleUpload";
 
 const schema = yup.object().shape({
     productId: yup.string().default(''),
@@ -46,7 +47,7 @@ const schema = yup.object().shape({
 });
 
 const CreatePricing = () => {
-    const {role,productId} = useParams();
+    const {role, productId} = useParams();
     const navigate = useNavigate();
     const [isShowSidebar, setIsShowSidebar] = useState(false);
     const [colors, setColors] = useState([]);
@@ -54,13 +55,14 @@ const CreatePricing = () => {
     const [productTypes, setProductTypes] = useState([]);
     const [productTypesByCategory, setProductTypesByCategory] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('Nữ');
-    const [productImages, setProductImages] = useState([]);
     const [disabled, setDisabled] = useState(false);
     const [images, setImages] = useState([]);
     const [validateError, setValidateError] = useState([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [content, setContent] = useState(false);
-    const {register, handleSubmit,reset, formState: {errors}, setValue, control} = useForm({
+    const [multipleImage, setMultipleImage] = useState([]);
+    const [oneImage, setOneImage] = useState([]);
+    const {register, handleSubmit, reset,getValues, formState: {errors}, setValue, control} = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
             pricingList: [],
@@ -86,7 +88,7 @@ const CreatePricing = () => {
             await getAllCategory();
             await getAllColor();
             await getAllProductType();
-            if(!productId){
+            if (!productId) {
                 await fetchUniqueProductCode();
             }
         };
@@ -96,8 +98,8 @@ const CreatePricing = () => {
     useEffect(() => {
         getProductById(productId)
     }, [productId]);
-    const getProductById = (productId)=>{
-        productService1.getProductById(productId).then(res =>{
+    const getProductById = (productId) => {
+        productService1.getProductById(productId).then(res => {
             setSelectedCategory(res.productType.category.categoryName)
             setDisabled(true);
             console.log(res.productType.category.categoryName);
@@ -112,9 +114,9 @@ const CreatePricing = () => {
             }));
             setValue('productImages', productImagesValues);
             console.log(productImagesValues)
-            setImages( [ res.productImages?.map((item => item.imageUrl))]);
+            setImages([res.productImages?.map((item => item.imageUrl))]);
             console.log(images)
-        }).catch(err=>console.log(err))
+        }).catch(err => console.log(err))
     }
 
     useEffect(() => {
@@ -124,7 +126,7 @@ const CreatePricing = () => {
             }
         };
         fetchCodes().catch(err => console.log(err));
-    }, [ fields, setValue]);
+    }, [fields, setValue]);
 
     const fetchUniqueProductCode = () => {
         generateUniqueCode(`/products/generateAndCheckProductCode`).then(res => {
@@ -169,84 +171,95 @@ const CreatePricing = () => {
     const handleRemovePricingRow = (index) => {
         remove(index);
     };
-
     const onSubmit = async (data) => {
         setIsSubmitting(true);
         try {
-            const updatedPricingList = await Promise.all(data.pricingList.map(async (item) => {
-                try {
-                    const qrDataURL = await generateAndUploadQRCode({
-                        pricingCode: item.pricingCode,
-                        pricingName: item.pricingName,
-                    });
-                    return {
+            await handleUploadMultiple(multipleImage, 'productImages',setValue)
+            console.log(oneImage)
+            const uploadPromises = oneImage.map(async (imgUrl, index) => {
+                    console.log(imgUrl.url)
+                    // Nếu là file hình ảnh, thực hiện upload
+                    await handleUploadOne(imgUrl.url, `pricingList[${index}].pricingImgUrl`, setValue);
+            });
+            console.log(data.pricingList)
+
+            // Chờ tất cả các Promise hoàn thành
+            await Promise.all(uploadPromises);
+
+                const updatedPricingList = await Promise.all(data.pricingList.map(async (item) => {
+                    try {
+                        const qrDataURL = await generateAndUploadQRCode({
+                            pricingCode: item.pricingCode,
+                            pricingName: item.pricingName,
+                        });
+                        return {
+                            ...item,
+                            qrCode: qrDataURL
+                        };
+                    } catch (error) {
+                        console.error('Error generating QR code:', error);
+                        throw error;
+                    }
+                }));
+                setValidateError([])
+                const updatedData = {
+                    ...data,
+                    description: content,
+                    pricingList: updatedPricingList.map((item,index) => ({
                         ...item,
-                        qrCode: qrDataURL
-                    };
-                } catch (error) {
-                    console.error('Error generating QR code:', error);
-                    throw error;
-                }
-            }));
-            setValidateError([])
-            const updatedData = {
-                ...data,
-                pricingList: updatedPricingList.map(item => ({
-                    ...item,
-                    color: JSON.parse(item.color)
-                })),
-                productType: JSON.parse(data.productType)
-            };
-            console.log(updatedData.pricingList);
-            productId?
-                pricingService.addPricing(productId,updatedData.pricingList)
-                    .then(() => {
-                        toast.success('Tạo thành công');
-                        reset();
-                        navigate(`/dashboard/${role}/warehouse`);
-                    })
-                    .catch(error => {
-                        setIsSubmitting(false);
-                        toast.error('Tạo thất bại');
-                        console.error('Error creating product:', error);
-                        setValidateError(error);
-                    })
-            : productService.createProduct(updatedData)
-                .then(() => {
-                    toast.success('Tạo thành công');
-                    navigate(`/dashboard/${role}/warehouse`);
-                    reset();
-                })
-                .catch(error => {
-                    setIsSubmitting(false);
-                    toast.error('Tạo thất bại');
-                    console.error('Error creating product:', error);
-                    setValidateError(error);
-                });
+                        pricingImgUrl:getValues(`pricingList[${index}].pricingImgUrl`),
+                        color: JSON.parse(item.color)
+                    })),
+                    productType: JSON.parse(data.productType),
+                    productImages: getValues('productImages')
+
+                };
+                console.log(updatedData.pricingList);
+                productId ?
+                    pricingService.addPricing(productId, updatedData.pricingList)
+                        .then(() => {
+                            toast.success('Tạo thành công');
+                            reset();
+                            navigate(`/dashboard/${role}/warehouse`);
+                        })
+                        .catch(error => {
+                            toast.error('Tạo thất bại');
+                            console.error('Error creating product:', error);
+                            setValidateError(error);
+                        })
+                    : productService.createProduct(updatedData)
+                        .then(() => {
+                            toast.success('Tạo thành công');
+                            navigate(`/dashboard/${role}/warehouse`);
+                        })
+                        .catch(error => {
+                            toast.error('Tạo thất bại');
+                            console.error('Error creating product:', error);
+                            setValidateError(error);
+                        });
         } catch (error) {
             console.error('Error submitting form:', error);
             toast.error('Gửi thất bại');
             setValidateError(error);
         }
     };
-
-    const handleImageUrlChange = async (uploadedImageUrls) => {
-        const currentImages = productImages.map(img => ({...img}));
-
-        for (let url of uploadedImageUrls) {
-            currentImages.push({imageUrl: url});
-        }
-
-        await setValue('productImages', currentImages);
-    };
-
-    const handleOneImageUrlChange = async (uploadedImageUrl, index) => {
-        await setValue(`pricingList[${index}].pricingImgUrl`, uploadedImageUrl);
+    const handleOneImageUrlChange = async (url, index) => {
+        console.log(url)
+        setOneImage(prevImages => {
+            // Tạo bản sao của danh sách hình ảnh cũ
+            const newImages = [...prevImages];
+            // Cập nhật URL cho mục tại chỉ mục index
+            newImages[index] = {
+                ...newImages[index],
+                url
+            };
+            return newImages;
+        });
+        console.log(oneImage)
     };
     const handeleChangeContent = (value) => {
         setContent(value);
     }
-
     return (
         <DashboardMain path={role} content={
             <div className="content-body">
@@ -263,30 +276,17 @@ const CreatePricing = () => {
                     <div className={styles.formGroup}>
                         <label>Tên sản phẩm:</label>
                         <input type="text" {...register('productName')} disabled={disabled}/>
-                        {errors.productName && <p  className={styles.errorMessage}>{errors.productName.message}</p>}
+                        {errors.productName && <p className={styles.errorMessage}>{errors.productName.message}</p>}
                         <small className={styles.errorMessage}>{validateError?.productName}</small>
                     </div>
                     <div className={styles.formGroup}>
                         <label>Mô tả:</label>
-                        <input type="text" {...register('description')} disabled={disabled} onChange={e=>setContent(e.target.value)}/>
-                        {errors.description && <p  className={styles.errorMessage}>{errors.description.message}</p>}
-                        <small  className={styles.errorMessage}>{validateError?.description}</small>
-                        {errors.productName && <p>{errors.productName.message}</p>}
-                        {/*<small>{validateError?.productName}</small>*/}
-
+                        <textarea rows="1" placeholder="" value={content}
+                                  style={{display: "none"}} {...register("description", {})}></textarea>
+                        <Editor value={content} onChange={handeleChangeContent} className="custom-editor"/>
+                        {errors.description && <p className={styles.errorMessage}>{errors.description.message}</p>}
+                        <small className={styles.errorMessage}>{validateError?.description}</small>
                     </div>
-                    <div className={styles.formGroup}>
-                        <label>Mô tả:</label>
-                        <input type="text" {...register('description')} disabled={disabled}/>
-                        {errors.description && <p>{errors.description.message}</p>}
-                        {/*<small>{validateError?.description}</small>*/}
-                    </div>
-                    <label htmlFor="">
-                        <span>Nội dung *</span>
-                        <textarea rows="1" placeholder="" value={content} style={{display: "none"}} {...register("content",{})}></textarea>
-                        <Editor value={content} onChange={handeleChangeContent} className="custom-editor"  />
-                        <small>{validateError?.content}</small>
-                    </label>
                     <div className={styles.formGroup}>
                         <label>Ảnh sản phẩm:</label>
                         <Controller
@@ -294,16 +294,17 @@ const CreatePricing = () => {
                             control={control}
                             disabled={disabled}
                             render={({field}) => (
-                                <UploadMultipleImage onImageUrlChange={handleImageUrlChange} existingImageUrls={images} />
-                            )}
+                                <UploadMultiple onImageChange={(images) => setMultipleImage(images)}/>
+                            )
+                            }
                         />
-                        {errors.productImages && <p  className={styles.errorMessage}>{errors.productImages.message}</p>}
+                        {errors.productImages && <p className={styles.errorMessage}>{errors.productImages.message}</p>}
                         {/*<small>{validateError?.productImages}</small>*/}
 
                     </div>
                     <div className={styles.formGroup}>
                         <label>Danh mục:</label>
-                        <select  onChange={event => setSelectedCategory(event.target.value)} disabled={disabled}>
+                        <select onChange={event => setSelectedCategory(event.target.value)} disabled={disabled}>
                             <option value=''>--chọn danh mục--</option>
                             {
                                 categories?.map((item, index) => (
@@ -314,15 +315,16 @@ const CreatePricing = () => {
                     </div>
                     <div className={styles.formGroup}>
                         <label>Loại sản phẩm:</label>
-                        <select {...register('productType')} disabled={disabled} >
+                        <select {...register('productType')} disabled={disabled}>
                             <option value=''>--chọn loại sản phẩm--</option>
                             {
                                 productTypesByCategory?.map((item, index) => (
-                                    <option value={JSON.stringify(item)} key={item.typeId} selected={item.typeId === productTypes.typeId}>{item.typeName}</option>
+                                    <option value={JSON.stringify(item)} key={item.typeId}
+                                            selected={item.typeId === productTypes.typeId}>{item.typeName}</option>
                                 ))
                             }
                         </select>
-                        {errors.productType && <p  className={styles.errorMessage}>{errors.productType.message}</p>}
+                        {errors.productType && <p className={styles.errorMessage}>{errors.productType.message}</p>}
                         {/*<small>{validateError?.productType}</small>*/}
 
                     </div>
@@ -334,7 +336,7 @@ const CreatePricing = () => {
                                     <input type="text" {...register(`pricingList[${index}].pricingCode`)}
                                            disabled={true}/>
                                     {errors.pricingList?.[index]?.pricingCode &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].pricingCode.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingCode}</small>*/}
 
                                 </div>
@@ -342,7 +344,7 @@ const CreatePricing = () => {
                                     <label>Tên sản phẩm chi tiết:</label>
                                     <input type="text" {...register(`pricingList[${index}].pricingName`)} />
                                     {errors.pricingList?.[index]?.pricingName &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].pricingName.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingName}</small>*/}
 
                                 </div>
@@ -350,7 +352,7 @@ const CreatePricing = () => {
                                     <label>Giá:</label>
                                     <input type="number" {...register(`pricingList[${index}].price`)} />
                                     {errors.pricingList?.[index]?.price &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].price.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.price}</small>*/}
 
                                 </div>
@@ -358,7 +360,7 @@ const CreatePricing = () => {
                                     <label>Kích thước:</label>
                                     <input type="text" {...register(`pricingList[${index}].size`)} />
                                     {errors.pricingList?.[index]?.size &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].size.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.size}</small>*/}
 
                                 </div>
@@ -374,7 +376,7 @@ const CreatePricing = () => {
                                         }
                                     </select>
                                     {errors.pricingList?.[index]?.color &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].color.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.color}</small>*/}
 
                                 </div>
@@ -385,12 +387,12 @@ const CreatePricing = () => {
                                         control={control}
                                         defaultValue={item.pricingImgUrl}
                                         render={({field}) => (
-                                            <UploadOneImage
-                                                onImageUrlChange={(url) => handleOneImageUrlChange(url, index)}
+                                            <UploadOne
+                                                onImageChange={(url) => handleOneImageUrlChange(url, index)}
                                             />
                                         )}/>
                                     {errors.pricingList?.[index]?.pricingImgUrl &&
-                                        <p  className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
+                                        <p className={styles.errorMessage}>{errors.pricingList[index].pricingImgUrl.message}</p>}
                                     {/*<small>{validateError?.pricingList[index]?.pricingImgUrl}</small>*/}
 
                                 </div>
@@ -416,5 +418,4 @@ const CreatePricing = () => {
         } callbackFunction={callbackFunction} isShowSidebar={isShowSidebar}/>
     );
 };
-
 export default CreatePricing;
